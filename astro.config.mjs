@@ -8,23 +8,27 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'Documentação',
+      lastUpdated: true,
+      editLink: {
+        baseUrl: 'https://github.com/danub-io/docs/edit/main',
+      },
       social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/danub-io/docs' }],
       sidebar: [
-        { label: 'Início', slug: 'index' },
+        { label: '🏠 Início', slug: 'index' },
         {
-          label: 'CTech',
+          label: '💻 CTech',
           autogenerate: { directory: 'ctech' },
         },
         {
-          label: 'Editora',
+          label: '📖 Editora',
           autogenerate: { directory: 'editora' },
         },
         {
-          label: 'GospelReads',
+          label: '✝️ GospelReads',
           autogenerate: { directory: 'gospelreads' },
         },
         {
-          label: 'MBA Lite',
+          label: '🎓 MBA Lite',
           autogenerate: { directory: 'mbalite' },
         },
       ],

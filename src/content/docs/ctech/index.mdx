@@ -3,25 +3,155 @@ title: CTech
 description: Plataforma de tecnologia e inovação
 ---
 
-Bem-vindo à documentação do **CTech**.
+import { Badge, Aside, Tabs, TabItem, Steps, FileTree, LinkCard, CardGrid } from '@astrojs/starlight/components';
+
+<Badge text="Estável" variant="success" /> <Badge text="v2.3.1" variant="note" /> <Badge text="Node.js 22" variant="tip" />
+
+Bem-vindo à documentação do **CTech**, uma plataforma moderna de tecnologia e inovação.
+
+---
 
 ## Visão Geral
 
-O CTech é uma plataforma de tecnologia e inovação.
+O CTech é uma plataforma full-stack construída com arquitetura modular, focada em performance e escalabilidade.
+
+<Aside type="tip" title="Dica">
+  Certifique-se de ter o Node.js 22+ instalado antes de prosseguir.
+</Aside>
+
+## Arquitetura
+
+```
+┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+│   Frontend   │────▶│     API      │────▶│  PostgreSQL  │
+│  React/Vite  │     │  Fastify     │     │    + Redis   │
+└──────────────┘     └──────────────┘     └──────────────┘
+```
+
+### Estrutura do Projeto
+
+<FileTree>
+  - src
+    - api
+      routes.ts
+      controllers
+    - web
+      components
+      pages
+    - core
+      domain
+      services
+    - infra
+      database
+      cache
+  - tests
+  - docker-compose.yml
+  - package.json
+  - tsconfig.json
+</FileTree>
 
 ## Começando
 
 ### Pré-requisitos
 
-- Node.js 18+
-- PostgreSQL
-- Docker (opcional)
+- Node.js 22+
+- PostgreSQL 16+
+- Docker (recomendado)
+- pnpm 10+
 
 ### Instalação
 
+Escolha o método de instalação:
+
+<Tabs>
+  <TabItem label="Com Docker (recomendado)">
+
+    ```bash
+    git clone https://github.com/danieldcc/ctech
+    cd ctech
+    cp .env.example .env
+    docker compose up -d
+    ```
+
+  </TabItem>
+  <TabItem label="Manual">
+
+    ```bash
+    git clone https://github.com/danieldcc/ctech
+    cd ctech
+    pnpm install
+    cp .env.example .env
+    pnpm run dev
+    ```
+
+  </TabItem>
+  <TabItem label="Produção">
+
+    ```bash
+    git clone https://github.com/danieldcc/ctech
+    cd ctech
+    pnpm install --prod
+    pnpm run build
+    pnpm run start
+    ```
+
+  </TabItem>
+</Tabs>
+
+### Configuração Inicial
+
+<Steps>
+  1. **Clone o repositório** — `git clone https://github.com/danieldcc/ctech`
+  2. **Instale as dependências** — `pnpm install`
+  3. **Configure as variáveis de ambiente** — copie `.env.example` para `.env` e ajuste
+  4. **Execute as migrations** — `pnpm run db:migrate`
+  5. **Inicie o servidor** — `pnpm run dev`
+</Steps>
+
+<Aside type="caution" title="Atenção">
+  Nunca commite o arquivo `.env` no repositório. Ele contém credenciais sensíveis.
+</Aside>
+
+## API
+
+### Endpoints Principais
+
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| `GET` | `/api/v1/users` | Lista usuários |
+| `POST` | `/api/v1/users` | Cria usuário |
+| `GET` | `/api/v1/users/:id` | Busca usuário |
+| `PUT` | `/api/v1/users/:id` | Atualiza usuário |
+| `DELETE` | `/api/v1/users/:id` | Remove usuário |
+
+## Deploy
+
 ```bash
-git clone https://github.com/danieldcc/ctech
-cd ctech
-pnpm install
-pnpm run dev
+# Build de produção
+pnpm run build
+
+# Iniciar em produção
+pnpm run start
+
+# Ou via Docker
+docker build -t ctech .
+docker run -p 3000:3000 ctech
 ```
+
+## FAQ
+
+<Aside type="note" title="Porta em uso?">
+  Altere a porta no arquivo `.env` com a variável `PORT`.
+</Aside>
+
+<Aside type="danger" title="Erro de conexão com banco">
+  Verifique se o PostgreSQL está rodando e as credenciais no `.env` estão corretas.
+</Aside>
+
+## Links Relacionados
+
+<CardGrid>
+  <LinkCard title="Repositório" href="https://github.com/danieldcc/ctech" icon="external" />
+  <LinkCard title="Issues" href="https://github.com/danieldcc/ctech/issues" icon="warning" />
+  <LinkCard title="Changelog" href="https://github.com/danieldcc/ctech/releases" icon="list-format" />
+</CardGrid>

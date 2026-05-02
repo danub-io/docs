@@ -3,25 +3,149 @@ title: Editora
 description: Sistema de gerenciamento editorial
 ---
 
-Bem-vindo à documentação da **Editora**.
+import { Badge, Aside, Tabs, TabItem, Steps, FileTree, LinkCard, CardGrid } from '@astrojs/starlight/components';
+
+<Badge text="Estável" variant="success" /> <Badge text="v1.8.2" variant="note" /> <Badge text="MongoDB" variant="tip" />
+
+Bem-vindo à documentação da **Editora**, sistema completo de gerenciamento editorial.
+
+---
 
 ## Visão Geral
 
-Sistema de gerenciamento editorial para publicação de livros.
+Sistema para gerenciamento de livros, autores, contratos e distribuição digital, com integração AWS S3 para armazenamento de arquivos.
+
+## Arquitetura
+
+```
+┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+│    Next.js   │────▶│   Express    │────▶│    MongoDB    │
+│     SSR      │     │    REST      │     │   + Mongoose  │
+└──────────────┘     └──────┬───────┘     └──────────────┘
+                            │
+                     ┌──────▼───────┐
+                     │   AWS S3     │
+                     │  (arquivos)  │
+                     └──────────────┘
+```
+
+### Estrutura do Projeto
+
+<FileTree>
+  - src
+    - modules
+      - books
+      - authors
+      - contracts
+      - sales
+    - shared
+      - middlewares
+      - utils
+    - config
+    - infra
+      - database
+      - storage
+  - tests
+    - unit
+    - integration
+  - docker-compose.yml
+  - package.json
+  - tsconfig.json
+</FileTree>
 
 ## Começando
 
 ### Pré-requisitos
 
-- Node.js 18+
-- MongoDB
-- AWS S3 (ou compatível)
+- Node.js 20+
+- MongoDB 7+
+- Conta AWS S3 (ou serviço compatível)
+- pnpm
 
 ### Instalação
 
+<Tabs>
+  <TabItem label="Desenvolvimento">
+
+    ```bash
+    git clone https://github.com/danieldcc/editora
+    cd editora
+    pnpm install
+    cp .env.example .env
+    # Configure as variáveis no .env
+    pnpm run dev
+    ```
+
+  </TabItem>
+  <TabItem label="Docker">
+
+    ```bash
+    git clone https://github.com/danieldcc/editora
+    cd editora
+    cp .env.example .env
+    docker compose up -d
+    ```
+
+  </TabItem>
+</Tabs>
+
+<Aside type="tip" title="MongoDB Local">
+  Use `docker run -d -p 27017:27017 mongo:7` para subir o MongoDB rapidamente.
+</Aside>
+
+### Configuração Inicial
+
+<Steps>
+  1. **Clone e instale** — `git clone` + `pnpm install`
+  2. **Configure o banco** — ajuste `MONGODB_URI` no `.env`
+  3. **Configure o storage** — preencha `AWS_ACCESS_KEY`, `AWS_SECRET_KEY` e `S3_BUCKET`
+  4. **Popule o banco** — `pnpm run db:seed`
+  5. **Inicie** — `pnpm run dev`
+</Steps>
+
+<Aside type="caution" title="Credenciais AWS">
+  Nunca exponha suas chaves AWS. Use IAM roles ou variáveis de ambiente seguras.
+</Aside>
+
+## API
+
+### Endpoints
+
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| `GET` | `/api/books` | Lista livros |
+| `POST` | `/api/books` | Cadastra livro |
+| `PUT` | `/api/books/:id` | Atualiza livro |
+| `DELETE` | `/api/books/:id` | Remove livro |
+| `POST` | `/api/books/:id/cover` | Upload de capa |
+
+## Deploy
+
 ```bash
-git clone https://github.com/danieldcc/editora
-cd editora
-pnpm install
-pnpm run dev
+# Build
+pnpm run build
+
+# Produção
+pnpm run start
+
+# Docker produção
+docker compose -f docker-compose.prod.yml up -d
 ```
+
+## FAQ
+
+<Aside type="note" title="Upload não funciona?">
+  Verifique as permissões do bucket S3 e se as credenciais estão corretas.
+</Aside>
+
+<Aside type="danger" title="Erro de conexão MongoDB">
+  Certifique-se de que o MongoDB está acessível e o `MONGODB_URI` está correto.
+</Aside>
+
+## Links Relacionados
+
+<CardGrid>
+  <LinkCard title="Repositório" href="https://github.com/danieldcc/editora" icon="external" />
+  <LinkCard title="Issues" href="https://github.com/danieldcc/editora/issues" icon="warning" />
+  <LinkCard title="Changelog" href="https://github.com/danieldcc/editora/releases" icon="list-format" />
+</CardGrid>

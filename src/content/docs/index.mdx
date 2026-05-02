@@ -3,37 +3,22 @@ title: Documentação
 description: Central de documentação dos projetos
 template: splash
 hero:
+  title: Documentação
   tagline: Central de documentação dos projetos
   actions:
-    - text: CTech
+    - text: Ver Projetos
       link: /ctech/
       icon: right-arrow
-    - text: Editora
-      link: /editora/
-      icon: right-arrow
-    - text: GospelReads
-      link: /gospelreads/
-      icon: right-arrow
-    - text: MBA Lite
-      link: /mbalite/
-      icon: right-arrow
+      variant: primary
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import { LinkCard, CardGrid } from '@astrojs/starlight/components';
 
 ## Projetos
 
-<CardGrid stagger>
-  <Card title="CTech" icon="seti:javascript">
-    Plataforma de tecnologia e inovação.
-  </Card>
-  <Card title="Editora" icon="open-book">
-    Sistema de gerenciamento editorial.
-  </Card>
-  <Card title="GospelReads" icon="seti:markdown">
-    Aplicativo de leitura e estudos bíblicos.
-  </Card>
-  <Card title="MBA Lite" icon="graduation-cap">
-    Plataforma de ensino e cursos online.
-  </Card>
+<CardGrid>
+  <LinkCard title="💻 CTech" href="/ctech/" description="Plataforma de tecnologia e inovação" />
+  <LinkCard title="📖 Editora" href="/editora/" description="Sistema de gerenciamento editorial" />
+  <LinkCard title="✝️ GospelReads" href="/gospelreads/" description="Aplicativo de leitura e estudos bíblicos" />
+  <LinkCard title="🎓 MBA Lite" href="/mbalite/" description="Plataforma de ensino e cursos online" />
 </CardGrid>
