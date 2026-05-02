@@ -1,8 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
-import react from '@astrojs/react';
-import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   site: 'https://danub-io.github.io',
@@ -11,7 +9,6 @@ export default defineConfig({
     starlight({
       title: 'Documentação',
       social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/danub-io/docs' }],
-      customCss: ['./src/styles/globals.css'],
       sidebar: [
         { label: 'Início', slug: 'index' },
         {
@@ -32,9 +29,5 @@ export default defineConfig({
         },
       ],
     }),
-    react(),
   ],
-  vite: {
-    plugins: [tailwindcss()],
-  },
 });
