@@ -8,11 +8,8 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'Documentação',
+      customCss: ['./src/styles/layout.css'],
       lastUpdated: true,
-      editLink: {
-        baseUrl: 'https://github.com/danub-io/docs/edit/main',
-      },
-      social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/danub-io/docs' }],
       sidebar: [
         { label: '🏠 Início', slug: 'index' },
         {

@@ -1,0 +1,53 @@
+:root {
+  /* Largura do painel lateral esquerdo (25% maior) */
+  --sl-sidebar-width: 21.25rem;
+  /* Largura do painel lateral direito (mantida) */
+  --sl-right-sidebar-width: 17rem;
+}
+
+/* Remove scrollbar da sidebar esquerda e iguala fundo ao da sidebar direita */
+html body .sidebar-pane {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  background-color: var(--sl-color-bg) !important;
+}
+
+html body .sidebar-pane::-webkit-scrollbar {
+  display: none !important;
+}
+
+@media (min-width: 72rem) {
+  /* Força a barra da direita a ter exatamente a largura desejada */
+  html body .right-sidebar-container {
+    width: var(--sl-right-sidebar-width) !important;
+    min-width: var(--sl-right-sidebar-width) !important;
+    max-width: var(--sl-right-sidebar-width) !important;
+    flex: 0 0 var(--sl-right-sidebar-width) !important;
+  }
+
+  html body .right-sidebar {
+    width: var(--sl-right-sidebar-width) !important;
+    max-width: var(--sl-right-sidebar-width) !important;
+  }
+
+  /* O painel principal ocupará todo o espaço restante */
+  html[data-has-sidebar][data-has-toc] body .main-pane {
+    width: calc(100% - var(--sl-sidebar-width)) !important;
+    max-width: calc(100% - var(--sl-sidebar-width)) !important;
+    flex: 1 1 calc(100% - var(--sl-sidebar-width)) !important;
+    --sl-content-margin-inline: 0 !important;
+  }
+
+  /* Permite que o container interno preencha 100% do painel central */
+  html body .content-panel .sl-container {
+    max-width: 50rem !important;
+    width: 100% !important;
+    margin-inline: auto !important;
+  }
+
+  /* Libera o conteúdo markdown para preencher todo o container */
+  html body .sl-markdown-content {
+    max-width: none !important;
+    width: 100% !important;
+  }
+}
