@@ -1,151 +1,94 @@
 ---
 title: Editora
-description: Sistema de gerenciamento editorial
+description: Editora pessoal automatizada com IA para produção de livros
 ---
 
 import { Badge, Aside, Tabs, TabItem, Steps, FileTree, LinkCard, CardGrid } from '@astrojs/starlight/components';
 
-<Badge text="Estável" variant="success" /> <Badge text="v1.8.2" variant="note" /> <Badge text="MongoDB" variant="tip" />
+<Badge text="Alpha" variant="note" /> <Badge text="v0.1.0" variant="caution" /> <Badge text="Python 3.12" variant="tip" />
 
-Bem-vindo à documentação da **Editora**, sistema completo de gerenciamento editorial.
+Bem-vindo à documentação da **Editora**, uma ferramenta de vibe coding para produção profissional de livros. Escreva capítulos em Markdown e a Editora cuida da editoração — revisão com IA, diagramação e exportação para PDF (print-ready) e EPUB.
 
 ---
 
 ## Visão Geral
 
-Sistema para gerenciamento de livros, autores, contratos e distribuição digital, com integração AWS S3 para armazenamento de arquivos.
-
-## Arquitetura
-
 ```
-┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│    Next.js   │────▶│   Express    │────▶│    MongoDB    │
-│     SSR      │     │    REST      │     │   + Mongoose  │
-└──────────────┘     └──────┬───────┘     └──────────────┘
-                            │
-                     ┌──────▼───────┐
-                     │   AWS S3     │
-                     │  (arquivos)  │
-                     └──────────────┘
+chapters/*.md → [IA: Edição/Revisão] → [Pandoc + LaTeX] → output/*.pdf / *.epub
 ```
 
-### Estrutura do Projeto
+### Stack Tecnológica
 
-<FileTree>
-  - src
-    - modules
-      - books
-      - authors
-      - contracts
-      - sales
-    - shared
-      - middlewares
-      - utils
-    - config
-    - infra
-      - database
-      - storage
-  - tests
-    - unit
-    - integration
-  - docker-compose.yml
-  - package.json
-  - tsconfig.json
-</FileTree>
+| Ferramenta | Função |
+|------------|--------|
+| **Python 3.12+** | Linguagem principal |
+| **Typer** | Interface CLI |
+| **Pydantic** | Validação e configurações |
+| **Pandoc + LaTeX** | Diagramação profissional |
+| **LangChain** | Orquestração de IA |
+| **LanguageTool** | Gramática pt-BR |
+
+## Funcionalidades
+
+| Funcionalidade | Descrição |
+|----------------|-----------|
+| Escrita em Markdown | Capítulos versionáveis com Git e fáceis de converter |
+| Edição com IA | Copyediting em 3 níveis (light/medium/aggressive) |
+| Revisão de Consistência | Detecção de contradições, furos na trama e timeline |
+| Proofreading | Correção gramatical e ortográfica pt-BR |
+| Typesetting | PDF print-ready (KDP compliant) e EPUB |
+| CLI Intuitiva | Comandos simples para todo o fluxo |
+
+## Provedores de IA
+
+| Provider | Variável | Modelo Padrão |
+|----------|----------|---------------|
+| Anthropic | `ANTHROPIC_API_KEY` | claude-sonnet-4 |
+| OpenAI | `OPENAI_API_KEY` | gpt-4o |
+| Google | `GOOGLE_API_KEY` | gemini-2.0-flash |
+| Ollama | (local) | llama3 |
 
 ## Começando
 
 ### Pré-requisitos
 
-- Node.js 20+
-- MongoDB 7+
-- Conta AWS S3 (ou serviço compatível)
-- pnpm
+- Python 3.12+
+- Pandoc
+- LaTeX (TeX Live ou TinyTeX)
 
 ### Instalação
 
-<Tabs>
-  <TabItem label="Desenvolvimento">
-
-    ```bash
-    git clone https://github.com/danieldcc/editora
-    cd editora
-    pnpm install
-    cp .env.example .env
-    # Configure as variáveis no .env
-    pnpm run dev
-    ```
-
-  </TabItem>
-  <TabItem label="Docker">
-
-    ```bash
-    git clone https://github.com/danieldcc/editora
-    cd editora
-    cp .env.example .env
-    docker compose up -d
-    ```
-
-  </TabItem>
-</Tabs>
-
-<Aside type="tip" title="MongoDB Local">
-  Use `docker run -d -p 27017:27017 mongo:7` para subir o MongoDB rapidamente.
-</Aside>
-
-### Configuração Inicial
-
-<Steps>
-  1. **Clone e instale** — `git clone` + `pnpm install`
-  2. **Configure o banco** — ajuste `MONGODB_URI` no `.env`
-  3. **Configure o storage** — preencha `AWS_ACCESS_KEY`, `AWS_SECRET_KEY` e `S3_BUCKET`
-  4. **Popule o banco** — `pnpm run db:seed`
-  5. **Inicie** — `pnpm run dev`
-</Steps>
-
-<Aside type="caution" title="Credenciais AWS">
-  Nunca exponha suas chaves AWS. Use IAM roles ou variáveis de ambiente seguras.
-</Aside>
-
-## API
-
-### Endpoints
-
-| Método | Rota | Descrição |
-|--------|------|-----------|
-| `GET` | `/api/books` | Lista livros |
-| `POST` | `/api/books` | Cadastra livro |
-| `PUT` | `/api/books/:id` | Atualiza livro |
-| `DELETE` | `/api/books/:id` | Remove livro |
-| `POST` | `/api/books/:id/cover` | Upload de capa |
-
-## Deploy
-
 ```bash
-# Build
-pnpm run build
-
-# Produção
-pnpm run start
-
-# Docker produção
-docker compose -f docker-compose.prod.yml up -d
+git clone <repo-url>
+cd editora
+python -m venv .venv
+source .venv/bin/activate
+pip install -e .
 ```
 
-## FAQ
+### Uso Rápido
 
-<Aside type="note" title="Upload não funciona?">
-  Verifique as permissões do bucket S3 e se as credenciais estão corretas.
-</Aside>
+```bash
+editora init --title "Meu Livro" --author "Seu Nome" --output meu-livro
+cd meu-livro
+# Escreva os capítulos em chapters/*.md
+editora build    # Gera PDF + EPUB
+```
 
-<Aside type="danger" title="Erro de conexão MongoDB">
-  Certifique-se de que o MongoDB está acessível e o `MONGODB_URI` está correto.
-</Aside>
+## Comandos CLI
 
-## Links Relacionados
+| Comando | Descrição |
+|---------|-----------|
+| `editora init` | Cria novo projeto de livro |
+| `editora build` | Compila para PDF/EPUB |
+| `editora edit` | Edita capítulos com IA |
+| `editora proofread` | Revisa gramática e ortografia |
+| `editora consistency` | Verifica consistência global |
+| `editora info` | Mostra estatísticas do projeto |
+
+## Documentação no Projeto
 
 <CardGrid>
-  <LinkCard title="Repositório" href="https://github.com/danieldcc/editora" icon="external" />
-  <LinkCard title="Issues" href="https://github.com/danieldcc/editora/issues" icon="warning" />
-  <LinkCard title="Changelog" href="https://github.com/danieldcc/editora/releases" icon="list-format" />
+  <LinkCard title="Repositório" href="https://github.com/danub-io/editora" icon="external" />
+  <LinkCard title="README" href="https://github.com/danub-io/editora/blob/main/README.md" description="Documentação completa no projeto fonte" />
 </CardGrid>

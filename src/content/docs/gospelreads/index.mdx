@@ -1,146 +1,72 @@
 ---
 title: GospelReads
-description: Aplicativo de leitura e estudos bíblicos
+description: The Intellectual Archive — Blog de conteúdo teológico
 ---
 
 import { Badge, Aside, Tabs, TabItem, Steps, FileTree, LinkCard, CardGrid } from '@astrojs/starlight/components';
 
-<Badge text="Beta" variant="note" /> <Badge text="v0.4.0" variant="caution" /> <Badge text="React Native" variant="tip" />
+<Badge text="Estável" variant="success" /> <Badge text="v0.1.0" variant="note" /> <Badge text="Astro 6" variant="tip" />
 
-Bem-vindo à documentação do **GospelReads**, aplicativo mobile de leitura e estudos bíblicos.
+Bem-vindo à documentação do **GospelReads**, um blog de conteúdo teológico e reflexões cristãs com performance 100/100 Lighthouse.
 
 ---
 
 ## Visão Geral
 
-Aplicativo React Native com funcionalidades de leitura bíblica, planos de estudo, notas pessoais e comunidade.
-
-## Arquitetura
+Blog estático (SSG) construído com Astro 6 e React 19, hospedado no Firebase Hosting com cache agressivo.
 
 ```
-┌──────────────────┐     ┌──────────────┐     ┌──────────────┐
-│  React Native    │────▶│  Firebase    │────▶│   Firestore  │
-│  (iOS + Android) │     │  Functions   │     │   + Auth     │
-└──────────────────┘     └──────────────┘     └──────────────┘
+Markdown (MD) → Content Collections → Páginas Astro → HTML estático → Firebase Hosting
 ```
 
-### Estrutura do Projeto
+### Stack
 
-<FileTree>
-  - src
-    - screens
-      - Home
-      - Bible
-      - Study
-      - Community
-    - components
-      - ui
-      - bible
-    - services
-      - api
-      - auth
-      - storage
-    - hooks
-    - utils
-    - types
-  - ios
-  - android
-  - __tests__
-  - package.json
-  - app.json
-  - tsconfig.json
-</FileTree>
+| Tecnologia | Função |
+|------------|--------|
+| **Astro 6** | Framework SSG |
+| **React 19** | Componentes interativos |
+| **Tailwind CSS v4** | Estilização + Typography |
+| **Content Collections** | Gerenciamento de conteúdo |
+| **Firebase Hosting** | Hospedagem com CDN global |
+| **date-fns** | Formatação de datas pt-BR |
+
+## Estrutura de Conteúdo
+
+```
+src/content/
+├── posts/          # Artigos em MD com frontmatter
+├── authors/        # Perfis de autores
+└── pages/          # Páginas estáticas
+```
+
+Os posts possuem schema com `title`, `description`, `date`, `authors`, `tags`, `image`.
 
 ## Começando
 
-### Pré-requisitos
-
-- Node.js 20+
-- React Native CLI
-- Xcode (iOS) ou Android Studio (Android)
-- Firebase project
-- pnpm
-
-### Instalação
-
-<Tabs>
-  <TabItem label="iOS">
-
-    ```bash
-    git clone https://github.com/danieldcc/gospelreads
-    cd gospelreads
-    pnpm install
-    cd ios && pod install && cd ..
-    cp .env.example .env
-    pnpm run ios
-    ```
-
-  </TabItem>
-  <TabItem label="Android">
-
-    ```bash
-    git clone https://github.com/danieldcc/gospelreads
-    cd gospelreads
-    pnpm install
-    cp .env.example .env
-    pnpm run android
-    ```
-
-  </TabItem>
-</Tabs>
-
-<Aside type="tip" title="Firebase">
-  Baixe o arquivo `google-services.json` (Android) e `GoogleService-Info.plist` (iOS) do console Firebase e cole na pasta correta.
-</Aside>
-
-### Configuração Inicial
-
-<Steps>
-  1. **Clone e instale** — `git clone` + `pnpm install`
-  2. **Configure o Firebase** — baixe os arquivos de config do console Firebase
-  3. **Configure variáveis** — copie `.env.example` para `.env` e preencha
-  4. **Inicie o Metro** — `pnpm run start`
-  5. **Execute no dispositivo** — `pnpm run ios` ou `pnpm run android`
-</Steps>
-
-<Aside type="caution" title="Ambiente Android">
-  Certifique-se de ter o Android SDK 34+ instalado e a variável `ANDROID_HOME` configurada.
-</Aside>
-
-## Funcionalidades Principais
-
-| Funcionalidade | Status | Descrição |
-|----------------|--------|-----------|
-| Leitura bíblica | ✅ | Navegação por livro, capítulo e versículo |
-| Planos de estudo | ✅ | Planos temáticos com notificações |
-| Notas pessoais | ✅ | Anotações sincronizadas com a conta |
-| Comunidade | 🚧 | Fórum de discussão (em desenvolvimento) |
-| Áudio | 🚧 | Narração dos capítulos (planejado) |
-
-## Deploy
-
 ```bash
-# Android (APK)
-cd android && ./gradlew assembleRelease
-
-# iOS (Archive)
-# Abra o projeto no Xcode e Archive pelo menu Product > Archive
+git clone <repo-url>
+cd gospelreads
+pnpm install
+pnpm dev          # Servidor local (localhost:4321)
 ```
 
-## FAQ
+### Build e Deploy
 
-<Aside type="note" title="App não inicia no Android?">
-  Execute `pnpm run android` novamente. Se persistir, limpe o cache: `cd android && ./gradlew clean`.
-</Aside>
+```bash
+pnpm build        # Gera dist/
+firebase deploy   # Publica no Firebase Hosting
+```
 
-<Aside type="danger" title="Erro de autenticação Firebase">
-  Verifique se o `google-services.json` ou `GoogleService-Info.plist` está presente e correto.
-</Aside>
+## Performance
 
-## Links Relacionados
+- 100/100 Lighthouse performance
+- SSG puro sem JS no carregamento inicial
+- Cache de 1 ano para assets estáticos
+- Imagens otimizadas com filters CSS
+
+## Documentação no Projeto
 
 <CardGrid>
-  <LinkCard title="Repositório" href="https://github.com/danieldcc/gospelreads" icon="external" />
-  <LinkCard title="Issues" href="https://github.com/danieldcc/gospelreads/issues" icon="warning" />
-  <LinkCard title="Changelog" href="https://github.com/danieldcc/gospelreads/releases" icon="list-format" />
+  <LinkCard title="Repositório" href="https://github.com/danub-io/gospelreads" icon="external" />
+  <LinkCard title="README" href="https://github.com/danub-io/gospelreads/blob/main/README.md" description="Documentação completa no projeto fonte" />
 </CardGrid>

@@ -1,160 +1,60 @@
 ---
 title: MBA Lite
-description: Plataforma de ensino e cursos online
+description: Landing page do curso MBA Lite — Gestão para Alta Performance
 ---
 
 import { Badge, Aside, Tabs, TabItem, Steps, FileTree, LinkCard, CardGrid } from '@astrojs/starlight/components';
 
-<Badge text="Estável" variant="success" /> <Badge text="v3.1.0" variant="note" /> <Badge text="Next.js" variant="tip" />
+<Badge text="Estável" variant="success" /> <Badge text="v0.1.0" variant="note" /> <Badge text="Astro 6" variant="tip" />
 
-Bem-vindo à documentação do **MBA Lite**, plataforma de ensino e cursos online.
+Bem-vindo à documentação do **MBA Lite**, landing page do curso *MBA Lite — A Série Gestão para Alta Performance*.
 
 ---
 
 ## Visão Geral
 
-Plataforma completa de EAD com gerenciamento de cursos, alunos, matriculas e certificados, com foco em administração e negócios.
+Landing page estática (SSG) construída com Astro 6, Tailwind CSS v4 e shadcn/ui. Design componentizado com seções independentes, todas pré-renderizadas.
 
-## Arquitetura
+### Stack
 
-```
-┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│   Next.js    │────▶│    API       │────▶│  PostgreSQL   │
-│   App Router │     │  tRPC        │     │  + Prisma     │
-└──────┬───────┘     └──────┬───────┘     └──────┬────────┘
-       │                    │                     │
-       │              ┌─────▼──────┐       ┌──────▼──────┐
-       │              │   Redis    │       │   MinIO     │
-       └──────────────┴────────────┘       │(arquivos)   │
-                                           └─────────────┘
-```
+| Tecnologia | Função |
+|------------|--------|
+| **Astro 6** | Framework SSG |
+| **React 19** | Ilhas de interatividade |
+| **Tailwind CSS v4** | Estilização com `@theme` |
+| **shadcn/ui + Radix UI** | Componentes de UI |
+| **Geist Variable** | Tipografia |
 
-### Estrutura do Projeto
+## Componentes da Página
 
-<FileTree>
-  - src
-    - app
-      - (auth)
-      - (dashboard)
-      - (courses)
-      - api
-    - components
-      - ui
-      - forms
-      - layout
-    - lib
-      - db
-      - auth
-      - upload
-    - server
-      - actions
-      - api
-    - validations
-  - prisma
-    schema.prisma
-    migrations
-  - public
-    uploads
-  - docker-compose.yml
-  - package.json
-  - tsconfig.json
-  - next.config.ts
-</FileTree>
+| Componente | Descrição |
+|------------|-----------|
+| `Header` | Navegação superior com links âncora |
+| `Hero` | Seção principal com CTA |
+| `Features` | Grid de benefícios do curso |
+| `LeadCapture` | Formulário de captura de leads |
+| `AuthorBio` | Biografia do autor |
+| `Footer` | Rodapé com links |
 
 ## Começando
 
-### Pré-requisitos
-
-- Node.js 22+
-- PostgreSQL 16+
-- Redis 7+
-- pnpm
-
-### Instalação
-
-<Tabs>
-  <TabItem label="Desenvolvimento">
-
-    ```bash
-    git clone https://github.com/danieldcc/mbalite
-    cd mbalite
-    pnpm install
-    cp .env.example .env
-    pnpm run db:push
-    pnpm run dev
-    ```
-
-  </TabItem>
-  <TabItem label="Docker (recomendado)">
-
-    ```bash
-    git clone https://github.com/danieldcc/mbalite
-    cd mbalite
-    cp .env.example .env
-    docker compose up -d
-    ```
-
-  </TabItem>
-</Tabs>
-
-<Aside type="tip" title="Prisma Studio">
-  Use `pnpm run db:studio` para visualizar e editar dados do banco via interface web.
-</Aside>
-
-### Configuração Inicial
-
-<Steps>
-  1. **Clone e instale** — `git clone` + `pnpm install`
-  2. **Configure o banco** — ajuste `DATABASE_URL` no `.env`
-  3. **Execute as migrations** — `pnpm run db:push`
-  4. **Popule com dados iniciais** — `pnpm run db:seed`
-  5. **Inicie o servidor** — `pnpm run dev`
-</Steps>
-
-<Aside type="caution" title="Redis">
-  O Redis é usado para cache de sessão e filas. Sem ele, o login e a geração de certificados podem falhar.
-</Aside>
-
-## API
-
-### Endpoints
-
-| Método | Rota | Descrição |
-|--------|------|-----------|
-| `GET` | `/api/courses` | Lista cursos |
-| `POST` | `/api/courses` | Cria curso |
-| `GET` | `/api/courses/:id` | Detalhes do curso |
-| `PUT` | `/api/courses/:id` | Atualiza curso |
-| `DELETE` | `/api/courses/:id` | Remove curso |
-| `POST` | `/api/enrollments` | Realiza matrícula |
-
-## Deploy
-
 ```bash
-# Build
-pnpm run build
-
-# Produção
-pnpm run start
-
-# Docker produção
-docker compose -f docker-compose.prod.yml up -d
+git clone <repo-url>
+cd mbalite
+pnpm install
+pnpm dev          # Servidor local
 ```
 
-## FAQ
+### Build
 
-<Aside type="note" title="Erro de schema Prisma?">
-  Execute `pnpm run db:push` para sincronizar o schema com o banco de dados.
-</Aside>
+```bash
+pnpm build        # Gera dist/
+pnpm preview      # Preview do build
+```
 
-<Aside type="danger" title="Upload de arquivos não funciona?">
-  Verifique as configurações do MinIO no `.env` e se o serviço está rodando.
-</Aside>
-
-## Links Relacionados
+## Documentação no Projeto
 
 <CardGrid>
-  <LinkCard title="Repositório" href="https://github.com/danieldcc/mbalite" icon="external" />
-  <LinkCard title="Issues" href="https://github.com/danieldcc/mbalite/issues" icon="warning" />
-  <LinkCard title="Changelog" href="https://github.com/danieldcc/mbalite/releases" icon="list-format" />
+  <LinkCard title="Repositório" href="https://github.com/danub-io/mbalite" icon="external" />
+  <LinkCard title="README" href="https://github.com/danub-io/mbalite/blob/main/README.md" description="Documentação completa no projeto fonte" />
 </CardGrid>

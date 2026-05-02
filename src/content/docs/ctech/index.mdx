@@ -1,157 +1,102 @@
 ---
 title: CTech
-description: Plataforma de tecnologia e inovação
+description: Ecossistema de Curadoria Técnica de Hardware
 ---
 
 import { Badge, Aside, Tabs, TabItem, Steps, FileTree, LinkCard, CardGrid } from '@astrojs/starlight/components';
 
-<Badge text="Estável" variant="success" /> <Badge text="v2.3.1" variant="note" /> <Badge text="Node.js 22" variant="tip" />
+<Badge text="Produção" variant="success" /> <Badge text="v2026.4" variant="note" /> <Badge text="Next.js + Astro" variant="tip" />
 
-Bem-vindo à documentação do **CTech**, uma plataforma moderna de tecnologia e inovação.
+Bem-vindo à documentação do **CTECH (TechReveal)**, um ecossistema automatizado para análise, comparação e curadoria de hardware com IA.
 
 ---
 
 ## Visão Geral
 
-O CTech é uma plataforma full-stack construída com arquitetura modular, focada em performance e escalabilidade.
+O CTECH é dividido em dois repositórios que compartilham o mesmo banco **Turso (SQLite)**:
 
-<Aside type="tip" title="Dica">
-  Certifique-se de ter o Node.js 22+ instalado antes de prosseguir.
-</Aside>
-
-## Arquitetura
+| Repositório | Stack | Papel |
+|-------------|-------|-------|
+| **ctech_be** | Next.js 16, Turso, Pino, AI SDK, Tailwind v4 | Backend/Painel: Automação, Scrapers, Processamento IA |
+| **ctech_fe** | Astro 6, React 19, Tailwind v4, Turso, Zod v4 | Frontend/Público: Interface de alta performance otimizada para SEO |
 
 ```
-┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│   Frontend   │────▶│     API      │────▶│  PostgreSQL  │
-│  React/Vite  │     │  Fastify     │     │    + Redis   │
-└──────────────┘     └──────────────┘     └──────────────┘
+ctech_be (Server Actions) → Turso DB (SQLite) ← ctech_fe (Astro SSR)
 ```
 
-### Estrutura do Projeto
+## Arquitetura — Módulos de Automação
 
-<FileTree>
-  - src
-    - api
-      routes.ts
-      controllers
-    - web
-      components
-      pages
-    - core
-      domain
-      services
-    - infra
-      database
-      cache
-  - tests
-  - docker-compose.yml
-  - package.json
-  - tsconfig.json
-</FileTree>
+### Backend (ctech_be)
+
+O backend é dividido em 9 módulos independentes (M1-M9):
+
+| Módulo | Nome | Função |
+|--------|------|--------|
+| M1 | Entrada | Ingestão e detecção de duplicidade semântica via IA |
+| M2 | Descoberta | Busca de links de reviews técnicas |
+| M3 | Extração | Processamento de reviews e extração de specs via IA |
+| M4 | Consolidação | Unificação de reviews com nota bayesiana |
+| M5 | Preços | Monitoramento de preços em lojas |
+| M6 | Conferência | Auditoria de links afiliados e estoque |
+| M7 | CMS | Gerenciador central do catálogo de produtos |
+| M8 | Configurações | Painel de configurações globais (IA, Scrapers, Logs) |
+| M9 | Documentação | Visualizador de documentação Markdown integrado |
+
+### Frontend (ctech_fe)
+
+| Rota | Descrição |
+|------|-----------|
+| `/` | Home com produto em destaque e tendências |
+| `/laptops` | Lista de laptops com filtros |
+| `/compare` | Comparação lado a lado de produtos |
+| `/community` | Feed com reviews da comunidade |
+| `/reviews/[slug]` | Página detalhada de review |
 
 ## Começando
 
 ### Pré-requisitos
 
 - Node.js 22+
-- PostgreSQL 16+
-- Docker (recomendado)
-- pnpm 10+
+- pnpm
+- Conta no [Turso](https://turso.tech)
 
 ### Instalação
 
-Escolha o método de instalação:
-
 <Tabs>
-  <TabItem label="Com Docker (recomendado)">
+  <TabItem label="Backend (ctech_be)">
 
     ```bash
-    git clone https://github.com/danieldcc/ctech
-    cd ctech
-    cp .env.example .env
-    docker compose up -d
+    cd ctech/ctech_be
+    pnpm install
+    cp .env.example .env.local
+    # Configure TURSO_DATABASE_URL e TURSO_AUTH_TOKEN
+    pnpm dev
     ```
 
   </TabItem>
-  <TabItem label="Manual">
+  <TabItem label="Frontend (ctech_fe)">
 
     ```bash
-    git clone https://github.com/danieldcc/ctech
-    cd ctech
+    cd ctech/ctech_fe
     pnpm install
     cp .env.example .env
-    pnpm run dev
-    ```
-
-  </TabItem>
-  <TabItem label="Produção">
-
-    ```bash
-    git clone https://github.com/danieldcc/ctech
-    cd ctech
-    pnpm install --prod
-    pnpm run build
-    pnpm run start
+    # Configure TURSO_DATABASE_URL e TURSO_AUTH_TOKEN
+    pnpm dev
     ```
 
   </TabItem>
 </Tabs>
 
-### Configuração Inicial
+## Segurança
 
-<Steps>
-  1. **Clone o repositório** — `git clone https://github.com/danieldcc/ctech`
-  2. **Instale as dependências** — `pnpm install`
-  3. **Configure as variáveis de ambiente** — copie `.env.example` para `.env` e ajuste
-  4. **Execute as migrations** — `pnpm run db:migrate`
-  5. **Inicie o servidor** — `pnpm run dev`
-</Steps>
+- CSP configurada via middleware (ctech_fe)
+- Consultas parametrizadas ao banco (sem SQL injection)
+- Cliente Turso usado apenas em SSR (nunca exposto ao cliente)
+- HSTS, X-Frame-Options, X-Content-Type-Options
 
-<Aside type="caution" title="Atenção">
-  Nunca commite o arquivo `.env` no repositório. Ele contém credenciais sensíveis.
-</Aside>
-
-## API
-
-### Endpoints Principais
-
-| Método | Rota | Descrição |
-|--------|------|-----------|
-| `GET` | `/api/v1/users` | Lista usuários |
-| `POST` | `/api/v1/users` | Cria usuário |
-| `GET` | `/api/v1/users/:id` | Busca usuário |
-| `PUT` | `/api/v1/users/:id` | Atualiza usuário |
-| `DELETE` | `/api/v1/users/:id` | Remove usuário |
-
-## Deploy
-
-```bash
-# Build de produção
-pnpm run build
-
-# Iniciar em produção
-pnpm run start
-
-# Ou via Docker
-docker build -t ctech .
-docker run -p 3000:3000 ctech
-```
-
-## FAQ
-
-<Aside type="note" title="Porta em uso?">
-  Altere a porta no arquivo `.env` com a variável `PORT`.
-</Aside>
-
-<Aside type="danger" title="Erro de conexão com banco">
-  Verifique se o PostgreSQL está rodando e as credenciais no `.env` estão corretas.
-</Aside>
-
-## Links Relacionados
+## Documentação nos Projetos
 
 <CardGrid>
-  <LinkCard title="Repositório" href="https://github.com/danieldcc/ctech" icon="external" />
-  <LinkCard title="Issues" href="https://github.com/danieldcc/ctech/issues" icon="warning" />
-  <LinkCard title="Changelog" href="https://github.com/danieldcc/ctech/releases" icon="list-format" />
+  <LinkCard title="Backend" href="https://github.com/danub-io/ctech/tree/main/ctech_be" description="ctech_be — README, ARCHITECTURE, API, CHANGELOG, CONTRIBUTING + docs/" />
+  <LinkCard title="Frontend" href="https://github.com/danub-io/ctech/tree/main/ctech_fe" description="ctech_fe — README, ARCHITECTURE, DATA_LAYER, CHANGELOG, CONTRIBUTING + docs/" />
 </CardGrid>
