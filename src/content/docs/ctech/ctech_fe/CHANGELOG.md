@@ -12,6 +12,27 @@ e este projeto segue o [Semantic Versioning](https://semver.org/lang/pt-BR/).
 ## [Unreleased]
 
 ### Adicionado
+- **Avaliações de Usuários:** Nova seção "Análises de Usuários" na página do produto com até 3 cards + link "Ver todas as análises" para `/produto/[slug]/user-reviews`.
+- **Página `/produto/[slug]/user-reviews`:** Página dedicada com todas as avaliações de usuários de um produto.
+- **ProductUserReviews.astro:** Componente que exibe cards de avaliações de usuários na página do produto.
+- **PressReviewCard.astro:** Componente compartilhado de card para reviews de imprensa (mesmo visual na página do produto e na página dedicada `/produto/[slug]/reviews`).
+- **`review_type` na tabela Reviews:** Coluna `review_type` (`'critic' | 'user'`) no banco de dados para separar reviews de imprensa e de usuários.
+- **productService.getUserReviewsByProductId():** Novo método para buscar reviews de usuários.
+- **ProductVerdict.astro:** Agora aceita `userScore` e `userReviewCount` como props, exibindo a nota real dos usuários (dinâmica, não mais hardcoded).
+- **Módulo de Produto (`product`)**: Substituição do antigo módulo `reviews`. A rota agora é `/produto/[slug]`, proporcionando uma experiência de "Single Product Page" completa.
+- **ProductSpecs.astro**: Novo componente para exibição detalhada de especificações técnicas extraídas do banco de dados.
+- **Modularização Profunda**: O módulo `home` agora contém seus próprios componentes de layout (`Navbar`, `Footer`, `Layout`) e seções específicas (`Hero`, `Categories`, `Trending`).
+- **CategoryIcon.astro**: Novo componente para ícones SVG por categoria, substituindo dependência de fontes externas.
+- Script de seed para banco de dados Turso, garantindo dados iniciais para a Landing Page.
+- Documentação de Ícones e Tipografia no `ARCHITECTURE.md`.
+
+### Corrigido
+- **"Ligature Leak"**: Substituição de Material Symbols por SVGs Inline para evitar que nomes de ícones apareçam como texto se a fonte falhar.
+- **Design Tokens**: Variável `--radius-full` corrigida para `9999px` para garantir arredondamento perfeito.
+- **Conectividade DB**: Adicionado fallback para `process.env` no `db.ts` para melhor compatibilidade com ambientes Node.js/Astro.
+- **Layout LP**: Corrigida quebra de linha no link "Ver Todas" e visibilidade de scrollbars em seções horizontais.
+
+### Adicionado (Anterior)
 - **CONTRIBUTING.md**: Guia de contribuição com padrões de commits, branches e PRs
 - **DATA_LAYER.md**: Documentação do fluxo de dados entre frontend e Turso DB
 - **CHANGELOG.md**: Histórico de versões do projeto

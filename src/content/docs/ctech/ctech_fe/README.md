@@ -66,7 +66,9 @@ pnpm format                 # Formata código com Prettier
 | `/laptops` | Lista de laptops aprovados com filtros |
 | `/compare` | Comparação lado a lado de produtos |
 | `/community` | Feed com reviews recentes da comunidade |
-| `/reviews/[slug]` | Página detalhada de review de produto |
+| `/produto/[slug]` | Página detalhada do produto (Single Product) |
+| `/produto/[slug]/reviews` | Todas as análises da imprensa sobre o produto |
+| `/produto/[slug]/user-reviews` | Todas as avaliações de usuários sobre o produto |
 
 ## 🏗️ Arquitetura
 
@@ -75,7 +77,7 @@ O projeto segue metodologia **Modular (Vibecoding)**, otimizada para desenvolvim
 ```
 src/
 ├── core/         # Infraestrutura global (UI, layouts, lib, types)
-├── modules/      # Domínios isolados (laptops, compare, reviews...)
+├── modules/      # Domínios isolados (laptops, compare, product...)
 └── pages/        # Rotas Astro (camada fina de conexão)
 ```
 

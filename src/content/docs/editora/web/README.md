@@ -4,14 +4,14 @@ title: "Editora Web - Interface Web"
 
 
 
-Interface web moderna para a Editora, construída com Next.js, Tailwind CSS e shadcn/ui.
+Interface web moderna para a Editora, construída com Next.js, Tailwind CSS v4 e shadcn/ui (base-nova).
 
 ## 🚀 Tecnologias
 
 - **Next.js 14** - Framework React full-stack
 - **TypeScript** - Type safety
 - **Tailwind CSS** - Estilização utility-first
-- **shadcn/ui** - Componentes acessíveis
+- **shadcn/ui (base-nova)** - Componentes acessíveis (Base UI)
 - **Tiptap** - Editor de texto rico
 - **Zustand** - Gerenciamento de estado
 - **Drizzle ORM** - Banco de dados (SQLite)
@@ -49,7 +49,7 @@ src/
 │   ├── page.tsx            # Página inicial
 │   └── globals.css         # Estilos globais
 ├── components/
-│   └── ui/                 # Componentes shadcn/ui
+│   └── ui/                 # Componentes shadcn/ui (base-nova)
 ├── lib/
 │   └── utils.ts            # Utilitários
 ├── stores/

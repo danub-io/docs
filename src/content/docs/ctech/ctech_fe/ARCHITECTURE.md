@@ -16,11 +16,7 @@ O projeto foi estruturado para manter baixo custo cognitivo para desenvolvimento
 src/
 ├── core/                        # Infraestrutura e base do sistema
 │   ├── ui/                      # Componentes genéricos (shadcn/ui + Base UI)
-│   │   ├── badge.tsx
-│   │   ├── button.tsx
-│   │   ├── card.tsx
-│   │   └── progress.tsx
-│   ├── layouts/                 # Estruturas globais (Navbar, Footer, BottomNav, Layout)
+│   ├── layouts/                 # (Agora vazios ou genéricos)
 │   ├── lib/                     # Conexão DB, utilitários (cn), logger
 │   ├── services/                # Serviços globais (categoryService com cache)
 │   ├── styles/                  # CSS Global e design tokens
@@ -28,30 +24,17 @@ src/
 │
 ├── modules/                     # Domínios isolados por funcionalidade
 │   ├── laptops/                 # Listagem e filtros de laptops
-│   │   ├── components/          # LaptopsList, LaptopsFilter, LaptopsHeader
-│   │   └── services/            # laptopService
 │   ├── compare/                 # Motor de comparação de produtos
-│   │   ├── components/          # CompareGrid, CompareHeader
-│   │   └── services/            # compareService
-│   ├── reviews/                 # Páginas de review de produtos
-│   │   ├── components/          # ReviewHero, ReviewWhereToBuy, ReviewVerdict
-│   │   └── services/            # reviewService
+│   ├── product/                 # Páginas de detalhes do produto (Single Product)
+│   │   ├── components/          # ProductHero, ProductVerdict, ProductSpecs, ProductSources, ProductUserReviews, PressReviewCard, ProductWhereToBuy
+│   │   └── services/            # productService
 │   ├── community/               # Feed da comunidade
-│   │   ├── components/          # ReviewFeed, CommunityHeader
-│   │   └── services/            # communityService
-│   └── home/                    # Página inicial
-│       ├── components/          # (se houver)
+│   └── home/                    # Página inicial (Altamente Modularizada)
+│       ├── components/          # Navbar, Footer, Layout, Hero, Categories, Trending
 │       └── services/            # homeService
 │
 ├── pages/                       # Camada de roteamento (Astro)
-│   ├── index.astro              # Home
-│   ├── laptops.astro            # Lista de laptops
-│   ├── compare.astro            # Comparação
-│   ├── community.astro          # Comunidade
-│   ├── 404.astro                # Página de erro
-│   └── reviews/[slug].astro     # Página dinâmica de review
-│
-└── middleware.ts                # Segurança (CSP, HSTS)
+│   ├── index.astro              # Home (Orquestra componentes de @modules/home)
 ```
 
 ### Metodologia "Vibecoding"
@@ -107,27 +90,69 @@ O projeto usa Astro Islands — componentes React interativos ilhados em HTML es
 :root {
   --color-primary: #...;
   --color-surface: #...;
-  --font-heading: 'Geist', sans-serif;
+  --font-heading: 'Inter', sans-serif;
   --font-body: 'Inter', sans-serif;
-  --radius-sm: 0.5rem;
-  --radius-md: 0.75rem;
-  --radius-xl: 1rem;
+  --radius-DEFAULT: 0.25rem;
+  --radius-full: 9999px;
 }
 ```
 
-## SEO e Performance
+## Padrões de Layout e Espaçamento
+
+Para manter a consistência visual entre páginas (LP, Produto, etc.), utilizamos classes e variáveis de layout padronizadas em `src/core/styles/global.css`:
+
+### Container de Página (`.layout-container`)
+
+Todas as páginas principais devem envolver seu conteúdo principal com a classe `.layout-container`. Esta classe garante:
+- **Largura Máxima:** `1280px` (`--spacing-container-max`).
+- **Alinhamento:** Centralizado horizontalmente (`mx-auto`).
+- **Margens Laterais (Edge):**
+    - Mobile: `16px` (`px-4`).
+    - Desktop (>=768px): `32px` (`--spacing-margin-edge`).
+
+### Espaçamento entre Itens (Gutter)
+
+- **Gutter Padrão:** O espaçamento entre itens em grids ou listas deve seguir o token `--spacing-gutter: 24px`, geralmente aplicado via classe Tailwind `gap-6`.
+- **Gap entre Seções:** O espaçamento vertical entre grandes blocos de conteúdo segue `--spacing-section-gap: 80px`.
+
+### Padronização de Boxes e Padding (`.layout-boxed`, `.layout-box-padding`)
+
+Para garantir que todos os elementos contidos em "boxes" (cards, seções de veredito, especificações) tenham uma hierarquia visual consistente, utilizamos:
+
+- **`.layout-box-padding`:** Define um padding interno padrão de `24px` (vinculado ao token `--spacing-box-padding`). Este é o padrão ouro para conteúdo textual dentro de containers.
+- **`.layout-boxed`:** Uma classe utilitária que combina o fundo padrão (`bg-surface-container-lowest`), borda (`border-surface-variant`), arredondamento (`rounded-xl`) e o padding padrão definido no token.
+
+Deve ser usado em:
+- Cards de produto (Trending, Listagens).
+- Blocos de Veredito e Scores.
+- Qualquer seção que exija destaque visual dentro de uma borda.
+
+## Ícones e Tipografia
+
+Para garantir máxima confiabilidade e performance:
+
+- **Ícones:** Não utilizamos fontes de ícones (como Material Symbols) que dependem de ligaduras. Em vez disso, usamos **SVGs Inline** ou o componente `CategoryIcon.astro`. Isso evita que nomes de ícones apareçam como texto se a fonte falhar.
+- **Tipografia:** Utilizamos a fonte **Inter** (via `@fontsource-variable/inter` e fallback Google Fonts) para garantir uma interface moderna e legível em todos os dispositivos.
+
+
+### SEO e Performance
+
+#### Image Optimization (`astro:assets`)
+- **Padrão:** Sempre utilize o componente `<Image />` de `astro:assets` para imagens locais e remotas.
+- **Remote Images:** Para imagens externas (Turso/Cloudinary), utilize o atributo `inferSize` para que o Astro processe as dimensões automaticamente, garantindo WebP/Avif e evitando Cumulative Layout Shift (CLS).
+- **Configuração:** Novos domínios de imagem devem ser adicionados ao `remotePatterns` no `astro.config.mjs`.
+
+#### Loading States (`server:defer`)
+- **Conceito:** Componentes que dependem de dados lentos (como preços de afiliados ou APIs externas) devem usar a diretiva `server:defer` (Astro 5+).
+- **Fallback:** Sempre forneça um `slot="fallback"` com um skeleton loader animado (`animate-pulse`) para manter o design estável enquanto os dados são carregados.
+- **Exemplo:** Veja `ProductWhereToBuy` em `[slug].astro`.
 
 ### Meta Tags e Open Graph
+
 
 - Meta tags e Open Graph definidas no `Layout.astro`
 - Geração de sitemap automática via `@astrojs/sitemap`
 - URLs canônicas configuradas
-
-### Otimização de Imagens
-
-- Uso de `astro:assets` com Sharp para transformação
-- Imagens externas com padrões de URL configurados no `astro.config.mjs`
-- Atributos `loading="lazy"` e `decoding="async"`
 
 ### Core Web Vitals
 

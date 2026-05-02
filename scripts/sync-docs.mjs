@@ -80,30 +80,69 @@ async function processFile(filePath, project) {
 }
 
 async function main() {
+  const isWatch = process.argv.includes('--watch');
   const allSyncedFiles = [];
 
-  for (const project of projects) {
-    console.log(`\nSyncing ${project}...`);
-    const projectDir = path.join(SRC_DIR, project);
-    const mdFiles = await findMarkdownFiles(projectDir);
+  const runSync = async () => {
+    console.log('\nStarting sync...');
+    for (const project of projects) {
+      console.log(`\nSyncing ${project}...`);
+      const projectDir = path.join(SRC_DIR, project);
+      const mdFiles = await findMarkdownFiles(projectDir);
 
-    if (mdFiles.length === 0) {
-      console.warn(`  [warn] Nenhum arquivo .md/.mdx encontrado em ${projectDir}`);
-      continue;
+      if (mdFiles.length === 0) {
+        console.warn(`  [warn] Nenhum arquivo .md/.mdx encontrado em ${projectDir}`);
+        continue;
+      }
+
+      let count = 0;
+      for (const file of mdFiles) {
+        if (file.includes('src/content/docs')) continue;
+        await processFile(file, project);
+        allSyncedFiles.push(file);
+        count++;
+      }
+      console.log(`  -> ${count} arquivo(s) sincronizado(s)`);
+    }
+    console.log(`\nSync concluído. ${allSyncedFiles.length} arquivo(s) processado(s).`);
+  };
+
+  await runSync();
+
+  if (isWatch) {
+    console.log('\n[watch] Monitorando alterações...');
+    const watchers = [];
+
+    for (const project of projects) {
+      const projectDir = path.join(SRC_DIR, project);
+      try {
+        const watcher = fs.watch(projectDir, { recursive: true }, async (eventType, filename) => {
+          if (filename && (filename.endsWith('.md') || filename.endsWith('.mdx'))) {
+            if (filename.includes('node_modules') || filename.includes('.git') || filename.includes('.astro')) return;
+            
+            console.log(`\n[watch] Alteração detectada em ${project}: ${filename}`);
+            const filePath = path.join(projectDir, filename);
+            try {
+              // Verifica se o arquivo ainda existe (pode ter sido deletado)
+              await fs.access(filePath);
+              await processFile(filePath, project);
+            } catch (e) {
+              console.log(`  [watch] Arquivo ignorado ou removido: ${filename}`);
+            }
+          }
+        });
+        watchers.push(watcher);
+      } catch (err) {
+        console.error(`[error] Falha ao iniciar watcher para ${project}:`, err.message);
+      }
     }
 
-    let count = 0;
-    for (const file of mdFiles) {
-      if (file.includes('src/content/docs')) continue;
-      await processFile(file, project);
-      allSyncedFiles.push(file);
-      count++;
-    }
-    console.log(`  -> ${count} arquivo(s) sincronizado(s)`);
+    process.on('SIGINT', () => {
+      console.log('\n[watch] Encerrando...');
+      watchers.forEach(w => w.close());
+      process.exit(0);
+    });
   }
-
-  const total = allSyncedFiles.length;
-  console.log(`\nSync concluído. ${total} arquivo(s) processado(s).`);
 }
 
 main().catch((err) => {

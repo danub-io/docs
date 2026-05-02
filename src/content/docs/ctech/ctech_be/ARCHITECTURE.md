@@ -79,7 +79,7 @@ Ecossistema de curadoria técnica de hardware e inteligência comercial. Pipelin
 
 ## 3. BANCO DE DADOS (TURSO SQLITE)
 - `Produtos`: Catálogo central (specs, nota final, imagem). **Fonte única de verdade para imagens.**
-- `Reviews`: Análises unitárias do M3 vinculadas a um produto.
+- `Reviews`: Análises unitárias (M3) e avaliações de usuários vinculadas a um produto. Possui `review_type` (`'critic'` | `'user'`) para separar análises de imprensa de avaliações de usuários.
 - `Afiliados`: Links finais de loja/oferta validados no M6. (Coluna `imagem_url` removida em Abr/2026).
 - `historico_precos`: Registro de oscilação de preço (limpo após 90 dias).
 - `config_ai_models` e `config_scraping_services`: Tabelas que controlam a Cascata de Resiliência (6-tiers). Nelas ficam salvas as API Keys criptografadas at-rest em AES-256-CBC.

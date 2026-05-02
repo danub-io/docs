@@ -9,7 +9,7 @@ Landing page do curso **MBA Lite — A Série Gestão para Alta Performance**, c
 ## 🚀 Tecnologias
 
 - **Framework:** Astro 6
-- **UI:** React 19 + shadcn/ui (Radix UI)
+- **UI:** React 19 + shadcn/ui (base-nova, Base UI)
 - **Estilização:** Tailwind CSS v4
 - **Fontes:** Geist Variable (Google Fonts)
 - **Build:** SSG puro

@@ -50,7 +50,7 @@ Cada domínio possui um serviço que encapsula consultas SQL e transformações.
 | **Home** | `homeService` | `getFeaturedProduct()`, `getTrendingProducts()` | Produto em destaque e tendências |
 | **Laptops** | `laptopService` | `getLaptops()` | Lista filtrada de laptops aprovados |
 | **Compare** | `compareService` | `getComparisonProducts(ids)`, `getTopProducts(limit)`, `getSearchSuggestions(query)` | Comparação e busca |
-| **Reviews** | `reviewService` | `getReviewBySlug(slug)`, `getAllReviewSlugs()`, `getAffiliatesByProductId(productId)` | Páginas de review e afiliados |
+| **Product** | `productService` | `getProductBySlug(slug)`, `getAllProductSlugs()`, `getReviewsByProductId(productId)`, `getUserReviewsByProductId(productId)`, `getAffiliatesByProductId(productId)` | Páginas de produto, reviews de imprensa/usuários e afiliados |
 | **Community** | `communityService` | `getLatestReviews(limit)` | Feed da comunidade |
 
 ## Tipos e Validação

@@ -5,6 +5,7 @@
   "scripts": {
     "predev": "node scripts/sync-docs.mjs",
     "dev": "astro dev",
+    "dev:sync": "node scripts/sync-docs.mjs --watch & astro dev",
     "start": "astro dev",
     "prebuild": "node scripts/sync-docs.mjs",
     "build": "astro build",
@@ -15,9 +16,11 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
+    "@astrojs/check": "^0.9.9",
     "@astrojs/starlight": "^0.38.4",
     "astro": "^6.1.9",
-    "sharp": "^0.34.5"
+    "sharp": "^0.34.5",
+    "typescript": "^6.0.3"
   },
   "devDependencies": {
     "prettier": "^3.8.3",

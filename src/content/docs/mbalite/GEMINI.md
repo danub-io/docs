@@ -10,7 +10,7 @@ Projeto criado com Astro, Tailwind CSS (v4) e shadcn/ui.
 
 - **Framework:** Astro
 - **Estilização:** Tailwind CSS v4
-- **Componentes:** shadcn/ui (Radix UI + React)
+- **Componentes:** shadcn/ui (base-nova, Base UI + React)
 - **Fontes:** Inter, Work Sans (Google Fonts)
 
 ## Estrutura de Pastas

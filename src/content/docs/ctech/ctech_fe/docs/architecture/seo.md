@@ -17,25 +17,11 @@ Gerado automaticamente via `@astrojs/sitemap` no build. URL base configurada em 
 
 ## Dados Estruturados (JSON-LD)
 
-Implementar futuramente para páginas de review:
-```json
-{
-  "@context": "https://schema.org",
-  "@type": "Product",
-  "name": "Nome do Produto",
-  "review": {
-    "@type": "Review",
-    "reviewRating": {
-      "@type": "Rating",
-      "ratingValue": "9.2"
-    }
-  }
-}
-```
+Implementado nas páginas de produto (`/produto/[slug]`) utilizando o padrão `Product` do Schema.org. Inclui nome, imagem, descrição, marca e dados da review (nota técnica da TECHREVEAL).
 
 ## Boas Práticas
 
-- URLs limpas e descritivas (`/reviews/sony-wh-1000xm5`)
+- URLs limpas e descritivas (`/produto/sony-wh-1000xm5`)
 - Meta descrições únicas por página
 - Atributos `alt` em todas as imagens
 - URLs canônicas para evitar conteúdo duplicado

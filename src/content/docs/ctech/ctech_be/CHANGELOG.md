@@ -12,6 +12,7 @@ e este projeto segue o [Semantic Versioning](https://semver.org/lang/pt-BR/).
 ## [Unreleased]
 
 ### Adicionado
+- **Coluna `review_type` na tabela `Reviews`:** Adicionado campo `review_type` (`'critic' | 'user'`) via ALTER TABLE para suportar avaliações de usuários no frontend.
 - **M9: Documentação** - Novo módulo em `/docs` que centraliza toda a documentação do projeto
   - Sidebar com navegação entre todos os documentos
   - Busca integrada via Command Palette (Ctrl+K)

@@ -10,7 +10,7 @@ title: "Changelog"
 
 - Landing page completa com 6 seções (Header, Hero, Features, LeadCapture, AuthorBio, Footer)
 - Design responsivo com Tailwind CSS v4
-- Componentes shadcn/ui (Radix UI primitives)
+- Componentes shadcn/ui (base-nova, Base UI primitives)
 - Tipografia Geist Variable
 - Formulário de captura de leads
 - Build SSG otimizado
