@@ -13,11 +13,11 @@ function fetchUrl(url) {
 async function testLinks() {
   const baseUrl = 'http://localhost:4322';
   const startUrl = baseUrl + '/docs/';
-  console.log(`Fetching ${startUrl}...`);
-  
+  console.log(`Buscando ${startUrl}...`);
+
   const { statusCode, data } = await fetchUrl(startUrl);
   if (statusCode !== 200) {
-    console.error(`Failed to fetch home page: ${statusCode}`);
+    console.error(`Falha ao acessar página inicial: ${statusCode}`);
     return;
   }
 
@@ -31,11 +31,10 @@ async function testLinks() {
     }
   }
 
-  console.log(`Found ${links.size} local links on homepage. Testing them...`);
-  
+  console.log(`Encontrados ${links.size} links locais na página inicial. Testando...`);
+
   let broken = 0;
   for (const link of links) {
-    // Resolve relative to startUrl
     let resolvedPath = link;
     if (!link.startsWith('/')) {
         resolvedPath = '/docs/' + link;
@@ -43,14 +42,14 @@ async function testLinks() {
     const url = baseUrl + resolvedPath;
     const res = await fetchUrl(url);
     if (res.statusCode >= 400) {
-      console.error(`❌ BROKEN LINK: ${link} -> ${url} (Status: ${res.statusCode})`);
+      console.error(`❌ LINK QUEBRADO: ${link} -> ${url} (Status: ${res.statusCode})`);
       broken++;
     } else {
       console.log(`✅ OK: ${link} -> ${url}`);
     }
   }
-  
-  console.log(`\nTest complete. ${broken} broken links found.`);
+
+  console.log(`\nTeste concluído. ${broken} link(s) quebrado(s).`);
 }
 
 testLinks().catch(console.error);

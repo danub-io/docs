@@ -1,53 +1,47 @@
-:root {
-  /* Largura do painel lateral esquerdo (25% maior) */
-  --sl-sidebar-width: 21.25rem;
-  /* Largura do painel lateral direito (mantida) */
-  --sl-right-sidebar-width: 17rem;
+:root .sidebar-pane {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  background-color: var(--sl-color-bg);
 }
 
-/* Remove scrollbar da sidebar esquerda e iguala fundo ao da sidebar direita */
-html body .sidebar-pane {
-  scrollbar-width: none !important;
-  -ms-overflow-style: none !important;
-  background-color: var(--sl-color-bg) !important;
+:root .sidebar-pane::-webkit-scrollbar {
+  display: none;
 }
 
-html body .sidebar-pane::-webkit-scrollbar {
-  display: none !important;
+@media (min-width: 50rem) and (max-width: 71.999rem) {
+  :root {
+    --sl-sidebar-width: 17rem;
+  }
 }
 
 @media (min-width: 72rem) {
-  /* Força a barra da direita a ter exatamente a largura desejada */
-  html body .right-sidebar-container {
-    width: var(--sl-right-sidebar-width) !important;
-    min-width: var(--sl-right-sidebar-width) !important;
-    max-width: var(--sl-right-sidebar-width) !important;
-    flex: 0 0 var(--sl-right-sidebar-width) !important;
+  :root .right-sidebar-container {
+    width: var(--sl-right-sidebar-width);
+    min-width: var(--sl-right-sidebar-width);
+    max-width: var(--sl-right-sidebar-width);
+    flex: 0 0 var(--sl-right-sidebar-width);
   }
 
-  html body .right-sidebar {
-    width: var(--sl-right-sidebar-width) !important;
-    max-width: var(--sl-right-sidebar-width) !important;
+  :root .right-sidebar {
+    width: var(--sl-right-sidebar-width);
+    max-width: var(--sl-right-sidebar-width);
   }
 
-  /* O painel principal ocupará todo o espaço restante */
-  html[data-has-sidebar][data-has-toc] body .main-pane {
-    width: calc(100% - var(--sl-sidebar-width)) !important;
-    max-width: calc(100% - var(--sl-sidebar-width)) !important;
-    flex: 1 1 calc(100% - var(--sl-sidebar-width)) !important;
-    --sl-content-margin-inline: 0 !important;
+  :root[data-has-sidebar][data-has-toc] .main-pane {
+    width: calc(100% - var(--sl-sidebar-width));
+    max-width: calc(100% - var(--sl-sidebar-width));
+    flex: 1 1 calc(100% - var(--sl-sidebar-width));
+    --sl-content-margin-inline: 0;
   }
 
-  /* Permite que o container interno preencha 100% do painel central */
-  html body .content-panel .sl-container {
-    max-width: 50rem !important;
-    width: 100% !important;
-    margin-inline: auto !important;
+  :root .content-panel .sl-container {
+    max-width: 50rem;
+    width: 100%;
+    margin-inline: auto;
   }
 
-  /* Libera o conteúdo markdown para preencher todo o container */
-  html body .sl-markdown-content {
-    max-width: none !important;
-    width: 100% !important;
+  :root .sl-markdown-content {
+    max-width: none;
+    width: 100%;
   }
 }

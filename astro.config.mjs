@@ -8,7 +8,7 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'Documentação',
-      customCss: ['./src/styles/layout.css'],
+      customCss: ['./src/styles/theme.css', './src/styles/layout.css'],
       lastUpdated: true,
       sidebar: [
         { label: '🏠 Início', slug: 'index' },
