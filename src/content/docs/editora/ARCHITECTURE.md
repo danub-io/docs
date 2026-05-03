@@ -19,8 +19,7 @@ src/editora/
 ├── cli.py               # Interface CLI (Typer)
 ├── config.py            # Configurações (Pydantic + YAML)
 ├── core/
-│   ├── manuscript.py    # Modelos Chapter e Manuscript
-│   └── orchestrator.py  # Pipeline de edição
+│   └── manuscript.py    # Modelos Chapter e Manuscript
 ├── ai/
 │   ├── llm.py           # Abstração multi-provider (Anthropic, OpenAI, Google, Ollama)
 │   ├── editing.py       # Copyediting em 3 níveis (light/medium/aggressive)

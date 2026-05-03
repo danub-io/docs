@@ -1,49 +1,55 @@
-# Starlight Starter Kit: Basics
+# Documentação — Central de Documentação dos Projetos
 
-[![Built with Starlight](https://astro.badg.es/v2/built-with-starlight/tiny.svg)](https://starlight.astro.build)
+Site de documentação centralizada construído com **Astro 6 + Starlight**, hospedado em `https://danub-io.github.io/docs/`.
+
+Reúne a documentação de todos os projetos do ecossistema em um único lugar, sincronizada automaticamente via script.
+
+## Projetos
+
+| Projeto | Descrição |
+|---------|-----------|
+| [CTech](./src/content/docs/ctech/) | Ecossistema de curadoria técnica de hardware com IA |
+| [Editora](./src/content/docs/editora/) | Editora pessoal automatizada com IA para produção de livros |
+| [GospelReads](./src/content/docs/gospelreads/) | Blog de conteúdo teológico e reflexões cristãs |
+| [MBA Lite](./src/content/docs/mbalite/) | Landing page do curso MBA Lite |
+
+## Como Funciona
+
+O script `scripts/sync-docs.mjs` copia arquivos `.md` e `.mdx` de cada projeto para `src/content/docs/<projeto>/`, adicionando frontmatter automaticamente quando necessário.
+
+### Sincronizar documentação
+
+```bash
+pnpm prebuild        # Sincroniza antes do build
+node scripts/sync-docs.mjs  # Sincronizar manualmente
+node scripts/sync-docs.mjs --watch  # Modo watch (dev contínuo)
+```
+
+### Desenvolvimento
+
+```bash
+pnpm install
+pnpm dev             # Dev server (já roda sync automaticamente)
+pnpm dev:sync        # Dev com watch de sincronização contínua
+pnpm build           # Build de produção
+pnpm check           # Validação Astro
+```
+
+## Adicionar Novo Projeto
+
+1. Adicione o diretório do projeto em `scripts/sync-docs.mjs` (array `projects`)
+2. Crie a entrada correspondente no `sidebar` do `astro.config.mjs`
+3. Adicione um `LinkCard` em `src/content/docs/index.mdx`
+
+## Estrutura
 
 ```
-pnpm create astro@latest -- --template starlight
+src/content/docs/
+├── ctech/
+├── editora/
+├── gospelreads/
+├── mbalite/
+└── index.mdx          # Página inicial com LinkCards
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-## 🚀 Project Structure
-
-Inside of your Astro + Starlight project, you'll see the following folders and files:
-
-```
-.
-├── public/
-├── src/
-│   ├── assets/
-│   ├── content/
-│   │   └── docs/
-│   └── content.config.ts
-├── astro.config.mjs
-├── package.json
-└── tsconfig.json
-```
-
-Starlight looks for `.md` or `.mdx` files in the `src/content/docs/` directory. Each file is exposed as a route based on its file name.
-
-Images can be added to `src/assets/` and embedded in Markdown with a relative link.
-
-Static assets, like favicons, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Check out [Starlight’s docs](https://starlight.astro.build/), read [the Astro documentation](https://docs.astro.build), or jump into the [Astro Discord server](https://astro.build/chat).
+Os conteúdos são **gerados automaticamente** pelo sync — não edite manualmente os arquivos dentro de `src/content/docs/` (suas alterações serão sobrescritas no próximo sync). Edite os arquivos-fonte nos repositórios de cada projeto.

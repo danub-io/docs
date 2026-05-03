@@ -4,14 +4,14 @@ title: "Editora Web - Interface Web"
 
 
 
-Interface web moderna para a Editora, construída com Next.js, Tailwind CSS v4 e shadcn/ui (base-nova).
+Interface web moderna para a Editora, construída com Next.js, Tailwind CSS e shadcn/ui.
 
 ## 🚀 Tecnologias
 
-- **Next.js 14** - Framework React full-stack
+- **Next.js 16** - Framework React full-stack
 - **TypeScript** - Type safety
 - **Tailwind CSS** - Estilização utility-first
-- **shadcn/ui (base-nova)** - Componentes acessíveis (Base UI)
+- **shadcn/ui** - Componentes acessíveis
 - **Tiptap** - Editor de texto rico
 - **Zustand** - Gerenciamento de estado
 - **Drizzle ORM** - Banco de dados (SQLite)
@@ -20,23 +20,15 @@ Interface web moderna para a Editora, construída com Next.js, Tailwind CSS v4 e
 
 ```bash
 # Instalar dependências
-npm install
-# ou
 pnpm install
 
 # Rodar em desenvolvimento
-npm run dev
-# ou
 pnpm dev
 
 # Build de produção
-npm run build
-# ou
 pnpm build
 
 # Iniciar produção
-npm run start
-# ou
 pnpm start
 ```
 
@@ -49,7 +41,7 @@ src/
 │   ├── page.tsx            # Página inicial
 │   └── globals.css         # Estilos globais
 ├── components/
-│   └── ui/                 # Componentes shadcn/ui (base-nova)
+│   └── ui/                 # Componentes shadcn/ui
 ├── lib/
 │   └── utils.ts            # Utilitários
 ├── stores/
@@ -72,30 +64,11 @@ src/
 
 ## 📱 Funcionalidades
 
-### MVP (Fase 1)
-- [x] Setup do projeto
-- [x] Página inicial com lista de projetos
-- [x] CRUD de projetos
-- [ ] Editor de capítulos
-- [ ] Salvamento automático
-
-### Editor Rico (Fase 2)
-- [ ] Tiptap integrado
-- [ ] Barra de formatação
-- [ ] Lista de capítulos arrastável
-- [ ] Contador de palavras
-
-### Ferramentas (Fase 3)
-- [ ] Banco de personagens
-- [ ] Banco de locais
-- [ ] Timeline
-- [ ] Anotações
-
-### IA e Exportação (Fase 4)
-- [ ] Integração com backend Python
-- [ ] Edição com IA
-- [ ] Proofreading
-- [ ] Exportação PDF/EPUB
+- **Gerenciamento de projetos** — Criar, editar e organizar projetos de livros
+- **Editor de capítulos** — Editor rico com Tiptap, barra de formatação e lista de capítulos
+- **Ferramentas narrativas** — Banco de personagens, locais, timeline e anotações
+- **IA integrada** — Edição, proofreading e sugestões via backend Python
+- **Exportação** — Geração de PDF e EPUB
 
 ## 🔗 Integração com Backend
 

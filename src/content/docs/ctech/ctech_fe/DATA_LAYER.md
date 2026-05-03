@@ -39,19 +39,24 @@ Cada domínio possui um serviço que encapsula consultas SQL e transformações.
 
 ### Core Services
 
-| Serviço | Arquivo | Funções | Descrição |
-|---------|---------|---------|-----------|
-| `categoryService` | `src/core/services/categoryService.ts` | `getCategories()` | Lista categorias únicas com cache em memória (TTL 5min) |
+| Serviço | Arquivo | Funções | Cache | Descrição |
+|---------|---------|---------|-------|-----------|
+| `servicoCatalogo` | `src/core/services/servicoCatalogo.ts` | `obterCategorias()` | 5 min | Lista categorias únicas |
+| `servicoMenu` | `src/core/services/servicoMenu.ts` | `obterMenu()` | 5 min | Menu de navegação com subcategorias |
+| `servicoProduto` | `src/modules/produto/services/servicoProduto.ts` | `obterTodosSlugs()` | 1h | Slugs de produtos para pré-renderização |
+| `servicoGuia` | `src/modules/guia/services/servicoGuia.ts` | `obterCategoriasComGuias()` | 30 min | Categorias com pelo menos 1 guia ativo |
 
 ### Module Services
 
-| Módulo | Serviço | Funções | Descrição |
-|--------|---------|---------|-----------|
-| **Home** | `homeService` | `getFeaturedProduct()`, `getTrendingProducts()` | Produto em destaque e tendências |
-| **Laptops** | `laptopService` | `getLaptops()` | Lista filtrada de laptops aprovados |
-| **Compare** | `compareService` | `getComparisonProducts(ids)`, `getTopProducts(limit)`, `getSearchSuggestions(query)` | Comparação e busca |
-| **Product** | `productService` | `getProductBySlug(slug)`, `getAllProductSlugs()`, `getReviewsByProductId(productId)`, `getUserReviewsByProductId(productId)`, `getAffiliatesByProductId(productId)` | Páginas de produto, reviews de imprensa/usuários e afiliados |
-| **Community** | `communityService` | `getLatestReviews(limit)` | Feed da comunidade |
+| Módulo | Serviço | Funções | Cache | Descrição |
+|--------|---------|---------|-------|-----------|
+| **Início** | `servicoInicio` | `obterProdutoDestaque()`, `obterProdutosRecentes()` | 2 min | Produto em destaque e recentes |
+| **Comparar** | `servicoComparacao` | `obterProdutosComparacao(ids)`, `obterTopProdutos(limit)`, `obterSugestoesBusca(query)` | — | Comparação e busca |
+| **Categoria** | `servicoCategoria` | `obterProdutosPorCategoria(categoria, filtros?)`, `obterProdutosAgrupadosPorNivel(categoria, filtros?)`, `obterRotuloNivel(tier)` | — | Páginas de categoria |
+| **Busca** | `servicoBusca` | `buscar(filtros)` | — | Busca full-text com paginação e facetas |
+| **Produto** | `servicoProduto` | `obterProdutoPorSlug(slug)`, `obterTodosSlugs()`, `obterAvaliacoesCriticas(produtoId)`, `obterAvaliacoesUsuarios(produtoId)`, `obterAfiliados(produtoId)`, `obterProdutoCompleto(slug)` | — (1h slugs) | Páginas de produto, reviews, afiliados e função agregada |
+| **Guia** | `servicoGuia` | `obterGuiasPorCategoria(categoria)`, `obterGuiaPorSlug(slug)`, `obterProdutosDoGuia(guiaId)`, `obterTodosGuiasAtivos()`, `obterCategoriasComGuias()` | — (30min cats) | Guias de recomendação |
+| **Comunidade** | `servicoComunidade` | `obterAvaliacoesRecentes(limit)` | — | Feed da comunidade |
 
 ## Tipos e Validação
 
@@ -74,6 +79,17 @@ export const ProductSchema = z.object({
 export type Product = z.infer<typeof ProductSchema>;
 ```
 
+### Outros Schemas Zod
+
+| Schema | Arquivo | Uso |
+|--------|---------|-----|
+| `AvaliacaoSchema` | `src/core/types/avaliacao.ts` | Reviews de imprensa e usuários |
+| `AvaliacaoComunidadeSchema` | `src/core/types/avaliacao.ts` | Review com nome do produto (JOIN) |
+| `GuiaSchema` | `src/core/types/guia.ts` | Guia de recomendação |
+| `GuiaProdutoSchema` | `src/core/types/guia.ts` | Relação guia ↔ produto |
+| `CategoriaSchema` | `src/core/services/servicoCatalogo.ts` | Categoria de produto |
+| `AfiliadoSchema` | `src/modules/produto/services/servicoProduto.ts` | Afiliado (loja, preço, link) |
+
 ### Tipos de Retorno
 
 Todos os serviços seguem o padrão:
@@ -82,15 +98,46 @@ Todos os serviços seguem o padrão:
 
 ## Estratégia de Cache
 
-### Cache em Memória (categoryService)
+### Cache em Memória com Proteção contra Stampede
+
+O projeto utiliza cache em memória com TTL em serviços específicos. Para evitar **cache stampede** (múltiplas requisições batendo no banco simultaneamente quando o cache expira), cada cache compartilha uma `pendingFetch` entre requisições concorrentes:
 
 ```typescript
-let cache: { data: Category[]; timestamp: number } | null = null;
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutos
+// Padrão de implementação (ex: servicoCatalogo)
+let cached: Categoria[] | null = null;
+let lastFetch = 0;
+let pendingFetch: Promise<Categoria[]> | null = null;
+const TTL = 5 * 60 * 1000;
+
+async obterDados() {
+  if (cached && Date.now() - lastFetch < TTL) return cached;
+  if (!pendingFetch) {
+    pendingFetch = (async () => {
+      try {
+        const result = await db.execute(...);
+        cached = result;
+        lastFetch = Date.now();
+        return cached;
+      } catch {
+        return cached || fallback;
+      } finally {
+        pendingFetch = null;
+      }
+    })();
+  }
+  return pendingFetch; // Reusa promise em andamento
+}
 ```
 
-- Válido apenas durante a vida útil do servidor (não persiste entre restarts)
-- Usado para dados que mudam com pouca frequência (categorias)
+| Serviço | Métodos cacheados | TTL |
+|---------|-------------------|-----|
+| `servicoCatalogo` | `obterCategorias()` | 5 min |
+| `servicoMenu` | `obterMenu()` | 5 min |
+| `servicoProduto` | `obterTodosSlugs()` | 1h |
+| `servicoGuia` | `obterCategoriasComGuias()` | 30 min |
+| `servicoInicio` | `obterProdutoDestaque()`, `obterProdutosRecentes()` | 2 min |
+
+Cache é invalidado apenas no restart do servidor. Dados dinâmicos (produto, reviews, afiliados) não usam cache — consultam o banco a cada requisição SSR.
 
 ### SSR sem Cache
 
@@ -103,6 +150,7 @@ Os demais serviços consultam o banco a cada requisição SSR. Para melhorar per
 
 1. **Consultas parametrizadas:** Sempre use `?` placeholders e `args` — nunca concatene valores em SQL
 2. **Tratamento de erros:** Todo serviço tem try/catch com fallback (array vazio ou null)
-3. **Validação:** Use `ProductSchema.safeParse()` para dados que podem vir mal formatados
+3. **Validação:** Use `Schema.safeParse()` para dados que podem vir mal formatados
 4. **Logging:** Erros são logados via `logger.error()` para debug em desenvolvimento
 5. **Performance:** Use `Promise.all()` para consultas paralelas independentes
+6. **Cache stampede:** Sempre use `pendingFetch` compartilhado quando implementar cache em memória

@@ -20,6 +20,21 @@ const IGNORE_DIRS = new Set([
   '.next',
 ]);
 
+const IGNORE_PATTERNS = [
+  '/content/posts/',
+  '/content/authors/',
+  '/content/pages/',
+  '/data/docs/history/',
+];
+
+const IGNORE_FILES = new Set(['AGENTS.md', 'GEMINI.md']);
+
+function shouldIgnore(filePath) {
+  const basename = path.basename(filePath);
+  if (IGNORE_FILES.has(basename)) return true;
+  return IGNORE_PATTERNS.some(p => filePath.includes(p));
+}
+
 async function findMarkdownFiles(dir) {
   let results = [];
   try {
@@ -98,6 +113,7 @@ async function main() {
       let count = 0;
       for (const file of mdFiles) {
         if (file.includes('src/content/docs')) continue;
+        if (shouldIgnore(file)) continue;
         await processFile(file, project);
         allSyncedFiles.push(file);
         count++;
@@ -120,10 +136,11 @@ async function main() {
           if (filename && (filename.endsWith('.md') || filename.endsWith('.mdx'))) {
             if (filename.includes('node_modules') || filename.includes('.git') || filename.includes('.astro')) return;
             
-            console.log(`\n[watch] Alteração detectada em ${project}: ${filename}`);
             const filePath = path.join(projectDir, filename);
+            if (shouldIgnore(filePath)) return;
+            
+            console.log(`\n[watch] Alteração detectada em ${project}: ${filename}`);
             try {
-              // Verifica se o arquivo ainda existe (pode ter sido deletado)
               await fs.access(filePath);
               await processFile(filePath, project);
             } catch (e) {

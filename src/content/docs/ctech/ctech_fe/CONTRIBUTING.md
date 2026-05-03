@@ -23,6 +23,8 @@ cp .env.example .env
 pnpm dev
 ```
 
+> Para um guia detalhado de setup (Turso local/remoto, seed, troubleshooting), veja [docs/development/setup-local.md](./docs/development/setup-local.md).
+
 ## Estratégia de Branches
 
 - `master`: Branch principal, sempre pronta para produção

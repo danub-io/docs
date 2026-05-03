@@ -18,7 +18,7 @@ O ecossistema é dividido em dois repositórios principais que compartilham o me
 ## 🚀 Como Começar (Quick Start)
 
 ### Pré-requisitos
-- **Node.js** v18 ou superior.
+- **Node.js** >= 22.12.0.
 - **pnpm** (Gerenciador de pacotes obrigatório).
 - **Turso CLI** (Para gerenciamento de banco de dados).
 
@@ -38,9 +38,10 @@ O banco de dados **Turso** é o "Coração" do sistema, servindo como ponto de s
 
 ## 📄 Documentação Detalhada
 
-- **Backend:** Veja [ctech_be/README.md](./ctech_be/README.md) e [ctech_be/ARCHITECTURE.md](./ctech_be/ARCHITECTURE.md).
-- **Frontend:** Veja [ctech_fe/README.md](./ctech_fe/README.md).
-- **Instruções para IA:** Consulte os arquivos `GEMINI.md` em cada diretório para regras específicas de desenvolvimento assistido.
+- **Backend:** Veja [ctech_be/README.md](./ctech_be/README.md) e [ctech_be/docs/](./ctech_be/docs/).
+- **Frontend:** Veja [ctech_fe/README.md](./ctech_fe/README.md) e [ctech_fe/docs/](./ctech_fe/docs/).
+- **Instruções para IA:** Consulte [AGENTS.md](./ctech_be/AGENTS.md) e [AGENTS.md](./ctech_fe/AGENTS.md).
+- **Decisões Arquiteturais (ADRs):** Veja [ADRs/](./ADRs/).
 
 ---
-*CTECH v2026.4 — Focado em Desempenho e Automação.*
+*CTECH v2026.5 — Focado em Desempenho e Automação.*

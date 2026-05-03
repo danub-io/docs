@@ -39,10 +39,21 @@ Reserve componentes React para:
 <ProductList />
 
 <!-- Bom: React apenas quando necessário -->
-<SearchFilters client:visible />
-<PriceChart client:idle />
+<CartaoAvaliacaoColapsavel client:visible />
+<NavDrawer client:load />
+<SearchCommand client:idle />
 ```
 
 ## Estado Atual
 
-Atualmente, o projeto usa majoritariamente componentes **Astro** estáticos. Componentes React UI (Badge, Button, Card, Progress) são usados principalmente em SSR, com potencial para hidratação cliente em funcionalidades futuras (filtros interativos, busca ao vivo, gráficos).
+O projeto usa majoritariamente componentes **Astro** estáticos (zero JS no cliente). Componentes React UI (Badge, Button, Card, Progress) renderizam em SSR sem hidratação cliente.
+
+**Islands ativas:**
+
+| Componente | Diretiva | Finalidade |
+|-----------|----------|-----------|
+| `CartaoAvaliacaoColapsavel` | `client:visible` | Card de avaliação de usuário com expandir/recolher |
+| `NavDrawer` | `client:load` | Drawer de navegação mobile |
+| `SearchCommand` | `client:idle` | Paleta de busca (CMD+K) |
+
+> **Regra:** só adicione `client:*` quando houver estado/evento inevitável. Prefira `client:visible` ou `client:idle` sobre `client:load`.

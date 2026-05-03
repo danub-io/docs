@@ -103,3 +103,7 @@ editora --version
 ## Configuração (`editora.yaml`)
 
 Todo o comportamento é controlado pelo arquivo `editora.yaml` na raiz do projeto. Veja o README para a referência completa de opções.
+
+## Interface Web
+
+O projeto também possui uma interface web (Next.js) em [web/](./web/). Consulte o [README](./web/README.md) para instruções de uso e desenvolvimento.

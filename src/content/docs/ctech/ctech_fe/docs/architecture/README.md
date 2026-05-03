@@ -11,6 +11,7 @@ title: "Arquitetura — Documentação"
 - [components.md](./components.md) — Catálogo de componentes React e Astro
 - [islands.md](./islands.md) — Estratégia de Islands Architecture e hidratação
 - [seo.md](./seo.md) — Estratégia de SEO, meta tags e dados estruturados
+- [busca.md](./busca.md) — Módulo de busca full-text com filtros e paginação
 
 ## Visão Geral
 

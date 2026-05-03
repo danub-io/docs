@@ -56,7 +56,7 @@ Ecossistema de curadoria técnica de hardware e inteligência comercial. Pipelin
 
 ### M8: Configurações (`8-configuracoes/` → `actions/8-configuracoes/`)
 **Objetivo:** Painel modular de configurações globais para suporte à edição via vibecoding.
-- **Submódulos:** Interface & UI (`/8-configuracoes`), Logs de Sistema (`/8-configuracoes/logs`), e configurações específicas por módulo M1-M6.
+- **Submódulos:** Interface & UI (`/8-configuracoes`), Logs de Sistema (`/8-configuracoes/logs`), Manutenção do Banco (`/8-configuracoes/manutencao`), e configurações específicas por módulo M1-M6.
 - **Server Actions:** `ai-models.ts`, `scraping-services.ts`, `logs.ts`, `preferences.ts` em `actions/8-configuracoes/`.
 - **Estratégia de Modularização:** Cada módulo (M1-M8) é isolado para facilitar manutenção e edição pontual por IAs, reduzindo o contexto necessário para vibecoding.
 
@@ -73,7 +73,7 @@ Ecossistema de curadoria técnica de hardware e inteligência comercial. Pipelin
 - **Gerenciamento de Fila:** Tabela `fila_processamento` gerencia os jobs em background. Status: `pendente`, `processando`, `concluido`, `erro`, `falha_critica`.
 - **Resiliência (DLQ):** O worker (`actions/worker.ts`) faz claim atômico. Se um job falhar, ele incrementa `tentativas`. Ao atingir **3 falhas**, o job é marcado como `falha_critica` (Dead Letter Queue), evitando desperdício de recursos e loops infinitos.
 - **Monitoramento Estruturado:** O projeto utiliza `pino` via `@/lib/logger`. Todos os módulos críticos (M1-M6) devem registrar erros e avisos de forma estruturada para facilitar o debug em ambiente serverless.
-- **Performance de Banco:** Queries em tabelas grandes (Produtos, Afiliados, Fila) são otimizadas via índices SQL em colunas de alta cardinalidade (`categoria`, `tier`, `modulo`, `referencia_id`).
+- **Performance de Banco:** Queries em tabelas grandes (Produtos, Afiliados, Fila) são otimizadas via índices SQL em colunas de alta cardinalidade (`categoria`, `tier`, `modulo`, `referencia_id`). Cache em memória com TTL reduz latência em queries de alta repetição, com invalidação automática nas mutações.
 
 ---
 
@@ -92,22 +92,42 @@ Ecossistema de curadoria técnica de hardware e inteligência comercial. Pipelin
 ## 4. ESTRUTURA DE DIRETÓRIOS PRINCIPAIS
 *   `/src/app/X-[modulo]/` - Rotas de UI do painel de cada módulo (1-entrada, 2-descoberta, ..., 7-cms, 8-configuracoes, 9-docs).
 *   `/src/app/8-configuracoes/` - Painel de configurações globais (M8).
-    *   **Geral:** Interface & UI (`/8-configuracoes`), Logs de Sistema (`/8-configuracoes/logs`).
+    *   **Geral:** Interface & UI (`/8-configuracoes`), Logs de Sistema (`/8-configuracoes/logs`), Manutenção do Banco (`/8-configuracoes/manutencao`).
     *   **Módulos de Automação:** Configurações específicas por módulo (M1-M6) em `/8-configuracoes/entrada/`, `/8-configuracoes/descoberta/`, etc.
     *   **Server Actions:** `/src/app/actions/8-configuracoes/` contém `ai-models.ts`, `scraping-services.ts`, `logs.ts`, `preferences.ts`.
 *   `/src/app/actions/` - Core das Server Actions (onde roda a regra de negócio).
 *   `/src/components/` - UI global (ActivityBar, Sidebar, CommandPalette, Logs).
-*   `/src/lib/` - Helpers de BD, scraping, queues e criptografia.
+*   `/src/lib/` - Helpers de BD, scraping, queues, cache e criptografia.
 *   `/src/lib/repositories/` - Padrão Repository para acesso ao banco de dados, isolando consultas SQL das Server Actions (ex: `cms-repository.ts`).
 
 ---
 
-## 5. ESTRATÉGIA DE PERFORMANCE E UX (MANDATO 2026)
+## 5. ESTRATÉGIA DE CACHE
+
+Cache em memória (Map-based) com TTL configurável implementado via classe `CacheLayer` em `src/lib/cache.ts`. Reduz latência em queries repetitivas e evita chamadas desnecessárias ao banco.
+
+### Queries Cacheadas e seus TTLs
+- **10 minutos:** `getAIModels`, `getScrapingServices`, `getDefaultPrompt`
+- **5 minutos:** `getProdutosParaConsolidar`, `getProdutosParaBuscaReview`
+
+### Invalidação Automática
+O cache é invalidado automaticamente nas seguintes mutações:
+- **AI Models:** `upsertAIModel`, `deleteAIModel`, `toggleAIModel`, `toggleAllAIModels`
+- **Scraping Services:** `upsertScrapingService`, `deleteScrapingService`, `toggleScrapingService`, `toggleAllScrapingServices`
+- **Aprovações M3/M4:** `aprovarProdutoM3`, `aprovarProdutosEmLoteM3`, `aprovarProdutosM4`
+
+### Cache Bypass
+Para forçar recarga, passe `{ refresh: true }` como parâmetro da query.
+
+---
+
+## 6. ESTRATÉGIA DE PERFORMANCE E UX (MANDATO 2026)
 O sistema foi otimizado para navegação instantânea e percepção de "zero latência".
 
 ### SSR e Paralelismo (Velocidade Real)
 - **Prioridade SSR:** Módulos de consulta pesada (M1, M2, M5, M6) utilizam Server-Side Rendering. Os dados são buscados no servidor e injetados diretamente nas props do Client Component.
 - **I/O Paralelo:** O uso de `await Promise.all([consulta1, consulta2])` é obrigatório em páginas que dependem de múltiplas fontes de dados. Isso reduz o tempo de carregamento pela metade ao evitar o efeito "cascata" (waterfall).
+- **Cache em Memória:** Queries de alta repetição (modelos de IA, serviços de scraping) utilizam cache em Map com TTL de 5 a 10 minutos, com invalidação automática nas mutações e bypass via parâmetro `refresh`.
 - **Sem Flash de Carregamento:** O uso de `Suspense` com esqueletos de UI (`ModuleSkeleton`) garante que a estrutura da página apareça imediatamente enquanto o servidor processa o streaming de dados.
 
 ### Transições Fluidas (Velocidade Percebida)
@@ -122,7 +142,7 @@ O sistema utiliza `react-resizable-panels` v4 para interfaces multi-coluna. Para
 
 ---
 
-## 6. AMBIENTE DE DESENVOLVIMENTO (GITHUB & TURSO)
+## 7. AMBIENTE DE DESENVOLVIMENTO (GITHUB & TURSO)
 Para garantir a continuidade operacional sem dependências globais do sistema:
 
 - **GitHub CLI Local:** O executável está na raiz como `./gh-cli`. Utilize-o para gerenciar PRs, Issues e autenticação via protocolo SSH.

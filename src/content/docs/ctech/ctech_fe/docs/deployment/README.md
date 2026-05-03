@@ -11,6 +11,11 @@ Guia para deploy do frontend CTECH em diferentes ambientes.
 - [vercel.md](./vercel.md) — Deploy na Vercel
 - [environment.md](./environment.md) — Configuração de variáveis de ambiente
 
+## Outros Guias
+
+- [docs/development/setup-local.md](../development/setup-local.md) — Setup do ambiente de desenvolvimento
+- [docs/security/seguranca.md](../security/seguranca.md) — Segurança e hardening
+
 ## Quick Start
 
 ```bash

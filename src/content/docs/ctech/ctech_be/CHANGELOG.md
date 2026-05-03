@@ -25,6 +25,16 @@ e este projeto segue o [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - **DLQ (Dead Letter Queue):** Sistema de resiliência para jobs falhos após 3 tentativas (commit `32c06d3`)
 - **Logging Estruturado:** Implementação de Pino via `@/lib/logger` para auditoria de módulos críticos (commit `32c06d3`)
 - **M3:** Extração de especificações faltantes em reviews com IA (commit `82e3ff5`)
+- **Cache em memória no BE:** Cache em Map com TTL configurável (5-10 min) e invalidação automática nas mutações
+- **Página de Manutenção do Banco:** Nova rota `/8-configuracoes/manutencao` com 5 funções de purge
+- **Migration 0004:** Índices e tabelas Guias/Guia_Produtos no schema
+- **Cache de slugs (1h) e categorias (30min) no FE**
+- **Função agregada `obterProdutoCompleto` no FE** (3 queries em paralelo)
+- **Cache bypass via parâmetro `refresh`**
+
+### Otimizado
+- **Queries N+1 reescritas:** LEFT JOIN + GROUP BY, Promise.all, transação nativa libsql
+- **Batch processing em atualizar-ia.ts:** BATCH_SIZE=10, HTTP paralelo com Promise.allSettled, writes condicionais (só insere histórico se preço mudou > R$5), purge único de 90 dias no final
 
 ### Corrigido
 - **Security:** Correção de SQL Injection em cláusulas IN via placeholders parametrizados (commit `08881d7`)
@@ -32,6 +42,8 @@ e este projeto segue o [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - **M3:** Resolução de tipos TypeScript em `specs_extraidas` (commit `c18c7d9`)
 - **Worker:** Correção de testes falhos e expansão de cobertura para DLQ (commits `3539464`, `7b11a7a`)
 - **M1:** Atualização de system prompt para múltiplos aparelhos no módulo de entrada (commit `5f5a3dd`)
+- **Linhas CRLF em .env.local:** Convertido para Unix
+- **Credenciais hardcoded removidas:** Removidas de scripts/seed-categories.js
 
 ### Atualizado (2026-05-01)
 - **API.md:** Adicionadas seções M8 (Configurações), M9 (Documentação), Worker & Queue e Utilitários
@@ -42,6 +54,12 @@ e este projeto segue o [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - **docs/architecture/:** Populado com `diagrams.md`, `queue-system.md`, `repository-pattern.md`, `ai-integration.md`
 - **docs/deployment/:** Populado com `vercel.md`, `docker.md`, `environment.md`
 - **docs/troubleshooting/:** Populado com `database.md`, `scraping.md`, `ai-services.md`, `common-errors.md`
+
+### Documentação
+- **`docs/architecture/schema-banco.md`**: Novo — schema completo do Turso (12 tabelas, índices, relacionamentos)
+- **`docs/operations/monitoramento.md`**: Novo — Pino logging, health check, workers, DLQ, alertas
+- **`docs/development/setup-local.md`**: Novo — setup local com migrações e troubleshooting
+- **`CONTRIBUTING.md`**: Node.js version corrigido (18+ → >= 22.12.0)
 
 ### Melhorado
 - Estrutura de documentação do projeto

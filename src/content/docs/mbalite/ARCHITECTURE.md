@@ -27,12 +27,12 @@ Astro Components → HTML estático → dist/
 
 - **Cores:** Variáveis CSS via `@theme` do Tailwind v4
 - **Tipografia:** Geist Variable (sans-serif)
-- **Componentes:** shadcn/ui (base-nova) com Base UI primitives
+- **Componentes:** shadcn/ui com Radix UI primitives
 
 ## Stack
 
 - Astro 6 (SSG)
 - React 19 (ilhas de interatividade)
 - Tailwind CSS v4
-- shadcn/ui (base-nova) + Base UI
+- shadcn/ui + Radix UI
 - Geist Variable font

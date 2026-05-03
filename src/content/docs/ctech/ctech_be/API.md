@@ -6,6 +6,8 @@ title: "API Documentation - CTECH Painel (Backend)"
 
 Este documento descreve as **Server Actions** (Next.js App Router) e **API Routes** disponíveis no projeto.
 
+> **Estratégia de Cache:** Queries de listagem (`getAIModels`, `getScrapingServices`, `getProdutosParaConsolidar`, etc.) utilizam cache em memória com TTL de 5 a 10 minutos. O cache é invalidado automaticamente nas mutações. Para bypass, use `{ refresh: true }`.
+
 ## Índice
 1. [M1 - Entrada (Ingestão)](#m1---entrada-ingestão)
 2. [M2 - Descoberta (Reviews)](#m2---descoberta-reviews)
@@ -15,10 +17,11 @@ Este documento descreve as **Server Actions** (Next.js App Router) e **API Route
 6. [M6 - Conferência](#m6---conferência)
 7. [M7 - CMS](#m7---cms)
 8. [M8 - Configurações](#m8---configurações)
-9. [M9 - Documentação](#m9---documentação)
-10. [Worker & Queue](#worker--queue)
-11. [Utilitários](#utilitários)
-12. [API Routes](#api-routes)
+9. [M8.5 - Manutenção (Purge)](#m85---manutenção-purge)
+10. [M9 - Documentação](#m9---documentação)
+11. [Worker & Queue](#worker--queue)
+12. [Utilitários](#utilitários)
+13. [API Routes](#api-routes)
 
 ---
 
@@ -633,6 +636,60 @@ Atualiza preferências do usuário (merge com valores atuais).
 - `prefs` (Partial<UserPreferences>): Campos a atualizar
 
 **Retorno:** `UserPreferences` (preferências atualizadas)
+
+---
+
+## M8.5 - Manutenção (Purge)
+
+Funções para limpeza e manutenção do banco de dados, disponíveis na rota `/8-configuracoes/manutencao`.
+
+### `limparLogsSistema(meses)`
+Remove logs de sistema mais antigos que o período especificado.
+
+**Parâmetros:**
+- `meses` (number, padrão 1): Manter últimos N meses
+
+**Retorno:** `{ sucesso: boolean; registros: number }`
+
+### `limparFilaProcessamento(dias)`
+Remove jobs da fila concluídos ou com erro após o período especificado.
+
+**Parâmetros:**
+- `dias` (number, padrão 7): Manter últimos N dias
+
+**Retorno:** `{ sucesso: boolean; registros: number }`
+
+### `limparHistoricoPrecos(dias)`
+Remove registros de histórico de preços mais antigos que o período.
+
+**Parâmetros:**
+- `dias` (number, padrão 90): Manter últimos N dias
+
+**Retorno:** `{ sucesso: boolean; registros: number }`
+
+### `limparConflitosEntrada(dias)`
+Remove conflitos de entrada resolvidos mais antigos que o período.
+
+**Parâmetros:**
+- `dias` (number, padrão 30): Manter últimos N dias
+
+**Retorno:** `{ sucesso: boolean; registros: number }`
+
+### `executarPurgeCompleta()`
+Executa todas as funções de purge acima em sequência e revalida o cache.
+
+**Retorno:**
+```typescript
+{
+  sucesso: boolean;
+  resultados: {
+    logs: number;
+    fila: number;
+    precos: number;
+    conflitos: number;
+  };
+}
+```
 
 ---
 

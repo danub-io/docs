@@ -63,9 +63,10 @@ pnpm format                 # Formata código com Prettier
 | Rota | Descrição |
 |------|-----------|
 | `/` | Home com produto em destaque e tendências |
-| `/laptops` | Lista de laptops aprovados com filtros |
-| `/compare` | Comparação lado a lado de produtos |
-| `/community` | Feed com reviews recentes da comunidade |
+| `/categoria/[categoria]` | Hub de guias de recomendação por categoria |
+| `/guia/[slug]` | Página individual de guia com produtos selecionados |
+| `/comparar` | Comparação lado a lado de produtos |
+| `/comunidade` | Feed com reviews recentes da comunidade |
 | `/produto/[slug]` | Página detalhada do produto (Single Product) |
 | `/produto/[slug]/reviews` | Todas as análises da imprensa sobre o produto |
 | `/produto/[slug]/user-reviews` | Todas as avaliações de usuários sobre o produto |
@@ -77,11 +78,11 @@ O projeto segue metodologia **Modular (Vibecoding)**, otimizada para desenvolvim
 ```
 src/
 ├── core/         # Infraestrutura global (UI, layouts, lib, types)
-├── modules/      # Domínios isolados (laptops, compare, product...)
+├── modules/      # Domínios isolados (inicio, produto, comparar, comunidade, categoria, guia)
 └── pages/        # Rotas Astro (camada fina de conexão)
 ```
 
-> Consulte [ARCHITECTURE.md](./ARCHITECTURE.md) e [DATA_LAYER.md](./DATA_LAYER.md) para detalhes completos.
+> Consulte [ARCHITECTURE.md](./ARCHITECTURE.md), [DATA_LAYER.md](./DATA_LAYER.md) e [docs/](./docs/) para detalhes completos.
 
 ## 🛡️ Segurança
 
@@ -89,6 +90,18 @@ src/
 - HSTS, X-Frame-Options, X-Content-Type-Options
 - Consultas parametrizadas ao banco (sem SQL injection)
 - Cliente Turso usado apenas em SSR (nunca exposto ao cliente)
+
+## 🗃️ Cache
+
+Cache em memória (Map) com TTL em serviços específicos para reduzir consultas ao banco:
+
+| Serviço | Método | TTL |
+|---------|--------|-----|
+| `servicoCatalogo` | `obterCategorias()` | 5 min |
+| `servicoProduto` | `obterTodosSlugs()` | 1h |
+| `servicoGuia` | `obterCategoriasComGuias()` | 30 min |
+
+Cache é invalidado apenas no restart do servidor (in-memory only).
 
 ## 📦 Deploy
 
@@ -110,8 +123,12 @@ Veja [CONTRIBUTING.md](./CONTRIBUTING.md) para guia completo de contribuição.
 - [DATA_LAYER.md](./DATA_LAYER.md) — Fluxo de dados e serviços
 - [CONTRIBUTING.md](./CONTRIBUTING.md) — Guia de contribuição
 - [CHANGELOG.md](./CHANGELOG.md) — Histórico de versões
-- [docs/](./docs/) — Subdocumentos por tópico
+- [docs/architecture/](./docs/architecture/) — Componentes, islands, SEO, busca
+- [docs/security/](./docs/security/) — CSP, headers, boas práticas
+- [docs/development/](./docs/development/) — Setup local e ambiente
+- [docs/deployment/](./docs/deployment/) — Deploy na Vercel e variáveis de ambiente
+- [docs/troubleshooting/](./docs/troubleshooting/) — Solução de problemas comuns
 
 ---
 
-_Licença MIT — CTECH Frontend v2026.4_
+_Licença MIT — CTECH Frontend v2026.5_

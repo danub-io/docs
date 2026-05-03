@@ -12,6 +12,7 @@ Documentação detalhada sobre a arquitetura do sistema CTECH Painel.
 - `queue-system.md` - Sistema de filas e DLQ
 - `repository-pattern.md` - Padrão Repository para acesso a dados
 - `ai-integration.md` - Integração com múltiplos provedores de IA
+- `schema-banco.md` - Schema completo do banco Turso (tabelas, índices, relações)
 
 ## Visão Geral
 

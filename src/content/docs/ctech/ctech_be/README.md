@@ -47,12 +47,29 @@ Este projeto é dividido em 9 módulos independentes (M1-M9), onde cada módulo 
 5. **M5 (Comercial):** Monitoramento de preços e ofertas.
 6. **M6 (Conferência):** Auditoria final de estoque e links.
 7. **M7 (CMS):** Gerenciador central do catálogo de produtos (CRUD).
-8. **M8 (Configurações):** Painel modular de configurações globais (IA, Scrapers, Logs).
+8. **M8 (Configurações):** Painel modular de configurações globais (IA, Scrapers, Logs, Manutenção do Banco).
 9. **M9 (Documentação):** Visualizador de documentação Markdown integrado ao painel.
 
 **Estratégia de Modularização:** Cada módulo (M1-M9) é projetado para ser autônomo, permitindo que IAs editem pontos estratégicos com foco e contexto reduzido.
 
+### 🧠 Cache Inteligente
+- Cache em memória (Map) com TTL configurável via `CacheLayer` em `src/lib/cache.ts`
+- **TTL 10 min:** `getAIModels`, `getScrapingServices`, `getDefaultPrompt`
+- **TTL 5 min:** `getProdutosParaConsolidar`, `getProdutosParaBuscaReview`
+- Invalidação automática nas mutações (save/delete/toggle de AI models e scraping services, aprovação M3/M4)
+- Cache bypass: parâmetro `refresh = true` força recarga
+
+### 🗄️ Manutenção do Banco
+- Rota: `/8-configuracoes/manutencao` no painel de Configurações
+- 5 funções de purge: `limparLogsSistema`, `limparFilaProcessamento`, `limparHistoricoPrecos`, `limparConflitosEntrada`, `executarPurgeCompleta`
+- Purge completo com revalidação de cache
+
+### 🔄 Migrações
+- Gerenciadas via Drizzle Kit: `pnpm db:generate` e `pnpm db:migrate`
+- Migration 0004 aplicada (Maio/2026): tabelas `Guias`/`Guia_Produtos` + 11 índices
+
 > Para uma explicação profunda da lógica de negócio e estrutura técnica, leia o [**ARCHITECTURE.md**](./ARCHITECTURE.md).
+> Documentação complementar em [docs/](./docs/) (arquitetura, deploy, troubleshooting, operações).
 
 ## 🛡️ Instruções para Desenvolvimento
 
@@ -62,4 +79,4 @@ Este projeto é dividido em 9 módulos independentes (M1-M9), onde cada módulo 
 - **Logger:** Use `@/lib/logger` em vez de `console.log`.
 
 ---
-*CTECH Backend v2026.4*
+*CTECH Backend v2026.5*

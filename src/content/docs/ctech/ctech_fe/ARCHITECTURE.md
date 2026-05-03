@@ -15,26 +15,34 @@ O projeto foi estruturado para manter baixo custo cognitivo para desenvolvimento
 ```
 src/
 ├── core/                        # Infraestrutura e base do sistema
-│   ├── ui/                      # Componentes genéricos (shadcn/ui + Base UI)
-│   ├── layouts/                 # (Agora vazios ou genéricos)
-│   ├── lib/                     # Conexão DB, utilitários (cn), logger
-│   ├── services/                # Serviços globais (categoryService com cache)
+│   ├── ui/                      # Componentes genéricos — React (shadcn/ui) e Astro (ícones, navegação)
+│   │   ├── reviews/             # CartaoImprensa.astro, CartaoAvaliacaoColapsavel.tsx
+│   │   ├── Icon.astro           # Ícones SVG inline (Material Symbols)
+│   │   ├── CategoryIcon.astro   # Ícones SVG por categoria de produto
+│   │   └── Breadcrumbs.astro    # Navegação estrutural (migalhas de pão)
+│   ├── layouts/                 # Layout, Navbar, Footer
+│   ├── lib/                     # Conexão DB, utilitários (cn, corNota), logger
+│   ├── services/                # Serviços globais com cache (servicoCatalogo, servicoProduto, servicoGuia)
 │   ├── styles/                  # CSS Global e design tokens
-│   └── types/                   # Schemas Zod e tipos TypeScript
+│   └── types/                   # Schemas Zod e tipos TypeScript (product, avaliacao)
 │
 ├── modules/                     # Domínios isolados por funcionalidade
-│   ├── laptops/                 # Listagem e filtros de laptops
-│   ├── compare/                 # Motor de comparação de produtos
-│   ├── product/                 # Páginas de detalhes do produto (Single Product)
-│   │   ├── components/          # ProductHero, ProductVerdict, ProductSpecs, ProductSources, ProductUserReviews, PressReviewCard, ProductWhereToBuy
-│   │   └── services/            # productService
-│   ├── community/               # Feed da comunidade
-│   └── home/                    # Página inicial (Altamente Modularizada)
-│       ├── components/          # Navbar, Footer, Layout, Hero, Categories, Trending
-│       └── services/            # homeService
+│   ├── inicio/                  # Página inicial (Hero, Categorias, Tendencias)
+│   ├── produto/                 # Páginas de detalhes do produto (obterProdutoCompleto)
+│   ├── comparar/                # Motor de comparação de produtos
+│   ├── comunidade/              # Feed da comunidade
+│   ├── categoria/               # Páginas de categoria de produtos (filtros server-side via query params, agrupamento por tier)
+│   └── guia/                    # Guias de recomendação editoriais (cards, grupos, páginas individuais)
 │
 ├── pages/                       # Camada de roteamento (Astro)
-│   ├── index.astro              # Home (Orquestra componentes de @modules/home)
+│   ├── index.astro              # Home (orquestra componentes de @modules/inicio)
+│   ├── comparar.astro           # /comparar (orquestra componentes de @modules/comparar)
+│   ├── comunidade.astro         # /comunidade (orquestra componentes de @modules/comunidade)
+│   ├── categoria/[categoria].astro
+│   ├── produto/[slug].astro     # /produto/[slug]
+│   ├── produto/[slug]/reviews.astro        # Reviews de imprensa
+│   ├── produto/[slug]/user-reviews.astro   # Avaliações de usuários
+│   └── guia/[slug].astro        # /guia/[slug]
 ```
 
 ### Metodologia "Vibecoding"
@@ -58,8 +66,10 @@ Componentes Astro/React (props → render)
 
 - **Server-Side Rendering:** Todo dado é buscado no frontmatter de páginas Astro
 - **Nunca em cliente:** O banco não é acessado no navegador
+- **Componentes com `server:defer`** podem buscar dados próprios (ex: Tendencias, ProdutoOndeComprar)
 - **Tratamento de erros:** Serviços retornam `[]` ou `null` em caso de falha
-- **Cache:** categoryService usa cache em memória com TTL de 5 minutos
+- **Cache em memória:** Map-based TTL cache em servicoCatalogo (5min), servicoProduto.obterTodosSlugs (1h), servicoGuia (30min), servicoInicio (2min)
+- **Função agregada:** `servicoProduto.obterProdutoCompleto()` paraleliza 3 queries (produto + reviews críticas + afiliados) para eliminar N+1 na página `/produto/[slug]`
 
 ## Islands Architecture
 
@@ -68,8 +78,8 @@ O projeto usa Astro Islands — componentes React interativos ilhados em HTML es
 | Tipo | Uso | Hidratação |
 |------|-----|-----------|
 | **Astro nativo** | Layouts, páginas, listas | Zero JS no cliente |
-| **React Island** | Progress, Badge dinâmicos | `client:visible` ou `client:idle` |
-| **React Interativo** | Filtros, busca, comparação | `client:load` (se necessário) |
+| **React Island** | Progress, Badge, CartaoAvaliacaoColapsavel | `client:visible` ou `client:idle` |
+| **React Interativo** | NavDrawer, SearchCommand | `client:load` / `client:idle` |
 
 ### Critério de Escolha
 
@@ -84,22 +94,15 @@ O projeto usa Astro Islands — componentes React interativos ilhados em HTML es
 - **Componentes:** Prefira compor classes Tailwind em vez de CSS avulso
 - **cn() utility:** Use a função `cn()` para merge condicional de classes
 
-### Sistema de Cores (Design Tokens)
+### Cache
 
-```css
-:root {
-  --color-primary: #...;
-  --color-surface: #...;
-  --font-heading: 'Inter', sans-serif;
-  --font-body: 'Inter', sans-serif;
-  --radius-DEFAULT: 0.25rem;
-  --radius-full: 9999px;
-}
-```
+Cache em memória com TTL e proteção contra stampede (`pendingFetch` compartilhado). Serviços cacheados incluem `servicoCatalogo` (5min), `servicoProduto.obterTodosSlugs` (1h), `servicoGuia.obterCategoriasComGuias` (30min) e `servicoInicio` (2min).
+
+> Tabela completa em [AGENTS.md](./AGENTS.md) e [DATA_LAYER.md](./DATA_LAYER.md). Cache é invalidado apenas no restart do servidor.
 
 ## Padrões de Layout e Espaçamento
 
-Para manter a consistência visual entre páginas (LP, Produto, etc.), utilizamos classes e variáveis de layout padronizadas em `src/core/styles/global.css`:
+Para manter a consistência visual entre páginas, utilizamos classes e variáveis de layout padronizadas em `src/core/styles/global.css`:
 
 ### Container de Página (`.layout-container`)
 
@@ -122,45 +125,21 @@ Para garantir que todos os elementos contidos em "boxes" (cards, seções de ver
 - **`.layout-box-padding`:** Define um padding interno padrão de `24px` (vinculado ao token `--spacing-box-padding`). Este é o padrão ouro para conteúdo textual dentro de containers.
 - **`.layout-boxed`:** Uma classe utilitária que combina o fundo padrão (`bg-surface-container-lowest`), borda (`border-surface-variant`), arredondamento (`rounded-xl`) e o padding padrão definido no token.
 
-Deve ser usado em:
-- Cards de produto (Trending, Listagens).
-- Blocos de Veredito e Scores.
-- Qualquer seção que exija destaque visual dentro de uma borda.
-
 ## Ícones e Tipografia
 
-Para garantir máxima confiabilidade e performance:
+- **Ícones:** Utilizamos SVGs inline ou o componente `Icon.astro` (nomes Material Symbols).
+- **Tipografia:** Fonte **Inter** via `@fontsource-variable/inter`.
 
-- **Ícones:** Não utilizamos fontes de ícones (como Material Symbols) que dependem de ligaduras. Em vez disso, usamos **SVGs Inline** ou o componente `CategoryIcon.astro`. Isso evita que nomes de ícones apareçam como texto se a fonte falhar.
-- **Tipografia:** Utilizamos a fonte **Inter** (via `@fontsource-variable/inter` e fallback Google Fonts) para garantir uma interface moderna e legível em todos os dispositivos.
+## SEO e Performance
 
-
-### SEO e Performance
-
-#### Image Optimization (`astro:assets`)
+### Image Optimization (`astro:assets`)
 - **Padrão:** Sempre utilize o componente `<Image />` de `astro:assets` para imagens locais e remotas.
-- **Remote Images:** Para imagens externas (Turso/Cloudinary), utilize o atributo `inferSize` para que o Astro processe as dimensões automaticamente, garantindo WebP/Avif e evitando Cumulative Layout Shift (CLS).
+- **Remote Images:** Utilize o atributo `inferSize` para que o Astro processe as dimensões automaticamente, garantindo WebP/Avif e evitando CLS.
 - **Configuração:** Novos domínios de imagem devem ser adicionados ao `remotePatterns` no `astro.config.mjs`.
 
-#### Loading States (`server:defer`)
-- **Conceito:** Componentes que dependem de dados lentos (como preços de afiliados ou APIs externas) devem usar a diretiva `server:defer` (Astro 5+).
-- **Fallback:** Sempre forneça um `slot="fallback"` com um skeleton loader animado (`animate-pulse`) para manter o design estável enquanto os dados são carregados.
-- **Exemplo:** Veja `ProductWhereToBuy` em `[slug].astro`.
-
-### Meta Tags e Open Graph
-
-
-- Meta tags e Open Graph definidas no `Layout.astro`
-- Geração de sitemap automática via `@astrojs/sitemap`
-- URLs canônicas configuradas
-
-### Core Web Vitals
-
-- **SSR** reduz First Contentful Paint (FCP)
-- **Islands** minimiza JavaScript bloqueante
-- **Tailwind** gera CSS purgado (apenas classes usadas)
-- **View Transitions** para navegações suaves (quando habilitado)
-- **Prefetch** de links via Astro nativo
+### Loading States (`server:defer`)
+- **Conceito:** Componentes que dependem de dados lentos devem usar a diretiva `server:defer` (Astro 5+).
+- **Fallback:** Sempre forneça um `slot="fallback"` com um skeleton loader animado (`animate-pulse`).
 
 ## Testes
 
@@ -188,8 +167,6 @@ pnpm test:e2e
 ```
 
 Testes em `tests/e2e/` cobrindo fluxos completos do usuário.
-
-> **Nota:** Componentes Astro puros são testados via E2E (não rodam em Vitest).
 
 ## Path Aliases
 

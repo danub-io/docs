@@ -216,8 +216,7 @@ src/editora/
 ├── cli.py              # Interface de linha de comando (Typer)
 ├── config.py           # Configurações (Pydantic)
 ├── core/
-│   ├── manuscript.py   # Modelos Chapter e Manuscript
-│   └── orchestrator.py # Pipeline principal (em desenvolvimento)
+│   └── manuscript.py   # Modelos Chapter e Manuscript
 ├── ai/
 │   ├── llm.py          # Camada de abstração LLM (multi-provider)
 │   ├── editing.py      # Copyediting com IA
@@ -258,6 +257,10 @@ pyright src/
 6. **Compile** — `editora build` para gerar PDF/EPUB
 7. **Valide KDP** — A validação é automática no build
 8. **Versione** — Use Git para controle de versões do manuscrito
+
+## 🌐 Interface Web
+
+O projeto inclui uma interface web construída com **Next.js 16**, React 19 e shadcn/ui. Consulte [web/README.md](./web/README.md) para instruções de setup e desenvolvimento.
 
 ## 🛠️  Stack Tecnológico
 

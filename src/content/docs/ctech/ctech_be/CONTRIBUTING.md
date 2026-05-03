@@ -9,7 +9,7 @@ Obrigado por contribuir com o projeto! Este guia define os padrões e fluxos de 
 ## Configuração do Ambiente de Desenvolvimento
 
 Pré-requisitos:
-- Node.js 18+
+- Node.js >= 22.12.0
 - pnpm (gerenciador de pacotes)
 - Conta no Turso (banco de dados)
 - Chaves de API para serviços de IA (opcional, para desenvolvimento local)
@@ -23,6 +23,8 @@ cp .env.example .env
 # Configure as variáveis no .env (TURSO_DB, TURSO_TOKEN, etc.)
 pnpm dev
 ```
+
+> Para um guia detalhado (migrações, Drizzle Studio, troubleshooting), veja [docs/development/setup-local.md](./docs/development/setup-local.md).
 
 ## Estratégia de Branches
 
