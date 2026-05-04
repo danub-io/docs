@@ -27,3 +27,4 @@ pnpm-debug.log*
 
 # TypeScript
 *.tsbuildinfo
+src/content/docs/ctech/ctech_fe/test-results/
