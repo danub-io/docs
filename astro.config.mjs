@@ -31,6 +31,7 @@ export default defineConfig({
                 { label: 'Camada de Dados', slug: 'ctech/ctech_fe/data_layer' },
                 { label: 'Contribuindo', slug: 'ctech/ctech_fe/contributing' },
                 { label: 'Changelog', slug: 'ctech/ctech_fe/changelog' },
+                { label: 'Release Process', slug: 'ctech/ctech_fe/docs/deployment/release' },
                 {
                   label: 'Postmortems',
                   collapsed: true,
