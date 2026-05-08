@@ -1,8 +1,6 @@
 ---
-title: "Contributing to CTECH Painel (Backend)"
+title: "Contribuindo — CTECH Backend"
 ---
-
-
 
 Obrigado por contribuir com o projeto! Este guia define os padrões e fluxos de trabalho para manter a qualidade e consistência do código.
 
@@ -19,23 +17,21 @@ Passos:
 git clone <repo-url>
 cd ctech_be
 pnpm install
-cp .env.example .env
-# Configure as variáveis no .env (TURSO_DB, TURSO_TOKEN, etc.)
+cp .env.example .env.local
+# Configure as variáveis no .env.local
 pnpm dev
 ```
 
-> Para um guia detalhado (migrações, Drizzle Studio, troubleshooting), veja [docs/development/setup-local.md](./docs/development/setup-local.md).
-
 ## Estratégia de Branches
 
-- `master`: Branch principal, sempre pronta para produção
-- `feature/*`: Novas funcionalidades (ex: `feature/m8-new-setting`)
-- `hotfix/*`: Correções urgentes em produção (ex: `hotfix/db-connection-leak`)
-- `bugfix/*`: Correções não urgentes (ex: `bugfix/m3-scraper-timeout`)
+- `production`: Branch principal, sempre pronta para produção
+- `develop`: Integração de funcionalidades
+- `feature/*`: Novas funcionalidades
+- `fix/*`: Correções
+- `refactor/*`: Refatorações
+- `chore/*`: Manutenção
 
 ## Padrão de Commits (Conventional Commits)
-
-Utilizamos Conventional Commits para manter o histórico organizado:
 
 | Tipo | Descrição |
 |------|-----------|
@@ -47,68 +43,54 @@ Utilizamos Conventional Commits para manter o histórico organizado:
 | `test` | Adição/atualização de testes |
 | `chore` | Manutenção (deps, scripts, etc.) |
 
-Exemplo:
-```bash
-git commit -m "feat(m5): add price alert threshold validation"
-```
-
 ## Padrões de Código
 
 - **TypeScript**: Strict mode ativado, evite `any`
 - **Linting**: ESLint configurado (executar `pnpm lint` antes do commit)
-- **Formatação**: 2 espaços de indentação, UTF-8 sem BOM (configurado no `.editorconfig`)
+- **Formatação**: 2 espaços de indentação, UTF-8 sem BOM
 - **Arquitetura**:
-  - Use Server Actions (`src/app/actions/`) para lógica de negócio
-  - Use Repository Pattern (`src/lib/repositories/`) para acesso a dados
+  - Server Actions em `src/app/actions/` para lógica de negócio
+  - Repository Pattern em `src/lib/repositories/` para acesso a dados
   - Componentes UI em `src/components/ui/` (padrão Shadcn)
+- **Logger**: Use `@/lib/logger` em vez de `console.log`
 
 ## Execução de Testes
 
 ### Testes Unitários (Vitest)
 ```bash
-pnpm test              # Roda testes em watch mode
-pnpm test:run          # Roda testes uma vez
-pnpm test:ui           # Interface visual do Vitest
+pnpm test:run          # Execução única
+pnpm test:ui           # Interface visual
 ```
 
-Cobertura mínima (configurada no `vitest.config.ts`):
-- Linhas: 60%
-- Funções: 60%
-- Branches: 50%
+Cobertura mínima: lines 60%, functions 60%, branches 50%
 
 ### Testes E2E (Playwright)
 ```bash
-pnpm exec playwright install  # Instala navegadores
-pnpm exec playwright test     # Roda testes E2E
+pnpm exec playwright test
 ```
 
 ## Processo de Pull Request
 
-1. Crie uma branch a partir da `master`
+1. Crie uma branch a partir da `develop`
 2. Faça suas alterações seguindo os padrões acima
 3. Execute testes e lint localmente:
    ```bash
-   pnpm lint && pnpm test:run && pnpm exec playwright test
+   pnpm lint && pnpm test:run
    ```
-4. Abra o PR para a branch `master`
-5. Preencha o template de PR com:
-   - Descrição das mudanças
-   - Tipo de alteração (feat/fix/docs/etc.)
-   - Issue relacionada (se houver)
-6. Aguarde revisão de código (mínimo 1 aprovação)
-7. O merge só será realizado após aprovação e passagem do CI
+4. Abra o PR para a branch `develop`
+5. Aguarde revisão de código (mínimo 1 aprovação)
+6. O merge só será realizado após aprovação e passagem do CI
 
 ## Checklist de Code Review
 
 - [ ] Segue padrão de commits Conventional Commits
-- [ ] Testes unitários/E2E adicionados ou atualizados
+- [ ] Testes adicionados ou atualizados
 - [ ] Sem erros de lint (`pnpm lint`)
-- [ ] Documentação atualizada (se aplicável)
 - [ ] Tipos TypeScript corretos (sem `any` desnecessário)
 - [ ] Funcionalidade testada manualmente (se não coberta por testes)
 
 ## Referências
 
-- [ARCHITECTURE.md](./ARCHITECTURE.md) - Visão geral da arquitetura
-
-- [CI Workflow](./.github/workflows/ci.yml) - Pipeline de integração contínua
+- [README](./README.md) — Visão geral do projeto
+- [ARCHITECTURE](./ARCHITECTURE.md) — Arquitetura e decisões técnicas
+- [API](./API.md) — Referência de API

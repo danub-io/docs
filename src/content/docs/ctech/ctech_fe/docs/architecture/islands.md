@@ -54,6 +54,11 @@ O projeto usa majoritariamente componentes **Astro** estáticos (zero JS no clie
 |-----------|----------|-----------|
 | `CartaoAvaliacaoColapsavel` | `client:visible` | Card de avaliação de usuário com expandir/recolher |
 | `NavDrawer` | `client:load` | Drawer de navegação mobile |
-| `SearchCommand` | `client:idle` | Paleta de busca (CMD+K) |
+| `SearchCommand` | `client:load` | Paleta de busca (CMD+K) |
+| `LoginDialog` | `client:load` | Modal de login/registro com abas |
+| `UserMenu` | `client:load` | Menu do usuário autenticado |
+| `PainelDashboard` | `client:load` | Dashboard do painel do usuário |
+| `ComparadorInteractive` | `client:load` | Comparação interativa de produtos |
+| `HeroCarousel` | `client:load` | Carrossel de produtos em destaque |
 
 > **Regra:** só adicione `client:*` quando houver estado/evento inevitável. Prefira `client:visible` ou `client:idle` sobre `client:load`.

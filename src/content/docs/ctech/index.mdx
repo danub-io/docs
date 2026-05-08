@@ -3,11 +3,21 @@ title: CTech
 description: Ecossistema de Curadoria Técnica de Hardware
 ---
 
-import { Badge, Aside, Tabs, TabItem, Steps, FileTree } from '@astrojs/starlight/components';
+import { Badge, Aside, Tabs, TabItem, Steps, FileTree, Card } from '@astrojs/starlight/components';
 
 <Badge text="Produção" variant="success" /> <Badge text="v2026.4" variant="note" /> <Badge text="Next.js + Astro" variant="tip" />
 
 Bem-vindo à documentação do **CTECH (TechReveal)**, um ecossistema automatizado para análise, comparação e curadoria de hardware com IA.
+
+Este ecossistema é dividido em **dois projetos** que compartilham o mesmo banco de dados:
+
+<Card title="ctech_be (Next.js)">
+Ferramenta local que roda na sua máquina para popular o banco de dados. Ingestão de produtos, preços, reviews, etc. Não precisa de login, não vai ser deployado, só você usa.
+</Card>
+
+<Card title="ctech_fe (Astro + Cloudflare)">
+Site público que lê desse banco para exibir produtos, categorias, preços. E também escreve dados de usuários (cadastro, login, Google OAuth, 2FA, reviews de usuários).
+</Card>
 
 ---
 

@@ -1,8 +1,6 @@
 ---
-title: "Arquitetura Frontend — TechReveal (CTECH)"
+title: "Arquitetura — CTECH Frontend"
 ---
-
-
 
 Este documento detalha as decisões arquiteturais, fluxo de dados e padrões de desenvolvimento do frontend.
 
@@ -15,51 +13,48 @@ O projeto foi estruturado para manter baixo custo cognitivo para desenvolvimento
 ```
 src/
 ├── core/                        # Infraestrutura e base do sistema
-│   ├── ui/                      # Componentes genéricos — React (shadcn/ui) e Astro (ícones, navegação)
-│   │   ├── reviews/             # CartaoImprensa.astro, CartaoAvaliacaoColapsavel.tsx
-│   │   ├── Icon.astro           # Ícones SVG inline (Material Symbols)
-│   │   ├── CategoryIcon.astro   # Ícones SVG por categoria de produto
-│   │   └── Breadcrumbs.astro    # Navegação estrutural (migalhas de pão)
+│   ├── ui/                      # Componentes ShadCN (button, card, badge, etc.)
+│   │   └── reviews/             # CartaoImprensa, CartaoAvaliacaoColapsavel
 │   ├── layouts/                 # Layout, Navbar, Footer
-│   ├── lib/                     # Conexão DB, utilitários (cn, corNota), logger
-│   ├── services/                # Serviços globais com cache (servicoCatalogo, servicoProduto, servicoGuia)
-│   ├── styles/                  # CSS Global e design tokens
-│   └── types/                   # Schemas Zod e tipos TypeScript (product, avaliacao)
+│   ├── lib/                     # Conexão DB, cache, logger, utilitários (cn, corNota)
+│   ├── services/                # Serviços globais com cache (servicoCatalogo, servicoMenu)
+│   ├── styles/                  # CSS Global e design tokens (Tailwind v4)
+│   └── types/                   # Schemas Zod e tipos TypeScript (product, avaliacao, guia)
 │
 ├── modules/                     # Domínios isolados por funcionalidade
 │   ├── inicio/                  # Página inicial (Hero, Categorias, Tendencias)
-│   ├── produto/                 # Páginas de detalhes do produto (obterProdutoCompleto)
+│   ├── produto/                 # Páginas de detalhes do produto
+│   ├── categoria/               # Páginas de categoria com agrupamento por labels
+│   ├── guia/                    # Guias de recomendação editoriais
 │   ├── comparar/                # Motor de comparação de produtos
 │   ├── comunidade/              # Feed da comunidade
-│   ├── categoria/               # Páginas de categoria de produtos (filtros server-side via query params, agrupamento por tier)
-│   └── guia/                    # Guias de recomendação editoriais (cards, grupos, páginas individuais)
+│   ├── auth/                    # Autenticação (serviços, componentes, schemas)
+│   └── rolagem_horizontal/      # Componentes de carrossel horizontal
 │
 ├── pages/                       # Camada de roteamento (Astro)
-│   ├── index.astro              # Home (orquestra componentes de @modules/inicio)
-│   ├── comparar.astro           # /comparar (orquestra componentes de @modules/comparar)
-│   ├── comunidade.astro         # /comunidade (orquestra componentes de @modules/comunidade)
-│   ├── categoria/[categoria].astro
-│   ├── produto/[slug].astro     # /produto/[slug]
-│   ├── produto/[slug]/reviews.astro        # Reviews de imprensa
-│   ├── produto/[slug]/user-reviews.astro   # Avaliações de usuários
-│   └── guia/[slug].astro        # /guia/[slug]
+│   ├── index.astro              # Home
+│   ├── [categoria]/[slug]       # Produto individual
+│   ├── [categoria]/             # Listagem por categoria
+│   ├── guia/[slug].astro        # Guia individual
+│   ├── painel/                  # Painel do usuário
+│   └── api/auth/                # Endpoints de autenticação
 ```
 
 ### Metodologia "Vibecoding"
 
-1. **Isolamento de Escopo:** Forneça apenas o contexto do módulo relevante para a IA.
-2. **Modificações Locais:** Evite alterar `@core/*` a menos que estritamente necessário.
-3. **Contratos Claros:** Componentes em `@modules` recebem dados via props tratadas nas páginas.
+1. **Isolamento de Escopo:** Forneça apenas o contexto do módulo relevante para a IA
+2. **Modificações Locais:** Evite alterar `@core/*` a menos que estritamente necessário
+3. **Contratos Claros:** Componentes em `@modules` recebem dados via props tratadas nas páginas
 
 ## Fluxo de Dados
 
 ```
-Turso DB (libsql)
-    ↑↓ SSR queries (parametrizadas)
+Turso DB (libsql) ← ctech_be (escrita)
+    ↑↓ SSR queries (parametrizadas com placeholders ?)
     ↓
-Services (try/catch → ProductSchema.parse)
+Services (try/catch → safeParse Zod)
     ↓
-Pages Astro (chamadas SSR no frontmatter)
+Páginas Astro (chamadas SSR no frontmatter)
     ↓
 Componentes Astro/React (props → render)
 ```
@@ -68,8 +63,45 @@ Componentes Astro/React (props → render)
 - **Nunca em cliente:** O banco não é acessado no navegador
 - **Componentes com `server:defer`** podem buscar dados próprios (ex: Tendencias, ProdutoOndeComprar)
 - **Tratamento de erros:** Serviços retornam `[]` ou `null` em caso de falha
-- **Cache em memória:** Map-based TTL cache em servicoCatalogo (5min), servicoProduto.obterTodosSlugs (1h), servicoGuia (30min), servicoInicio (2min)
-- **Função agregada:** `servicoProduto.obterProdutoCompleto()` paraleliza 3 queries (produto + reviews críticas + afiliados) para eliminar N+1 na página `/produto/[slug]`
+- **Função agregada:** `servicoProduto.obterProdutoCompleto()` paraleliza 3 queries (produto + reviews críticas + afiliados)
+
+## Cache em Memória
+
+Cache com proteção contra stampede (Map-based TTL + `pendingFetch` compartilhado):
+
+| Serviço | Método | TTL |
+|---------|--------|-----|
+| `servicoCatalogo` | `obterCategorias()` | 5 min |
+| `servicoMenu` | `obterMenu()` | 5 min |
+| `servicoProduto` | `obterTodosSlugs()` | 1h |
+| `servicoGuia` | `obterCategoriasComGuias()` | 30 min |
+| `servicoInicio` | `obterProdutoDestaque()`, `obterProdutosRecentes()` | 2 min |
+
+Cache é invalidado apenas no restart do servidor.
+
+## Serviços
+
+Cada domínio possui um serviço que encapsula consultas SQL e transformações.
+
+### Core Services
+
+| Serviço | Arquivo | Funções |
+|---------|---------|---------|
+| `servicoCatalogo` | `src/core/services/servicoCatalogo.ts` | `obterCategorias()` |
+| `servicoMenu` | `src/core/services/servicoMenu.ts` | `obterMenu()` |
+
+### Module Services
+
+| Módulo | Serviço | Funções |
+|--------|---------|---------|
+| Início | `servicoInicio` | `obterProdutoDestaque()`, `obterProdutosRecentes()` |
+| Produto | `servicoProduto` | `obterProdutoPorSlug()`, `obterTodosSlugs()`, `obterAvaliacoesCriticas()`, `obterAvaliacoesUsuarios()`, `obterAfiliados()`, `obterProdutoCompleto()` |
+| Categoria | `servicoCategoria` + `servicoSecoesCategoria` | `obterProdutosPorCategoria()`, `obterSecoes()` |
+| Guia | `servicoGuia` | `obterGuiasPorCategoria()`, `obterGuiaPorSlug()`, `obterProdutosDoGuia()` |
+| Busca | `servicoBusca` | `buscar()` |
+| Comparar | `servicoComparacao` | `obterProdutosComparacao()`, `obterTopProdutos()`, `obterSugestoesBusca()` |
+| Comunidade | `servicoComunidade` | `obterAvaliacoesRecentes()` |
+| Auth | `servicoAuth` | `verificarToken()`, `buscarUsuarioPorId()`, `usuarioParaPublico()` |
 
 ## Islands Architecture
 
@@ -78,8 +110,8 @@ O projeto usa Astro Islands — componentes React interativos ilhados em HTML es
 | Tipo | Uso | Hidratação |
 |------|-----|-----------|
 | **Astro nativo** | Layouts, páginas, listas | Zero JS no cliente |
-| **React Island** | Progress, Badge, CartaoAvaliacaoColapsavel | `client:visible` ou `client:idle` |
-| **React Interativo** | NavDrawer, SearchCommand | `client:load` / `client:idle` |
+| **React Island** | NotaBadge, CartaoAvaliacaoColapsavel | `client:visible` ou `client:idle` |
+| **React Interativo** | LoginDialog, UserMenu, SearchCommand | `client:load` / `client:idle` |
 
 ### Critério de Escolha
 
@@ -87,86 +119,116 @@ O projeto usa Astro Islands — componentes React interativos ilhados em HTML es
 - Use **React** apenas quando precisar de estado, eventos ou hooks
 - Priorize `client:visible` sobre `client:load` para performance
 
+## Tipos e Validação (Zod v4)
+
+| Schema | Arquivo | Uso |
+|--------|---------|-----|
+| `ProductSchema` | `src/core/types/product.ts` | Validação de produtos |
+| `AvaliacaoSchema` | `src/core/types/avaliacao.ts` | Reviews de imprensa e usuários |
+| `GuiaSchema` | `src/core/types/guia.ts` | Guias de recomendação |
+| `LabelSchema` | `src/core/types/label.ts` | Labels de categoria |
+
 ## Estratégia de CSS (Tailwind v4)
 
-- **Mobile First:** Classes base = mobile. `md:`, `lg:` para breakpoints maiores
+- **Mobile First:** Classes base = mobile. `md:`, `lg:` para breakpoints
 - **Design Tokens:** Cores e tipografia definidas em `src/core/styles/global.css`
 - **Componentes:** Prefira compor classes Tailwind em vez de CSS avulso
-- **cn() utility:** Use a função `cn()` para merge condicional de classes
+- **cn() utility:** Use `cn()` para merge condicional de classes
 
-### Cache
+### Layout Tokens
 
-Cache em memória com TTL e proteção contra stampede (`pendingFetch` compartilhado). Serviços cacheados incluem `servicoCatalogo` (5min), `servicoProduto.obterTodosSlugs` (1h), `servicoGuia.obterCategoriasComGuias` (30min) e `servicoInicio` (2min).
+| Token | Valor | Uso |
+|-------|-------|-----|
+| `--spacing-container-max` | 1280px | Largura máxima do container |
+| `--spacing-gutter` | 24px | Gap entre itens em grids |
+| `--spacing-section-gap` | 32px | Espaçamento entre seções |
+| `--spacing-box-padding` | 24px | Padding interno de cards |
 
-> Tabela completa em [AGENTS.md](./AGENTS.md) e [DATA_LAYER.md](./DATA_LAYER.md). Cache é invalidado apenas no restart do servidor.
+### Typography Tokens
 
-## Padrões de Layout e Espaçamento
+| Token | Valor | Uso |
+|-------|-------|-----|
+| `--font-heading` | 'Inter Variable' | Títulos (display, page-title, section-title) |
+| `--font-body` | 'Inter Variable' | Corpo de texto |
+| `--font-display` | 'Inter Variable' | Seções em uppercase (section-title) |
+| `--font-sans` | 'Inter Variable' | UI geral (nav, meta, labels) |
 
-Para manter a consistência visual entre páginas, utilizamos classes e variáveis de layout padronizadas em `src/core/styles/global.css`:
+### Typography Utilities
 
-### Container de Página (`.layout-container`)
+14 classes utilitárias `type-*` em `src/core/styles/global.css`, inspiradas no sistema tipográfico da RTINGS.com:
 
-Todas as páginas principais devem envolver seu conteúdo principal com a classe `.layout-container`. Esta classe garante:
-- **Largura Máxima:** `1280px` (`--spacing-container-max`).
-- **Alinhamento:** Centralizado horizontalmente (`mx-auto`).
-- **Margens Laterais (Edge):**
-    - Mobile: `16px` (`px-4`).
-    - Desktop (>=768px): `32px` (`--spacing-margin-edge`).
+| Classe | Uso | Font | Size | Weight |
+|--------|-----|------|------|--------|
+| `type-display` | Título hero da home | heading | 4xl/5xl | medium |
+| `type-page-title` | Título de página | heading | 2xl/4xl | medium |
+| `type-section-title` | Título de seção (uppercase) | display | xl | normal |
+| `type-subsection` | Subtítulo de seção | heading | xl | medium |
+| `type-card-title` | Título de card | heading | base | semibold |
+| `type-body` | Corpo de texto | (herdado) | base | normal |
+| `type-body-sm` | Corpo pequeno | (herdado) | sm | normal |
+| `type-body-lg` | Corpo grande | (herdado) | lg | normal |
+| `type-meta` | Metadados UI | sans | xs | medium |
+| `type-caption` | Legendas | sans | xs | normal |
+| `type-overline` | Overline label | sans | 10px | bold |
+| `type-micro` | Micro label | sans | 10px | bold |
+| `type-card-meta` | Metadados de card | sans | 11px | normal |
+| `type-nav-link` | Links de navegação | sans | sm | normal |
+| `type-view-all` | Link "Ver todos" | sans | xs | medium |
 
-### Espaçamento entre Itens (Gutter)
+> Componentes ShadCN UI agora declaram `font-sans` explicitamente em vez de herdar do `html`.
 
-- **Gutter Padrão:** O espaçamento entre itens em grids ou listas deve seguir o token `--spacing-gutter: 24px`, geralmente aplicado via classe Tailwind `gap-6`.
-- **Gap entre Seções:** O espaçamento vertical entre grandes blocos de conteúdo segue `--spacing-section-gap: 80px`.
+## Autenticação
 
-### Padronização de Boxes e Padding (`.layout-boxed`, `.layout-box-padding`)
+Módulo em `src/modules/auth/`:
 
-Para garantir que todos os elementos contidos em "boxes" (cards, seções de veredito, especificações) tenham uma hierarquia visual consistente, utilizamos:
+- `services/servicoAuth.ts` — Registro, login, verificação 2FA (JWT com jose, bcryptjs, otplib)
+- `services/servicoRateLimit.ts` — Rate limiting (memória em dev, D1 em prod)
+- `services/servicoCriptografia.ts` — Hash de senha, JWT, 2FA
 
-- **`.layout-box-padding`:** Define um padding interno padrão de `24px` (vinculado ao token `--spacing-box-padding`). Este é o padrão ouro para conteúdo textual dentro de containers.
-- **`.layout-boxed`:** Uma classe utilitária que combina o fundo padrão (`bg-surface-container-lowest`), borda (`border-surface-variant`), arredondamento (`rounded-xl`) e o padding padrão definido no token.
+### Middleware de Segurança
 
-## Ícones e Tipografia
+O middleware (`src/middleware.ts`) aplica:
 
-- **Ícones:** Utilizamos SVGs inline ou o componente `Icon.astro` (nomes Material Symbols).
-- **Tipografia:** Fonte **Inter** via `@fontsource-variable/inter`.
+- Verificação de token JWT em todas as rotas (não-assets)
+- Rate limiting em rotas `/api/auth/*` (5 req/min login, 3 req/min 2FA, 10 req/h register)
+- Headers de segurança: CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy
 
-## SEO e Performance
+### CSP bloqueia inline scripts do Astro
 
-### Image Optimization (`astro:assets`)
-- **Padrão:** Sempre utilize o componente `<Image />` de `astro:assets` para imagens locais e remotas.
-- **Remote Images:** Utilize o atributo `inferSize` para que o Astro processe as dimensões automaticamente, garantindo WebP/Avif e evitando CLS.
-- **Configuração:** Novos domínios de imagem devem ser adicionados ao `remotePatterns` no `astro.config.mjs`.
+A política `script-src 'self'` no middleware (`src/middleware.ts`) **bloqueia os inline scripts** que o Astro usa para hidratação de componentes React (`<astro-island>`, definição de `Astro.load`, etc.).
 
-### Loading States (`server:defer`)
-- **Conceito:** Componentes que dependem de dados lentos devem usar a diretiva `server:defer` (Astro 5+).
-- **Fallback:** Sempre forneça um `slot="fallback"` com um skeleton loader animado (`animate-pulse`).
+**Sintoma:** Todos os islands React com `client:load` falham silenciosamente — o HTML SSR é renderizado mas os componentes nunca hidratam. Nenhum erro visível no console do navegador, apenas avisos de CSP no console.
+
+**Diagnóstico:** Verificar se `<astro-island>` mantém o atributo `ssr` após carregamento da página. Se sim, a hidratação não ocorreu. Usar devtools ou `page.evaluate(() => document.querySelector('astro-island').hasAttribute('ssr'))`.
+
+**Fix:** Adicionar `'unsafe-inline'` ao `script-src`:
+```
+script-src 'self' 'unsafe-inline'
+```
+
+**Localização do código:** `src/middleware.ts:180`
 
 ## Testes
 
 ### Unitários (Vitest)
 
 ```bash
-pnpm test              # Watch mode
 pnpm test:run          # Execução única
 pnpm test:coverage     # Com relatório
 ```
 
 **Cobertura alvo:** lines 80%, functions 75%, branches 70%
 
-**Estrutura:** Testes ficam em `__tests__/` ao lado do arquivo testado.
-
 **Padrões:**
 - DB mockado com `vi.mock('@/core/lib/db')`
-- Console spied para logger
-- Componentes React renderizados com Testing Library + jest-dom
+- Testes ficam em `__tests__/` ao lado do arquivo testado
 
 ### E2E (Playwright)
 
 ```bash
 pnpm test:e2e
+pnpm test:e2e:dev      # Com servidor dev automático
 ```
-
-Testes em `tests/e2e/` cobrindo fluxos completos do usuário.
 
 ## Path Aliases
 
@@ -178,10 +240,25 @@ Testes em `tests/e2e/` cobrindo fluxos completos do usuário.
 }
 ```
 
-## Segurança
+## Estratégia de Branches
 
-- **CSP:** Content Security Policy restritiva no middleware
-- **HSTS:** HTTP Strict Transport Security
-- **Headers:** X-Frame-Options, X-Content-Type-Options, Referrer-Policy
-- **SQL Injection:** Todas as queries usam placeholders parametrizados (`?` + `args`)
-- **Banco:** Acesso apenas em SSR (nunca exposto ao cliente)
+- `production`: Branch principal, sempre pronta para produção
+- `develop`: Integração de funcionalidades
+- `feat/*`, `fix/*`, `refactor/*`, `chore/*`: Branches de trabalho
+
+## Release & Deploy
+
+Deploy controlado por tags semânticas:
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+O CI detecta a tag, executa lint, testes, build e deploy para Cloudflare Workers.
+
+| Tipo | Exemplo |
+|------|---------|
+| Nova feature | `v1.1.0` |
+| Hotfix | `v1.1.1` |
+| Breaking change | `v2.0.0` |

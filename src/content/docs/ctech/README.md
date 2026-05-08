@@ -2,46 +2,35 @@
 title: "CTECH — Ecossistema de Curadoria Técnica de Hardware"
 ---
 
-
-
 Bem-vindo ao **CTECH** (TechReveal), um ecossistema automatizado para análise, comparação e curadoria de hardware. Este projeto utiliza Inteligência Artificial e automação web para transformar dados brutos em insights comerciais valiosos.
 
-## 🏗️ Estrutura do Projeto
+## Estrutura do Projeto
 
 O ecossistema é dividido em dois repositórios principais que compartilham o mesmo banco de dados **Turso (SQLite)**.
 
 | Repositório | Tecnologia | Papel no Ecossistema |
 | :--- | :--- | :--- |
-| [**ctech_be**](./ctech_be) | Next.js 16+, Turso, Pino | **Backend / Painel:** Automação (M1-M6), Scrapers e Processamento de IA. |
-| [**ctech_fe**](./ctech_fe) | Astro 6+, React 19, Tailwind v4 | **Frontend / Público:** Interface de alta performance otimizada para SEO. |
+| [**ctech_be**](./ctech_be) | Next.js 16+, Turso, Pino | **Backend / Painel:** Automação (M1-M6), Scrapers e Processamento de IA |
+| [**ctech_fe**](./ctech_fe) | Astro 6+, React 19, Tailwind v4 | **Frontend / Público:** Interface de alta performance otimizada para SEO |
 
-## 🚀 Como Começar (Quick Start)
+## Fluxo de Dados
 
-### Pré-requisitos
-- **Node.js** >= 22.12.0.
-- **pnpm** (Gerenciador de pacotes obrigatório).
-- **Turso CLI** (Para gerenciamento de banco de dados).
+```
+ctech_be (Server Actions) → Turso DB (SQLite) ← ctech_fe (Astro SSR)
+```
 
-### Configuração Inicial
-1. Instale as dependências em ambos os diretórios:
-   ```bash
-   cd ctech_be && pnpm install
-   cd ../ctech_fe && pnpm install
-   ```
-2. Configure as variáveis de ambiente baseadas nos arquivos `.env.example` de cada pasta.
+O **Backend** injeta dados processados (reviews, preços, imagens). O **Frontend** lê esses dados em tempo real via Server-side Rendering (SSR).
 
-## 🛠️ Arquitetura de Dados
+## ADRs (Architecture Decision Records)
 
-O banco de dados **Turso** é o "Coração" do sistema, servindo como ponto de sincronização:
-- O **Backend** injeta dados processados (reviews, preços, imagens).
-- O **Frontend** lê esses dados em tempo real via Server-side Rendering (SSR).
+- **ADR-001:** Escolha do Turso (SQLite distribuído) como banco de dados
+- **ADR-002:** Adoção de Astro Islands para o frontend
+- **ADR-003:** Estrutura modular (Vibecoding) para desenvolvimento com IA
+- **ADR-004:** Cache em memória com proteção contra stampede
 
-## 📄 Documentação Detalhada
+## Documentação
 
-- **Backend:** Veja [ctech_be/README.md](./ctech_be/README.md) e [ctech_be/docs/](./ctech_be/docs/).
-- **Frontend:** Veja [ctech_fe/README.md](./ctech_fe/README.md) e [ctech_fe/docs/](./ctech_fe/docs/).
-- **Instruções para IA:** Consulte [AGENTS.md](./ctech_be/AGENTS.md) e [AGENTS.md](./ctech_fe/AGENTS.md).
-- **Decisões Arquiteturais (ADRs):** Veja [ADRs/](./ADRs/).
-
----
-*CTECH v2026.5 — Focado em Desempenho e Automação.*
+| Projeto | Documentos |
+|---------|-----------|
+| **ctech_fe** | [README](./ctech_fe/README.md), [ARCHITECTURE](./ctech_fe/ARCHITECTURE.md), [CONTRIBUTING](./ctech_fe/CONTRIBUTING.md), [DATA_LAYER](./ctech_fe/DATA_LAYER.md), [CHANGELOG](./ctech_fe/CHANGELOG.md) |
+| **ctech_be** | [README](./ctech_be/README.md), [ARCHITECTURE](./ctech_be/ARCHITECTURE.md), [CONTRIBUTING](./ctech_be/CONTRIBUTING.md), [API](./ctech_be/API.md), [CHANGELOG](./ctech_be/CHANGELOG.md) |

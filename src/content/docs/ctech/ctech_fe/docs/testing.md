@@ -49,9 +49,16 @@ vi.mock('@/core/lib/db', () => ({
 
 // Mock de sucesso
 (db.execute as any).mockResolvedValueOnce({ rows: [...] });
-// Mock de erro
+// Mock de erro DB
 (db.execute as any).mockRejectedValueOnce(new Error('DB error'));
+// Mock de parse error (retorno malformado)
+(db.execute as any).mockResolvedValueOnce({ rows: [{ coluna_invalida: 'valor' }] });
 ```
+
+**Cenários obrigatórios para todo serviço:**
+- **Parse error:** Dados malformados retornados do banco → serviço retorna `[]`
+- **DB error:** Falha na conexão/query → serviço retorna `[]`
+- **Empty results:** Query bem-sucedida sem dados → serviço retorna `[]`
 
 ### Componentes React
 

@@ -2,81 +2,125 @@
 title: "CTECH Painel (Backend)"
 ---
 
+**Ferramenta local que roda na sua máquina para popular o banco de dados.** Ingestão de produtos, preços, reviews, etc. Não precisa de login, não vai ser deployado, só você usa.
 
+---
 
 Este é o "Cérebro" do ecossistema CTECH. Um painel administrativo e motor de automação construído com **Next.js 16+** que gerencia o pipeline de dados desde a entrada bruta até a consolidação final via IA.
 
-## 🚀 Tecnologias
+## Tecnologias
 
-- **Framework:** Next.js (App Router)
+- **Framework:** Next.js 16 (App Router) com Turbopack
 - **Linguagem:** TypeScript (Strict Mode)
-- **Estilização:** Tailwind CSS v4 + Shadcn/ui
-- **Banco de Dados:** Turso (libsql)
-- **IA:** Vercel AI SDK
+- **Estilização:** Tailwind CSS v4 + Shadcn/ui (@base-ui/react)
+- **Banco de Dados:** Turso (libsql) com Drizzle ORM
+- **IA:** Vercel AI SDK (multi-provider: Google, Groq, Cerebras, OpenRouter, GitHub Models)
 - **Logs:** Pino (Logging Estruturado)
 - **Testes:** Vitest & Playwright
+- **Scraping:** Puppeteer Extra + Stealth Plugin, Mozilla Readability, Cheerio
 
-## 🛠️ Instalação e Execução
+## Instalação e Execução
 
 ### Pré-requisitos
-- `pnpm` instalado globalmente.
-- Arquivo `.env.local` configurado (veja `.env.example`).
+- `pnpm` instalado globalmente
+- Arquivo `.env.local` configurado (veja `.env.example`)
 
 ### Comandos
 ```bash
-# Instalar dependências
-pnpm install
-
-# Iniciar em modo desenvolvimento
-pnpm dev
-
-# Gerar build de produção
-pnpm build
-
-# Rodar testes unitários
-pnpm test
+pnpm install              # Instalar dependências
+pnpm dev                  # Iniciar em modo desenvolvimento (porta 3001)
+pnpm build                # Gerar build de produção
+pnpm start                # Iniciar servidor de produção
+pnpm test:run             # Rodar testes unitários
+pnpm test:e2e             # Rodar testes E2E (Playwright)
+pnpm lint                 # Verificar lint
+pnpm db:generate          # Gerar migrações Drizzle
+pnpm db:migrate           # Aplicar migrações
+pnpm db:studio            # Abrir Drizzle Studio
 ```
 
-## 🏗️ Arquitetura e Regras de Negócio
+## Arquitetura: 9 Módulos (M1-M9)
 
-Este projeto é dividido em 9 módulos independentes (M1-M9), onde cada módulo é isolado para facilitar edição e manutenção via vibecoding (foco de IAs):
-1. **M1 (Entrada):** Ingestão e detecção de duplicidade.
-2. **M2 (Descoberta):** Busca de links de reviews.
-3. **M3 (Extração):** Processamento de texto de reviews via IA.
-4. **M4 (Consolidação):** Unificação de reviews e cálculo de nota.
-5. **M5 (Comercial):** Monitoramento de preços e ofertas.
-6. **M6 (Conferência):** Auditoria final de estoque e links.
-7. **M7 (CMS):** Gerenciador central do catálogo de produtos (CRUD).
-8. **M8 (Configurações):** Painel modular de configurações globais (IA, Scrapers, Logs, Manutenção do Banco).
-9. **M9 (Documentação):** Visualizador de documentação Markdown integrado ao painel.
+O projeto é dividido em 9 módulos independentes, cada um isolado para facilitar edição via vibecoding:
 
-**Estratégia de Modularização:** Cada módulo (M1-M9) é projetado para ser autônomo, permitindo que IAs editem pontos estratégicos com foco e contexto reduzido.
+### M1 — Entrada
+Ingestão e detecção de duplicidade semântica. A IA extrai do texto bruto um JSON com `marca`, `nome_produto`, `specs_cru`, `tier I-V`. Candidatos similares são enviados para veredito semântico da IA.
 
-### 🧠 Cache Inteligente
-- Cache em memória (Map) com TTL configurável via `CacheLayer` em `src/lib/cache.ts`
-- **TTL 10 min:** `getAIModels`, `getScrapingServices`, `getDefaultPrompt`
-- **TTL 5 min:** `getProdutosParaConsolidar`, `getProdutosParaBuscaReview`
-- Invalidação automática nas mutações (save/delete/toggle de AI models e scraping services, aprovação M3/M4)
-- Cache bypass: parâmetro `refresh = true` força recarga
+### M2 — Descoberta
+Busca de links de reviews técnicas em massa via template de busca. IA tria links descartando fóruns, vídeos e lojas.
 
-### 🗄️ Manutenção do Banco
-- Rota: `/8-configuracoes/manutencao` no painel de Configurações
-- 5 funções de purge: `limparLogsSistema`, `limparFilaProcessamento`, `limparHistoricoPrecos`, `limparConflitosEntrada`, `executarPurgeCompleta`
-- Purge completo com revalidação de cache
+### M3 — Extração
+Leitura de artigos, pontuação (0-10), extração de `pros`, `contras`, `mini_review` e specs faltantes. Review_type distingue critic de user.
 
-### 🔄 Migrações
-- Gerenciadas via Drizzle Kit: `pnpm db:generate` e `pnpm db:migrate`
-- Migration 0004 aplicada (Maio/2026): tabelas `Guias`/`Guia_Produtos` + 11 índices
+### M4 — Consolidação
+Atua como Editor-Chefe: agrega até 8 reviews, calcula Nota Bayesiana (média global 7.5, mín. 3 reviews) com Fator de Defasagem (0.2/ano). Sintetiza Veredito Final.
 
-> Para uma explicação profunda da lógica de negócio e estrutura técnica, leia o [**ARCHITECTURE.md**](./ARCHITECTURE.md).
-> Documentação complementar em [docs/](./docs/) (arquitetura, deploy, troubleshooting, operações).
+### M5 — Preços
+Monitoramento contínuo de preços via Google Shopping. Detecção de falsos positivos (capinha, cabo, modelo errado). Variações > R$5,00 guardadas em `historico_precos` (retenção 90 dias).
 
-## 🛡️ Instruções para Desenvolvimento
+### M6 — Conferência
+Auditoria do link final (Afiliado): scraper navega na URL salva para capturar preço PIX/Boleto e estoque.
 
-- **UTF-8 SEM BOM:** Obrigatório para todos os arquivos.
-- **Server Components:** Priorizar SSR para carregamento de dados.
-- **Repository Pattern:** Consultas ao banco devem ficar em `src/lib/repositories/`.
-- **Logger:** Use `@/lib/logger` em vez de `console.log`.
+### M7 — CMS
+Gerenciador central do catálogo de produtos (CRUD) com listagem, filtros (marca, categoria, lançamento), edição e exclusão.
 
----
-*CTECH Backend v2026.5*
+### M8 — Configurações
+Painel modular de configurações globais: modelos IA (cascata 6-tiers), serviços de scraping, logs do sistema, manutenção do banco, preferências.
+
+### M9 — Documentação
+Visualizador de documentação Markdown integrado ao painel com sidebar, busca (Ctrl+K) e renderização GFM.
+
+## Sistema de Filas
+
+- Tabela `fila_processamento` gerencia jobs em background (status: pendente, processando, concluido, erro, falha_critica)
+- **DLQ (Dead Letter Queue):** Após 3 tentativas falhas, job marcado como `falha_critica`
+- Worker faz claim atômico com batch processing (BATCH_SIZE=10)
+
+## Cache Inteligente
+
+Cache em memória (Map) com TTL configurável via `CacheLayer`:
+
+| Query | TTL |
+|-------|-----|
+| `getAIModels`, `getScrapingServices`, `getDefaultPrompt` | 10 min |
+| `getProdutosParaConsolidar`, `getProdutosParaBuscaReview` | 5 min |
+
+Invalidação automática nas mutações. Cache bypass via parâmetro `refresh = true`.
+
+## Estratégia de Performance
+
+- **SSR Prioritário:** Módulos de consulta pesada usam SSR
+- **I/O Paralelo:** `Promise.all()` obrigatório em páginas com múltiplas fontes
+- **Suspense + Skeletons:** `ModuleSkeleton` para feedback visual imediato
+- **Prefetching:** Todos os links do ActivityBar com `prefetch={true}`
+- **Resizable Panels:** `react-resizable-panels` v4 com `autoSaveId` para persistência
+
+## Banco de Dados (Turso SQLite)
+
+Principais tabelas: `Produtos`, `Reviews` (com `review_type`), `Afiliados`, `historico_precos`, `fila_processamento`, `config_ai_models`, `config_scraping_services`, `logs_entrada`, `config_preferences`, `Guias`, `Guia_Produtos`.
+
+Colunas obsoletas removidas em Abr/2026 (`embedding`, `is_primary`, `is_fallback`, `is_reserve`, `Afiliados.imagem_url`).
+
+## Segurança
+
+- API Keys criptografadas em AES-256-CBC nas tabelas de configuração
+- SQL parametrizado (sem injeção)
+- Tokens JWT com jose
+- Rate limiting em rotas de autenticação
+
+## Migrações
+
+Gerenciadas via Drizzle Kit:
+```bash
+pnpm db:generate    # Gerar migração
+pnpm db:migrate     # Aplicar migração
+```
+
+Para migrations SQL manuais (ex: rate_limit), execute via Turso CLI:
+```bash
+turso db shell <database> < migrations/arquivo.sql
+```
+
+## Licença
+
+MIT — CTECH Backend
