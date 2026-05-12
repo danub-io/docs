@@ -1,43 +1,41 @@
 ---
-title: "Deploy na Cloudflare Workers"
+title: "Deploy on Cloudflare Workers"
 ---
 
+> **Note:** ctech_fe deploys exclusively on **Cloudflare Workers**, not Vercel.
 
+## Prerequisites
 
-> **Nota:** O ctech_fe faz deploy exclusivamente em **Cloudflare Workers**, não na Vercel.
+- [Cloudflare](https://cloudflare.com) account
+- [wrangler](https://developers.cloudflare.com/workers/wrangler/) CLI installed
+- Cloudflare API token with `workers_scripts:write`, `workers_routes:write`, and `workers_kv:write` permissions
 
-## Pré-requisitos
+## Automatic Deploy (Tags)
 
-- Conta na [Cloudflare](https://cloudflare.com)
-- [wrangler](https://developers.cloudflare.com/workers/wrangler/) CLI instalado
-- Token de API da Cloudflare com permissões `workers_scripts:write`, `workers_routes:write` e `workers_kv:write`
+Production deployment is controlled by semantic tags via GitHub Actions:
 
-## Deploy Automático (Tags)
-
-O deploy em produção é controlado por tags semânticas via GitHub Actions:
-
-1. Desenvolva em `feat/*` → PR para `develop`
-2. Faça merge de `develop` para `production`
-3. Crie uma tag semântica e faça push:
+1. Develop on `feat/*` → PR to `develop`
+2. Merge `develop` into `production`
+3. Create a semantic tag and push:
 
 ```bash
 git tag v1.0.0
 git push origin v1.0.0
 ```
 
-4. O CI detecta a tag, executa lint, testes, build e deploy automaticamente
+4. CI detects the tag, runs lint, tests, build, and deploys automatically
 
-## Deploy Manual
+## Manual Deploy
 
 ```bash
 pnpm deploy
 ```
 
-O Worker ficará disponível em `https://ctech-fe.<seu-subdominio>.workers.dev`.
+The Worker will be available at `https://ctech-fe.<your-subdomain>.workers.dev`.
 
-## Variáveis de Ambiente (Secrets)
+## Environment Variables (Secrets)
 
-Configure os secrets no Worker via wrangler:
+Configure Worker secrets via wrangler:
 
 ```bash
 pnpm wrangler secret put TURSO_DATABASE_URL
@@ -47,31 +45,31 @@ pnpm wrangler secret put GOOGLE_CLIENT_ID
 pnpm wrangler secret put GOOGLE_CLIENT_SECRET
 ```
 
-### Verificação e Redeploy
+### Verification and Redeploy
 
-Após configurar ou alterar secrets, verifique e faça redeploy obrigatório:
+After configuring or changing secrets, verify and redeploy (required):
 
 ```bash
 pnpm wrangler secret list
 pnpm run deploy
 ```
 
-> **Nota:** Secrets configurados via `wrangler secret put` só entram em vigor na próxima versão do Worker. Sem o redeploy, o Worker lança **Error 1101**.
+> **Note:** Secrets configured via `wrangler secret put` only take effect on the next Worker version. Without redeploy, the Worker throws **Error 1101**.
 
-## Notas
+## Notes
 
-- O adaptador `@astrojs/cloudflare` está configurado em modo `directory`
-- A flag `nodejs_compat` está ativada em `wrangler.jsonc` (necessária para `node:crypto`)
-- O middleware de segurança (CSP, HSTS) funciona sem configuração adicional
-- Sitemap é gerado automaticamente no build
-- Para desenvolvimento local, crie `.dev.vars` com as variáveis de ambiente
+- The `@astrojs/cloudflare` adapter is configured in `directory` mode
+- The `nodejs_compat` flag is enabled in `wrangler.jsonc` (required for `node:crypto`)
+- The security middleware (CSP, HSTS) works without additional configuration
+- Sitemap is generated automatically on build
+- For local development, create `.dev.vars` with environment variables
 
-### Acesso a Secrets em Runtime
+### Runtime Secret Access
 
-No runtime Cloudflare Workers, `import.meta.env` **não** contém automaticamente os secrets. Os módulos usam o padrão:
+In the Cloudflare Workers runtime, `import.meta.env` does **not** automatically contain secrets. Modules use the pattern:
 
 ```ts
-const val = import.meta.env.MINHA_VAR || process.env.MINHA_VAR;
+const val = import.meta.env.MY_VAR || process.env.MY_VAR;
 ```
 
-Isso garante compatibilidade entre desenvolvimento (Astro/miniflare) e produção (Workers).
+This ensures compatibility between development (Astro/miniflare) and production (Workers).

@@ -2,28 +2,26 @@
 title: "Deployment"
 ---
 
+This folder contains guides and documentation related to deploying the CTECH Panel application.
 
+## Contents
 
-Esta pasta contém guias e documentação relacionada ao deploy da aplicação CTECH Painel.
-
-## Conteúdo
-
-- `vercel.md` - Guia de deploy na Vercel
-- `docker.md` - Containerização e deploy com Docker
-- `environment.md` - Configuração de variáveis de ambiente
+- `vercel.md` — Vercel deployment guide
+- `docker.md` — Containerization and deployment with Docker
+- `environment.md` — Environment variables configuration
 
 ## Quick Start
 
-O projeto está configurado para deploy na Vercel (recomendado):
+The project is configured for deployment on Vercel (recommended):
 
 ```bash
-# Instalar Vercel CLI
+# Install Vercel CLI
 npm i -g vercel
 
 # Deploy
 vercel --prod
 ```
 
-## Variáveis de Ambiente Necessárias
+## Required Environment Variables
 
-Consulte `.env.example` na raiz do projeto para a lista completa.
+See `.env.example` in the project root for the full list.
