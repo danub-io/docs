@@ -1,21 +1,19 @@
 ---
-title: "Arquitetura — Documentação"
+title: "Architecture — Documentation"
 ---
 
+Index of the CTECH frontend architecture documentation.
 
+## Documents
 
-Índice da documentação de arquitetura do frontend CTECH.
+- [components.md](./components.md) — React and Astro component catalog
+- [islands.md](./islands.md) — Islands Architecture and hydration strategy
+- [seo.md](./seo.md) — SEO strategy, meta tags, and structured data
+- [search.md](./search.md) — Full-text search module with filters and pagination
+- [community.md](./community.md) — Community module (feature flag, auth, reviews, feed)
 
-## Documentos
+## Overview
 
-- [components.md](./components.md) — Catálogo de componentes React e Astro
-- [islands.md](./islands.md) — Estratégia de Islands Architecture e hidratação
-- [seo.md](./seo.md) — Estratégia de SEO, meta tags e dados estruturados
-- [busca.md](./busca.md) — Módulo de busca full-text com filtros e paginação
-- [comunidade.md](./comunidade.md) — Módulo de comunidade (feature flag, auth, reviews, feed)
+The frontend uses **Astro 6** with **React 19** for interactive components. The architecture is modular with clear separation between core (infrastructure) and modules (business domains).
 
-## Visão Geral
-
-O frontend usa **Astro 6** com **React 19** para componentes interativos. A arquitetura é modular com separação clara entre core (infraestrutura) e modules (domínios de negócio).
-
-> Consulte [ARCHITECTURE.md](../../ARCHITECTURE.md) para uma visão completa.
+> See [ARCHITECTURE.md](../../ARCHITECTURE.md) for a full overview.

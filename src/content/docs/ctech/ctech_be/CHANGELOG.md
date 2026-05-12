@@ -2,95 +2,93 @@
 title: "Changelog"
 ---
 
+All notable changes to this project will be documented in this file.
 
-
-Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
-
-O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-br/1.1.0/),
-e este projeto segue o [Semantic Versioning](https://semver.org/lang/pt-BR/).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
-### Adicionado
-- **Coluna `review_type` na tabela `Reviews`:** Adicionado campo `review_type` (`'critic' | 'user'`) via ALTER TABLE para suportar avaliações de usuários no frontend.
-- **M9: Documentação** - Novo módulo em `/docs` que centraliza toda a documentação do projeto
-  - Sidebar com navegação entre todos os documentos
-  - Busca integrada via Command Palette (Ctrl+K)
-  - Renderização de markdown com suporte a GFM
-  - Rotas dinâmicas para todos os documentos do projeto
-- Integração do M9 na ActivityBar (navegação principal)
-- Dependências `react-markdown` e `remark-gfm` para renderização
-- Documentação completa da API (`API.md`)
-- Guia de contribuição (`CONTRIBUTING.md`)
-- **DLQ (Dead Letter Queue):** Sistema de resiliência para jobs falhos após 3 tentativas (commit `32c06d3`)
-- **Logging Estruturado:** Implementação de Pino via `@/lib/logger` para auditoria de módulos críticos (commit `32c06d3`)
-- **M3:** Extração de especificações faltantes em reviews com IA (commit `82e3ff5`)
-- **Cache em memória no BE:** Cache em Map com TTL configurável (5-10 min) e invalidação automática nas mutações
-- **Página de Manutenção do Banco:** Nova rota `/8-configuracoes/manutencao` com 5 funções de purge
-- **Migration 0004:** Índices e tabelas Guias/Guia_Produtos no schema
-- **Cache de slugs (1h) e categorias (30min) no FE**
-- **Função agregada `obterProdutoCompleto` no FE** (3 queries em paralelo)
-- **Cache bypass via parâmetro `refresh`**
+### Added
+- **`review_type` column in `Reviews` table:** Added `review_type` field (`'critic' | 'user'`) via ALTER TABLE to support user reviews on the frontend.
+- **M9: Documentation** — New module at `/docs` that centralizes all project documentation
+  - Sidebar with navigation across all documents
+  - Integrated search via Command Palette (Ctrl+K)
+  - Markdown rendering with GFM support
+  - Dynamic routes for all project documents
+- M9 integration into the ActivityBar (main navigation)
+- `react-markdown` and `remark-gfm` dependencies for rendering
+- Full API documentation (`API.md`)
+- Contribution guide (`CONTRIBUTING.md`)
+- **DLQ (Dead Letter Queue):** Resilience system for failed jobs after 3 attempts (commit `32c06d3`)
+- **Structured Logging:** Pino implementation via `@/lib/logger` for auditing critical modules (commit `32c06d3`)
+- **M3:** Missing spec extraction from reviews using AI (commit `82e3ff5`)
+- **In-memory cache on BE:** Map-based cache with configurable TTL (5-10 min) and automatic invalidation on mutations
+- **Database Maintenance Page:** New route `/8-configuracoes/manutencao` with 5 purge functions
+- **Migration 0004:** Indexes and Guides/Guide_Products tables in the schema
+- **FE slug cache (1h) and category cache (30min)**
+- **Aggregate function `obterProdutoCompleto` on FE** (3 parallel queries)
+- **Cache bypass via `refresh` parameter**
 
-### Otimizado
-- **Queries N+1 reescritas:** LEFT JOIN + GROUP BY, Promise.all, transação nativa libsql
-- **Batch processing em atualizar-ia.ts:** BATCH_SIZE=10, HTTP paralelo com Promise.allSettled, writes condicionais (só insere histórico se preço mudou > R$5), purge único de 90 dias no final
+### Optimized
+- **N+1 queries rewritten:** LEFT JOIN + GROUP BY, Promise.all, native libsql transaction
+- **Batch processing in `update-ia.ts`:** BATCH_SIZE=10, parallel HTTP with Promise.allSettled, conditional writes (only inserts history if price changed > R$5), single 90-day purge at the end
 
-### Corrigido
-- **Security:** Correção de SQL Injection em cláusulas IN via placeholders parametrizados (commit `08881d7`)
-- **M4:** Eliminado gargalo N+1 com batch processing em `processarConsolidacao` (commit `57b4d31`)
-- **M3:** Resolução de tipos TypeScript em `specs_extraidas` (commit `c18c7d9`)
-- **Worker:** Correção de testes falhos e expansão de cobertura para DLQ (commits `3539464`, `7b11a7a`)
-- **M1:** Atualização de system prompt para múltiplos aparelhos no módulo de entrada (commit `5f5a3dd`)
-- **Linhas CRLF em .env.local:** Convertido para Unix
-- **Credenciais hardcoded removidas:** Removidas de scripts/seed-categories.js
+### Fixed
+- **Security:** Fixed SQL Injection in IN clauses via parameterized placeholders (commit `08881d7`)
+- **M4:** Eliminated N+1 bottleneck with batch processing in `processarConsolidacao` (commit `57b4d31`)
+- **M3:** Fixed TypeScript types in `specs_extraidas` (commit `c18c7d9`)
+- **Worker:** Fixed failing tests and expanded DLQ coverage (commits `3539464`, `7b11a7a`)
+- **M1:** Updated system prompt for multiple devices in the entry module (commit `5f5a3dd`)
+- **CRLF lines in .env.local:** Converted to Unix
+- **Removed hardcoded credentials:** Removed from `scripts/seed-categories.js`
 
-### Atualizado (2026-05-01)
-- **API.md:** Adicionadas seções M8 (Configurações), M9 (Documentação), Worker & Queue e Utilitários
-  - 18 funções Server Actions do M8 documentadas (`ai-models.ts`, `scraping-services.ts`, `logs.ts`, `preferences.ts`)
-  - Funções de Worker (`processNextJob`, `runWorkerBatch`)
-  - Utilitários (`getSetting`, `setSetting`, `atualizarPrecosComIA`)
-- **ARCHITECTURE.md:** Adicionado M9 (Documentação) na seção de módulos
-- **docs/architecture/:** Populado com `diagrams.md`, `queue-system.md`, `repository-pattern.md`, `ai-integration.md`
-- **docs/deployment/:** Populado com `vercel.md`, `docker.md`, `environment.md`
-- **docs/troubleshooting/:** Populado com `database.md`, `scraping.md`, `ai-services.md`, `common-errors.md`
+### Updated (2026-05-01)
+- **API.md:** Added M8 (Settings), M9 (Documentation), Worker & Queue, and Utilities sections
+  - 18 M8 Server Actions documented (`ai-models.ts`, `scraping-services.ts`, `logs.ts`, `preferences.ts`)
+  - Worker functions (`processNextJob`, `runWorkerBatch`)
+  - Utilities (`getSetting`, `setSetting`, `atualizarPrecosComIA`)
+- **ARCHITECTURE.md:** Added M9 (Documentation) to the modules section
+- **docs/architecture/:** Populated with `diagrams.md`, `queue-system.md`, `repository-pattern.md`, `ai-integration.md`
+- **docs/deployment/:** Populated with `vercel.md`, `docker.md`, `environment.md`
+- **docs/troubleshooting/:** Populated with `database.md`, `scraping.md`, `ai-services.md`, `common-errors.md`
 
-### Documentação
-- **`docs/architecture/schema-banco.md`**: Novo — schema completo do Turso (12 tabelas, índices, relacionamentos)
-- **`docs/operations/monitoramento.md`**: Novo — Pino logging, health check, workers, DLQ, alertas
-- **`docs/development/setup-local.md`**: Novo — setup local com migrações e troubleshooting
-- **`CONTRIBUTING.md`**: Node.js version corrigido (18+ → >= 22.12.0)
+### Documentation
+- **`docs/architecture/schema-banco.md`:** New — complete Turso schema (12 tables, indexes, relationships)
+- **`docs/operations/monitoramento.md`:** New — Pino logging, health check, workers, DLQ, alerts
+- **`docs/development/setup-local.md`:** New — local setup with migrations and troubleshooting
+- **`CONTRIBUTING.md`:** Fixed Node.js version (18+ → >= 22.12.0)
 
-### Melhorado
-- Estrutura de documentação do projeto
-- Renomeação de módulos para nomenclatura consistente (ex: `2-busca-link-review` → `2-descoberta`, `5-busca-precos` → `5-precos`)
+### Improved
+- Project documentation structure
+- Module renames for consistent naming (e.g., `2-busca-link-review` → `2-descoberta`, `5-busca-precos` → `5-precos`)
 
 ---
 
 ## [0.1.0] - 2026-04-15
 
-### Adicionado
-- M1: Módulo de Entrada (Ingestão de produtos com IA)
-- M2: Módulo de Descoberta (Busca de reviews via web scraping)
-- M3: Módulo de Extração (Análise técnica de reviews com IA)
-- M4: Módulo de Consolidação (Veredito final com IA e nota bayesiana)
-- M5: Módulo de Preços (Monitoramento de preços em lojas)
-- M6: Módulo de Conferência (Auditoria de links e preços)
-- M7: Módulo CMS (Gerenciador de catálogo)
-- M8: Módulo de Configurações (Gerenciamento de modelos IA e scraping)
-- Repository Pattern para acesso a dados
-- Integração com múltiplos provedores de IA (Google, Groq, Cerebras, OpenRouter, GitHub Models)
-- Sistema de fila para processamento assíncrono
-- Testes unitários com Vitest (cobertura 60%)
-- Testes E2E com Playwright
-- CI/CD com GitHub Actions
-- Logging estruturado com Pino
-- Suporte a Turso (libsql) com Drizzle ORM
-- Documentação inicial (README.md, ARCHITECTURE.md)
+### Added
+- M1: Entry Module (AI-powered product ingestion)
+- M2: Discovery Module (Web scraping for reviews)
+- M3: Extraction Module (AI-powered technical review analysis)
+- M4: Consolidation Module (Final AI verdict with Bayesian scoring)
+- M5: Price Module (Price monitoring across stores)
+- M6: Checkout Module (Link and price audit)
+- M7: CMS Module (Catalog manager)
+- M8: Settings Module (AI model and scraping management)
+- Repository Pattern for data access
+- Integration with multiple AI providers (Google, Groq, Cerebras, OpenRouter, GitHub Models)
+- Queue system for async processing
+- Unit tests with Vitest (60% coverage)
+- E2E tests with Playwright
+- CI/CD with GitHub Actions
+- Structured logging with Pino
+- Turso (libsql) support with Drizzle ORM
+- Initial documentation (README.md, ARCHITECTURE.md)
 
-### Configuração
-- Next.js 16.2.3 com App Router
-- TypeScript em modo strict
+### Configuration
+- Next.js 16.2.3 with App Router
+- TypeScript in strict mode
 - Tailwind CSS v4 + Shadcn/ui
-- ESLint configurado
-- EditorConfig (UTF-8 SEM BOM, 2 espaços)
+- ESLint configured
+- EditorConfig (UTF-8 without BOM, 2 spaces)
