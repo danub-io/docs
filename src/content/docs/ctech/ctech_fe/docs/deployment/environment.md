@@ -29,6 +29,16 @@ GOOGLE_CLIENT_ID=seu-google-client-id
 GOOGLE_CLIENT_SECRET=seu-google-client-secret
 ```
 
+## Módulo Comunidade (Opcional)
+
+```env
+# Habilita/desabilita o módulo de comunidade (login, reviews de usuários, feed)
+# true = habilitado, false ou omitido = desabilitado (padrão)
+COMMUNITY_ENABLED=false
+```
+
+> **Nota:** Quando desabilitado, todas as rotas `/comunidade`, `/painel`, `/api/auth/*`, `/api/reviews/*` e `user-reviews` retornam 404 e o middleware não carrega `currentUser`.
+
 ## Como Configurar
 
 ### Desenvolvimento Local

@@ -25,6 +25,9 @@ pnpm-debug.log*
 *.swp
 *.swo
 
+# Qwen Code (tool config)
+.qwen/
+
 # TypeScript
 *.tsbuildinfo
 src/content/docs/ctech/ctech_fe/test-results/

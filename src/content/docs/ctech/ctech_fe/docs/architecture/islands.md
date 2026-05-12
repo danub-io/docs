@@ -50,15 +50,17 @@ O projeto usa majoritariamente componentes **Astro** estáticos (zero JS no clie
 
 **Islands ativas:**
 
-| Componente | Diretiva | Finalidade |
-|-----------|----------|-----------|
-| `CartaoAvaliacaoColapsavel` | `client:visible` | Card de avaliação de usuário com expandir/recolher |
-| `NavDrawer` | `client:load` | Drawer de navegação mobile |
-| `SearchCommand` | `client:load` | Paleta de busca (CMD+K) |
-| `LoginDialog` | `client:load` | Modal de login/registro com abas |
-| `UserMenu` | `client:load` | Menu do usuário autenticado |
-| `PainelDashboard` | `client:load` | Dashboard do painel do usuário |
-| `ComparadorInteractive` | `client:load` | Comparação interativa de produtos |
-| `HeroCarousel` | `client:load` | Carrossel de produtos em destaque |
+| Componente | Path | Diretiva | Finalidade |
+|-----------|------|----------|-----------|
+| `CartaoAvaliacaoColapsavel` | `src/modules/comunidade/reviews/components/CartaoAvaliacaoColapsavel.tsx` | `client:visible` | Card de avaliação de usuário com expandir/recolher |
+| `NavDrawer` | `src/core/ui/nav-drawer.tsx` | `client:load` | Drawer de navegação mobile |
+| `SearchCommand` | `src/core/ui/search-command.tsx` | `client:load` | Paleta de busca (CMD+K) |
+| `LoginDialog` | `src/modules/comunidade/auth/components/LoginDialog.tsx` | `client:load` | Modal de login/registro com abas |
+| `UserMenu` | `src/modules/comunidade/auth/components/UserMenu.tsx` | `client:load` | Menu do usuário autenticado |
+| `PainelDashboard` | `src/modules/comunidade/auth/components/PainelDashboard.tsx` | `client:load` | Dashboard do painel do usuário |
+| `ComparadorInteractive` | `src/modules/comparar/components/ComparadorInteractive.tsx` | `client:load` | Comparação interativa de produtos |
+| `HeroCarousel` | `src/modules/inicio/components/HeroCarousel.tsx` | `client:load` | Carrossel de produtos em destaque |
 
 > **Regra:** só adicione `client:*` quando houver estado/evento inevitável. Prefira `client:visible` ou `client:idle` sobre `client:load`.
+
+> **Nota:** Todas as islands de autenticação (LoginDialog, UserMenu, PainelDashboard) e reviews (CartaoAvaliacaoColapsavel) são renderizadas condicionalmente — só aparecem quando `COMMUNITY_ENABLED()` retorna `true`. Veja [comunidade.md](./comunidade.md) para detalhes.

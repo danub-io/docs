@@ -68,7 +68,7 @@ await db.execute(`SELECT * FROM Produtos WHERE slug = '${slug}'`);
 2. **Nunca** importar `src/core/lib/db.ts` em componentes React (só Astro SSR)
 3. **Validar entradas:** Use Zod (`safeParse`) para dados do banco e query params
 4. **Sanitizar saídas:** Astro faz escape automático em templates (`{var}`)
-5. **Rate limiting:** Considere adicionar em rotas de busca se houver abuso
+5. **Rate limiting:** Considere adicionar em rotas de busca e nas rotas condicionais do módulo comunidade (`/api/auth/*`, `/api/reviews/*`) se houver abuso
 
 ## Checklist para PRs
 
@@ -76,6 +76,20 @@ await db.execute(`SELECT * FROM Produtos WHERE slug = '${slug}'`);
 - [ ] Consultas SQL usam placeholders (`?` + `args`)
 - [ ] Nenhuma credencial ou token em logs ou erros
 - [ ] Componente React não importa `db` diretamente
+
+## Rotas Protegidas
+
+As seguintes rotas são protegidas condicionalmente pela feature flag `COMMUNITY_ENABLED`:
+
+| Rota | Comportamento (desabilitado) |
+|------|------------------------------|
+| `/comunidade` | Retorna 404 |
+| `/painel` | Retorna 404 |
+| `/api/auth/*` | Retorna 404 |
+| `/api/reviews/*` | Retorna 404 |
+| `/user-reviews` | Retorna 404 |
+
+> O middleware verifica `COMMUNITY_ENABLED()` antes de carregar `currentUser`. Quando desabilitado, nenhuma rota de comunidade é acessível, independente de autenticação.
 
 ## Troubleshooting: CSP bloqueando hidratação de componentes Astro
 

@@ -1,0 +1,90 @@
+---
+title: turbo-cli
+description: Assistente inline de terminal para conversar com LLMs via API
+---
+
+import { Badge, Aside, Card } from '@astrojs/starlight/components';
+
+<Badge text="v0.3.1" variant="success" /> <Badge text="Python 3.12+" variant="note" /> <Badge text="prompt-toolkit" variant="tip" />
+
+Bem-vindo à documentação do **turbo-cli**, um assistente inline de terminal (estilo Claude Code) com 4 modos de agente (Normal, Plan, Code, Ask) para conversar com modelos LLM via API diretamente do terminal.
+
+<Card title="4 Modos de Agente">
+Normal (assistente geral com bash), Plan (planejamento com project_inspector), Code (execução autônoma de planos), Ask (conversa geral + fetch).
+</Card>
+
+<Card title="LLM Client (SDK OpenAI)">
+Cliente compatível com OpenAI, Groq, Together, Anthropic e qualquer provedor que implemente a API OpenAI-compatible.
+</Card>
+
+<Card title="Slash Commands">
+Comandos `/model`, `/key`, `/mode`, `/plan`, `/plan-menu`, `/plan-abort`, `/code`, `/code-reset`, `/code-status`, `/add`, `/clear`, `/new`, `/quit`, `/end`, `/help`.
+</Card>
+
+## Arquitetura
+
+```
+turbo-cli (Python CLI)
+  ├── main.py              # Entrypoint thin (→ cli.py)
+  ├── cli.py               # CLI argparse + asyncio.run()
+  ├── pyproject.toml       # Build system + entry point "turbo"
+  ├── requirements.txt     # Dev-deps (pytest, mypy)
+  ├── turbo_cli/
+  │   ├── __init__.py      # __version__
+  │   ├── __main__.py      # python -m turbo_cli
+  │   ├── app.py           # Loop principal (prompt_toolkit), tool dispatch
+  │   ├── config.py        # ConfigModel (pydantic)
+  │   ├── llm.py           # LLMClient (SDK OpenAI)
+  │   ├── messages.py      # Formatação rich
+  │   ├── shared/          # Estado, ferramentas, planos, widgets
+  │   │   ├── modes.py     # AgentMode enum, MODE_TOOLS
+  │   │   ├── state.py     # SessionState
+  │   │   ├── tools.py     # Definições e execução de ferramentas
+  │   │   ├── ui.py        # Branding, progress bar
+  │   │   ├── widgets.py   # ProgressWidget, AskUserDialog
+  │   │   ├── plan_parser.py
+  │   │   └── plan_writer.py
+  │   └── agents/          # 4 agentes
+  │       ├── base.py      # Agent (ABC)
+  │       ├── normal.py    # NormalAgent (bash)
+  │       ├── plan.py      # PlanAgent (project_inspector)
+  │       ├── code.py      # CodeAgent (planos)
+  │       └── ask.py       # AskAgent (fetch)
+  └── .env.example
+```
+
+## Início Rápido
+
+```bash
+# Clonar
+git clone <repo-url> turbo-cli
+cd turbo-cli
+
+# Criar venv e instalar
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e .
+
+# Executar (3 formas equivalentes)
+turbo
+# python -m turbo_cli
+# python main.py
+```
+
+## Stack Tecnológica
+
+| Camada | Tecnologia |
+|--------|-----------|
+| UI | prompt-toolkit 3.x |
+| Linguagem | Python 3.12+ |
+| LLM | OpenAI SDK (streaming) |
+| Formatação | rich (markdown, syntax highlight) |
+| Config | pydantic |
+
+## Seções da Documentação
+
+- [README](./README/) — Visão geral, instalação, comandos
+- [ARCHITECTURE](./ARCHITECTURE/) — Arquitetura detalhada, fluxos, módulos
+- [CHANGELOG](./CHANGELOG/) — Histórico de versões
+- [CONTRIBUTING](./CONTRIBUTING/) — Guia de contribuição
+- [docs/](./docs/) — Documentação técnica (arquitetura, desenvolvimento, operações, troubleshooting)

@@ -99,5 +99,7 @@ O que foi feito para corrigir. Inclua blocos de código antes/depois.
 | 002 | `POSTMORTEM-002-veredito-padding` | Padding inconsistente na seção Veredito (layout-boxed) |
 | 003 | `POSTMORTEM-003-csp-hydration-block` | CSP bloqueando hidratação de componentes React |
 | 004 | `POSTMORTEM-004-edit-tool-selfclosing-tag` | Edit tool convertendo self-closing JSX tag em closing tag inválida |
+| 005 | `POSTMORTEM-005-hero-horizontal-scroll-padding` | Padding horizontal do HeroCarousel quebrado em telas ultra-wide |
+| 006 | `POSTMORTEM-006-ssr-hooks-optimize-deps` | Erro de Hooks React no SSR (Vite + Cloudflare Workerd) |
 
 > **Nota:** A sidebar do Starlight é gerada automaticamente a partir do diretório `postmortems/`. Basta criar um novo arquivo `POSTMORTEM-NNN-descricao.md` no diretório do projeto correspondente que ele aparece na navegação sem precisar editar config.
