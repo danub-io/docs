@@ -1,17 +1,15 @@
 ---
-title: "Deploy com Docker - CTECH Painel"
+title: "Deploy with Docker - CTECH Panel"
 ---
 
+## Prerequisites
 
-
-## Pré-requisitos
-
-- Docker e Docker Compose instalados
-- Banco Turso (ou SQLite local para testes)
+- Docker and Docker Compose installed
+- Turso database (or local SQLite for testing)
 
 ## Dockerfile
 
-Crie um `Dockerfile` na raiz:
+Create a `Dockerfile` at the root:
 
 ```dockerfile
 FROM node:20-alpine AS base
@@ -60,10 +58,10 @@ services:
       retries: 3
 ```
 
-## Executar
+## Running
 
 ```bash
-# Criar arquivo .env com as variáveis
+# Create .env file with the variables
 cat > .env << EOL
 TURSO_DATABASE_URL=libsql://...
 TURSO_AUTH_TOKEN=...
@@ -71,15 +69,15 @@ ENCRYPTION_KEY=...
 NEXTAUTH_SECRET=...
 EOL
 
-# Subir container
+# Start container
 docker-compose up -d
 
-# Ver logs
+# View logs
 docker-compose logs -f
 ```
 
-## Notas
+## Notes
 
-- Next.js em produção requer acesso ao banco em runtime
-- Para SQLite local, monte um volume: `./data:/app/data`
-- Turso é recomendado para produção (SQLite remoto gerenciado)
+- Next.js in production requires database access at runtime
+- For local SQLite, mount a volume: `./data:/app/data`
+- Turso is recommended for production (managed remote SQLite)

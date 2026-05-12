@@ -1,18 +1,16 @@
 ---
-title: "Deploy na Vercel - CTECH Painel"
+title: "Deploy on Vercel - CTECH Panel"
 ---
 
+## Prerequisites
 
+- Account on [Vercel](https://vercel.com)
+- Vercel CLI installed: `npm i -g vercel`
+- Turso database configured and its URL ready
 
-## Pré-requisitos
+## Step by Step
 
-- Conta na [Vercel](https://vercel.com)
-- CLI da Vercel instalado: `npm i -g vercel`
-- Banco Turso configurado e URL em mãos
-
-## Passo a Passo
-
-### 1. Conectar Repositório
+### 1. Connect Repository
 
 ```bash
 cd /home/dan/Documentos/ctech/ctech_be
@@ -20,9 +18,9 @@ vercel login
 vercel link
 ```
 
-### 2. Configurar Variáveis de Ambiente
+### 2. Configure Environment Variables
 
-Via dashboard da Vercel ou CLI:
+Via Vercel dashboard or CLI:
 
 ```bash
 vercel env add TURSO_DATABASE_URL
@@ -37,36 +35,36 @@ vercel env add NEXTAUTH_SECRET
 # Preview
 vercel
 
-# Produção
+# Production
 vercel --prod
 ```
 
-## Configuração do next.config.ts
+## next.config.ts Configuration
 
-O projeto já está configurado para Vercel (serverless). Não é necessário ajustar o `next.config.ts` para deploy básico.
+The project is already configured for Vercel (serverless). No changes to `next.config.ts` are needed for basic deployment.
 
-## Variáveis de Ambiente Necessárias
+## Required Environment Variables
 
-| Variável | Descrição | Onde obter |
-|----------|-----------|------------|
-| `TURSO_DATABASE_URL` | URL do banco Turso | `turso db show [nome] --url` |
-| `TURSO_AUTH_TOKEN` | Token de acesso | `turso db tokens create [nome]` |
-| `ENCRYPTION_KEY` | Chave AES-256-CBC (32 chars) | Gerar: `openssl rand -hex 16` |
-| `NEXTAUTH_SECRET` | Secret para next-auth | Gerar: `openssl rand -hex 32` |
-| `GOOGLE_API_KEY` | (Opcional) Chave Google AI | Google AI Studio |
+| Variable | Description | Where to Get It |
+|----------|-------------|-----------------|
+| `TURSO_DATABASE_URL` | Turso database URL | `turso db show [name] --url` |
+| `TURSO_AUTH_TOKEN` | Access token | `turso db tokens create [name]` |
+| `ENCRYPTION_KEY` | AES-256-CBC key (32 chars) | Generate: `openssl rand -hex 16` |
+| `NEXTAUTH_SECRET` | Secret for next-auth | Generate: `openssl rand -hex 32` |
+| `GOOGLE_API_KEY` | (Optional) Google AI key | Google AI Studio |
 
-## Verificação Pós-Deploy
+## Post-Deploy Verification
 
-1. Acesse `/api/health` para verificar conexão com banco
-2. Teste login/cookie (se aplicável)
-3. Verifique logs na aba "Deployments" da Vercel
+1. Visit `/api/health` to verify database connection
+2. Test login/cookie (if applicable)
+3. Check logs in the "Deployments" tab on Vercel
 
 ## Troubleshooting
 
-**Erro de conexão com Turso:**
-- Verifique se o token não expirou: `turso db tokens list [nome]`
-- Confirme se a URL está no formato correto (`libsql://...`)
+**Turso connection error:**
+- Check if the token has expired: `turso db tokens list [name]`
+- Confirm the URL is in the correct format (`libsql://...`)
 
-**Build falha:**
-- Verifique se todas as env vars estão definidas
-- Teste o build local: `pnpm build`
+**Build fails:**
+- Verify all env vars are set
+- Test the build locally: `pnpm build`

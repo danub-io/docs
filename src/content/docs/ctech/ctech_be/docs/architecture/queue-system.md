@@ -1,77 +1,75 @@
 ---
-title: "Sistema de Filas e DLQ - CTECH Painel"
+title: "Queue System and DLQ - CTECH Panel"
 ---
 
+## Overview
 
+The project uses a `fila_processamento` table in Turso SQLite to manage async jobs. The worker (`src/app/actions/worker.ts`) processes jobs from 4 modules: `descoberta`, `extracao`, `consolidacao`, `precos`.
 
-## Visão Geral
+## Job States
 
-O projeto utiliza uma tabela `fila_processamento` no Turso SQLite para gerenciar jobs assíncronos. O worker (`src/app/actions/worker.ts`) processa jobs de 4 módulos: `descoberta`, `extracao`, `consolidacao`, `precos`.
+| Status | Description |
+|--------|-------------|
+| `pendente` | Awaiting processing |
+| `processando` | Job running (atomic claim) |
+| `concluido` | Successfully processed |
+| `erro` | Temporary failure (increments `tentativas`) |
+| `falha_critica` | DLQ: 3+ failures, will not be reprocessed |
 
-## Estados do Job
-
-| Status | Descrição |
-|--------|-----------|
-| `pendente` | Aguardando processamento |
-| `processando` | Job em execução (claim atômico) |
-| `concluido` | Processado com sucesso |
-| `erro` | Falha temporária (incrementa `tentativas`) |
-| `falha_critica` | DLQ: 3+ falhas, não será reprocessado |
-
-## Fluxo do Worker
+## Worker Flow
 
 ```typescript
-// 1. Claim atômico (evita race condition)
+// 1. Atomic claim (prevents race conditions)
 const job = await claimNextJob();
 
-// 2. Execução com timeout (WORKER_JOB_TIMEOUT_MS)
+// 2. Execution with timeout (WORKER_JOB_TIMEOUT_MS)
 const result = await Promise.race([
     executeJob(job),
     timeout(WORKER_JOB_TIMEOUT_MS)
 ]);
 
-// 3. Finalização
+// 3. Finalization
 if (sucesso) await finishJob(job.id, "concluido");
 else await finishJob(job.id, "erro", erro);
 ```
 
-## Resiliência (DLQ)
+## Resilience (DLQ)
 
-- Cada falha incrementa `tentativas` na tabela
-- Ao atingir **3 tentativas**, o job vai para `falha_critica`
-- Jobs em `falha_critica` não são mais processados automaticamente
-- Necessário intervenção manual ou reset via banco
+- Each failure increments `tentativas` in the table
+- After reaching **3 attempts**, the job goes to `falha_critica`
+- Jobs in `falha_critica` are no longer processed automatically
+- Requires manual intervention or a database reset
 
-## Funções Disponíveis
+## Available Functions
 
 ### `processNextJob()`
-Processa o próximo job na fila. Faz claim atômico e executa a tarefa correspondente ao módulo.
+Processes the next job in the queue. Atomically claims it and executes the task corresponding to the module.
 
 ### `runWorkerBatch(limit?)`
-Processa até `limit` jobs sequencialmente (padrão: 5).
+Processes up to `limit` jobs sequentially (default: 5).
 
 ### `claimNextJob()` (lib/queue.ts)
-Função interna que faz SELECT + UPDATE atômico para pegar o próximo job `pendente`.
+Internal function that performs an atomic SELECT + UPDATE to claim the next `pendente` job.
 
 ### `finishJob(jobId, status, error?)` (lib/queue.ts)
-Atualiza o status do job e registra timestamp de conclusão.
+Updates the job status and records the completion timestamp.
 
 ### `updateWorkerHeartbeat(active)` (lib/queue.ts)
-Atualiza o heartbeat do worker para monitoramento de saúde.
+Updates the worker heartbeat for health monitoring.
 
-## Monitoramento
+## Monitoring
 
-- **Health Check:** `GET /api/health` retorna status do worker (`active`, `lastHeartbeat`)
-- **Logs:** Todas as operações são registradas via `pino` (`@/lib/logger`)
-- **Página de Configurações:** `/8-configuracoes/logs` exibe logs em tempo real
+- **Health Check:** `GET /api/health` returns worker status (`active`, `lastHeartbeat`)
+- **Logs:** All operations are logged via `pino` (`@/lib/logger`)
+- **Settings Page:** `/8-configuracoes/logs` displays real-time logs
 
-## Configuração
+## Configuration
 
-O timeout dos jobs é definido em `@/lib/constants`:
+The job timeout is defined in `@/lib/constants`:
 ```typescript
-WORKER_JOB_TIMEOUT_MS // Timeout padrão por job
+WORKER_JOB_TIMEOUT_MS // Default timeout per job
 ```
 
-## Limpeza
+## Cleanup
 
-Não há limpeza automática de jobs concluídos. Recomenda-se manter apenas os últimos N dias conforme volume de dados.
+There is no automatic cleanup of completed jobs. It is recommended to keep only the last N days based on data volume.

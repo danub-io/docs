@@ -1,33 +1,31 @@
 ---
-title: "Integração com Múltiplos Provedores de IA"
+title: "Integration with Multiple AI Providers"
 ---
 
+## Overview
 
+The CTECH Panel supports multiple AI providers through the **Vercel AI SDK**, dynamically configured in M8 (Settings).
 
-## Visão Geral
+## Supported Providers
 
-O CTECH Painel suporta múltiplos provedores de IA através do **Vercel AI SDK**, configurados dinamicamente no M8 (Configurações).
-
-## Provedores Suportados
-
-| Provedor | SDK Package | Exemplo de Modelo |
-|----------|-------------|-------------------|
+| Provider | SDK Package | Example Model |
+|----------|-------------|---------------|
 | Google | `@ai-sdk/google` | `gemini-2.0-flash` |
 | Groq | `@ai-sdk/groq` | `llama3-70b-8192` |
 | Cerebras | `@ai-sdk/cerebras` | `llama3.1-70b` |
 | OpenRouter | `@ai-sdk/openrouter` | `meta-llama/...` |
 | GitHub Models | `@ai-sdk/github-models` | `gpt-4o` |
 
-## Configuração (M8)
+## Configuration (M8)
 
-As configurações são salvas na tabela `config_ai_models`:
+Settings are saved in the `config_ai_models` table:
 
 ```sql
 CREATE TABLE config_ai_models (
     id INTEGER PRIMARY KEY,
     provider TEXT NOT NULL,
     model_id TEXT NOT NULL,
-    api_key TEXT NOT NULL, -- Criptografado (AES-256-CBC)
+    api_key TEXT NOT NULL, -- Encrypted (AES-256-CBC)
     system_prompt TEXT,
     target_module TEXT NOT NULL,
     tier INTEGER NOT NULL,
@@ -35,20 +33,20 @@ CREATE TABLE config_ai_models (
 );
 ```
 
-## Cascata de Resiliência (Tiers)
+## Resilience Cascade (Tiers)
 
-Cada módulo pode ter até 5 tiers configurados:
+Each module can have up to 5 configured tiers:
 
 ```
-Tier 1: Modelo primário (ex: gemini-2.0-flash)
-  ↓ (falha)
-Tier 2: Reserva 1 (ex: gpt-4o via GitHub)
-  ↓ (falha)
-Tier 3: Reserva 2 (ex: llama3-70b via Groq)
-  ↓ (falha)
-Tier 4: Reserva 3
-  ↓ (falha)
-Tier 5: Fallback final
+Tier 1: Primary model (e.g. gemini-2.0-flash)
+  ↓ (fail)
+Tier 2: Backup 1 (e.g. gpt-4o via GitHub)
+  ↓ (fail)
+Tier 3: Backup 2 (e.g. llama3-70b via Groq)
+  ↓ (fail)
+Tier 4: Backup 3
+  ↓ (fail)
+Tier 5: Final fallback
 ```
 
 ## Factory Pattern (`lib/model-factory.ts`)
@@ -56,48 +54,48 @@ Tier 5: Fallback final
 ```typescript
 import { getModelInstance } from "@/lib/model-factory";
 
-// Retorna uma instância configurada do AI SDK
+// Returns a configured AI SDK instance
 const model = getModelInstance(provider, model_id, api_key);
 ```
 
-A factory instancia o provedor correto baseado na string `provider` salva no banco.
+The factory instantiates the correct provider based on the `provider` string saved in the database.
 
-## Uso na Prática
+## Usage in Practice
 
 ```typescript
 import { generateObject } from "ai";
 import { z } from "zod";
 
-// 1. Busca modelo configurado (M8)
+// 1. Fetch configured model (M8)
 const models = await getAIModels("extracao");
 const modelConfig = models.find(m => m.provider === "google") || models[0];
 
-// 2. Cria instância via factory
+// 2. Create instance via factory
 const model = getModelInstance(modelConfig.provider, modelConfig.model_id, modelConfig.api_key);
 
-// 3. Usa com AI SDK
+// 3. Use with AI SDK
 const { object } = await generateObject({
     model,
     schema: z.object({ nota: z.number(), pros: z.string() }),
     system: modelConfig.system_prompt || getDefaultPrompt("extracao"),
-    prompt: "Analise este review..."
+    prompt: "Analyze this review..."
 });
 ```
 
-## Criptografia de API Keys
+## API Key Encryption
 
-As chaves API são criptografadas em repouso usando `AES-256-CBC`:
+API keys are encrypted at rest using `AES-256-CBC`:
 
 ```typescript
 import { encrypt, decrypt } from "@/lib/encryption";
 
-// Salvar (em upsertAIModel)
+// Save (in upsertAIModel)
 const encrypted = encrypt(api_key);
 
-// Ler (em getAIModels)
+// Read (in getAIModels)
 const decrypted = decrypt(encrypted);
 ```
 
-## Prompts Padrão
+## Default Prompts
 
-Se nenhum `system_prompt` for salvo no banco, a função `getDefaultPrompt(module)` retorna prompts pré-definidos para cada módulo (M1-M6).
+If no `system_prompt` is saved in the database, the `getDefaultPrompt(module)` function returns pre-defined prompts for each module (M1-M6).

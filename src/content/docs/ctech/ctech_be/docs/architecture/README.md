@@ -2,20 +2,18 @@
 title: "Architecture"
 ---
 
+Detailed documentation about the architecture of the CTECH Panel system.
 
+## Contents
 
-Documentação detalhada sobre a arquitetura do sistema CTECH Painel.
+- `diagrams.md` — Flow diagrams for modules M1-M8
+- `queue-system.md` — Queue system and DLQ
+- `repository-pattern.md` — Repository pattern for data access
+- `ai-integration.md` — Integration with multiple AI providers
+- `schema-banco.md` — Full Turso database schema (tables, indexes, relationships)
 
-## Conteúdo
+## Overview
 
-- `diagrams.md` - Diagramas de fluxo dos módulos M1-M8
-- `queue-system.md` - Sistema de filas e DLQ
-- `repository-pattern.md` - Padrão Repository para acesso a dados
-- `ai-integration.md` - Integração com múltiplos provedores de IA
-- `schema-banco.md` - Schema completo do banco Turso (tabelas, índices, relações)
+The system follows a modular architecture with 8 main modules (M1-M8), each responsible for a stage in the data pipeline.
 
-## Visão Geral
-
-O sistema segue uma arquitetura modular com 8 módulos principais (M1-M8), cada um responsável por uma etapa do pipeline de dados.
-
-Para detalhes completos, consulte o [ARCHITECTURE.md](../ARCHITECTURE.md) na raiz do projeto.
+For full details, see [ARCHITECTURE.md](../ARCHITECTURE.md) in the project root.

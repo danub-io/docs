@@ -1,9 +1,7 @@
 ---
-title: "Operações"
+title: "Operations"
 ---
 
+## Documents
 
-
-## Documentos
-
-- [monitoramento.md](./monitoramento.md) — Pino logging, health check, workers e DLQ
+- [monitoring.md](./monitoring.md) — Pino logging, health check, workers, and DLQ

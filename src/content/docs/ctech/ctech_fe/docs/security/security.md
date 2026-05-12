@@ -1,14 +1,12 @@
 ---
-title: "Segurança — Frontend CTECH"
+title: "Security — CTECH Frontend"
 ---
 
-
-
-Este documento descreve as medidas de segurança implementadas no frontend.
+This document describes the security measures implemented in the frontend.
 
 ## Content Security Policy (CSP)
 
-Definida no middleware (`src/middleware.ts`). Política atual simplificada (Astro requer `unsafe-inline` para estilos SSR):
+Defined in the middleware (`src/middleware.ts`). Current simplified policy (Astro requires `unsafe-inline` for SSR styles):
 
 ```
 default-src 'self';
@@ -19,103 +17,103 @@ connect-src 'self' https://*;
 frame-ancestors 'none';
 ```
 
-> **Nota:** `unsafe-inline` em scripts é necessário para o Astro (injeção de scripts inline no SSR). `https://*` em imagens/conexões aceita qualquer fonte HTTPS (flexibilidade para afiliados e CDNs).
+> **Note:** `unsafe-inline` in scripts is required for Astro (inline script injection in SSR). `https://*` in images/connections accepts any HTTPS source (flexibility for affiliates and CDNs).
 
-### Como modificar
+### How to modify
 
-Edite `src/middleware.ts` e teste:
+Edit `src/middleware.ts` and test:
 
 ```bash
 curl -I http://localhost:4321 | grep content-security-policy
 ```
 
-## HTTP Headers de Segurança
+## HTTP Security Headers
 
-| Header | Valor | Efeito |
+| Header | Value | Effect |
 |--------|-------|--------|
-| `Strict-Transport-Security` | `max-age=63072000; includeSubDomains; preload` | Força HTTPS por 2 anos com preload |
-| `X-Frame-Options` | `DENY` | Protege contra clickjacking |
-| `X-Content-Type-Options` | `nosniff` | Impede MIME sniffing |
-| `Referrer-Policy` | `strict-origin-when-cross-origin` | Controla envio de referrer |
-| `Permissions-Policy` | `camera=(), microphone=(), geolocation=(), interest-cohort=()` | Desabilita APIs sensíveis e FLoC |
+| `Strict-Transport-Security` | `max-age=63072000; includeSubDomains; preload` | Forces HTTPS for 2 years with preload |
+| `X-Frame-Options` | `DENY` | Protects against clickjacking |
+| `X-Content-Type-Options` | `nosniff` | Prevents MIME sniffing |
+| `Referrer-Policy` | `strict-origin-when-cross-origin` | Controls referrer header |
+| `Permissions-Policy` | `camera=(), microphone=(), geolocation=(), interest-cohort=()` | Disables sensitive APIs and FLoC |
 
-Configurados no middleware Astro (`src/middleware.ts`).
+Configured in the Astro middleware (`src/middleware.ts`).
 
-## Proteção contra SQL Injection
+## SQL Injection Protection
 
-O banco Turso é acessado **apenas em SSR** (nunca no cliente). Todas as consultas usam placeholders parametrizados:
+The Turso database is accessed **only in SSR** (never on the client). All queries use parameterized placeholders:
 
 ```typescript
-// Correto (parametrizado)
+// Correct (parameterized)
 await db.execute({
   sql: 'SELECT * FROM Produtos WHERE slug = ?',
   args: [slug],
 });
 
-// Errado (nunca fazer)
+// Wrong (never do this)
 await db.execute(`SELECT * FROM Produtos WHERE slug = '${slug}'`);
 ```
 
-## Acesso ao Banco
+## Database Access
 
-- Cliente Turso (`libsql`) importado apenas em arquivos `.astro` (frontmatter) e serviços SSR
-- Nenhum endpoint expõe o cliente ao navegador
-- Token de autenticação do Turso é configurado via env var e marcado como secreto na Vercel
+- Turso client (`libsql`) imported only in `.astro` files (frontmatter) and SSR services
+- No endpoint exposes the client to the browser
+- Turso authentication token is configured via env var and marked as secret
 
-## Práticas para Desenvolvimento
+## Development Practices
 
-1. **Nunca** expor `TURSO_AUTH_TOKEN` em logs ou mensagens de erro
-2. **Nunca** importar `src/core/lib/db.ts` em componentes React (só Astro SSR)
-3. **Validar entradas:** Use Zod (`safeParse`) para dados do banco e query params
-4. **Sanitizar saídas:** Astro faz escape automático em templates (`{var}`)
-5. **Rate limiting:** Considere adicionar em rotas de busca e nas rotas condicionais do módulo comunidade (`/api/auth/*`, `/api/reviews/*`) se houver abuso
+1. **Never** expose `TURSO_AUTH_TOKEN` in logs or error messages
+2. **Never** import `src/core/lib/db.ts` in React components (Astro SSR only)
+3. **Validate inputs:** Use Zod (`safeParse`) for database data and query params
+4. **Sanitize outputs:** Astro auto-escapes in templates (`{var}`)
+5. **Rate limiting:** Consider adding on search routes and on the conditional community module routes (`/api/auth/*`, `/api/reviews/*`) if abuse is detected
 
-## Checklist para PRs
+## PR Checklist
 
-- [ ] CSP atualizada se nova CDN/externa foi adicionada
-- [ ] Consultas SQL usam placeholders (`?` + `args`)
-- [ ] Nenhuma credencial ou token em logs ou erros
-- [ ] Componente React não importa `db` diretamente
+- [ ] CSP updated if a new CDN/external source was added
+- [ ] SQL queries use placeholders (`?` + `args`)
+- [ ] No credentials or tokens in logs or errors
+- [ ] React component does not import `db` directly
 
-## Rotas Protegidas
+## Protected Routes
 
-As seguintes rotas são protegidas condicionalmente pela feature flag `COMMUNITY_ENABLED`:
+The following routes are conditionally protected by the `COMMUNITY_ENABLED` feature flag:
 
-| Rota | Comportamento (desabilitado) |
-|------|------------------------------|
-| `/comunidade` | Retorna 404 |
-| `/painel` | Retorna 404 |
-| `/api/auth/*` | Retorna 404 |
-| `/api/reviews/*` | Retorna 404 |
-| `/user-reviews` | Retorna 404 |
+| Route | Behavior (disabled) |
+|-------|---------------------|
+| `/community` | Returns 404 |
+| `/dashboard` | Returns 404 |
+| `/api/auth/*` | Returns 404 |
+| `/api/reviews/*` | Returns 404 |
+| `/user-reviews` | Returns 404 |
 
-> O middleware verifica `COMMUNITY_ENABLED()` antes de carregar `currentUser`. Quando desabilitado, nenhuma rota de comunidade é acessível, independente de autenticação.
+> The middleware checks `COMMUNITY_ENABLED()` before loading `currentUser`. When disabled, no community routes are accessible regardless of authentication.
 
-## Troubleshooting: CSP bloqueando hidratação de componentes Astro
+## Troubleshooting: CSP blocking Astro component hydration
 
-### Histórico
+### History
 
-Em maio de 2026, o menu hamburguer (NavDrawer) parou de responder a cliques. O
-botão renderizava no SSR, mas nada acontecia ao clicar. Foram necessárias várias
-horas de debugging até identificar a causa raiz.
+In May 2026, the hamburger menu (NavDrawer) stopped responding to clicks. The
+button rendered in SSR, but nothing happened when clicked. It took several
+hours of debugging to identify the root cause.
 
-### Sintoma
+### Symptom
 
-- Componentes React com `client:load` renderizam o HTML inicial (SSR) corretamente
-- Nenhum evento JavaScript é acionado ao interagir com os componentes
-- Nenhum erro no console do servidor ou no build
-- Erro no console do navegador:
+- React components with `client:load` render the initial HTML (SSR) correctly
+- No JavaScript events fire when interacting with the components
+- No errors in the server console or build output
+- Browser console error:
   ```
   Executing inline script violates the following Content Security Policy
   directive 'script-src 'self''. Either the 'unsafe-inline' keyword, a
   hash, or a nonce is required to enable inline execution.
   ```
 
-### Causa Raiz
+### Root Cause
 
-A CSP em `src/middleware.ts` usava `script-src 'self'`, que bloqueia **todos os
-scripts inline**. O Astro depende de scripts inline para o sistema de hidratação
-de ilhas (`<astro-island>`):
+The CSP in `src/middleware.ts` used `script-src 'self'`, which blocks **all
+inline scripts**. Astro depends on inline scripts for its island hydration
+system (`<astro-island>`):
 
 ```html
 <script>
@@ -124,64 +122,63 @@ de ilhas (`<astro-island>`):
 </script>
 ```
 
-Quando esse script é bloqueado:
+When this script is blocked:
 
-1. `Astro.load` nunca é definido
-2. O evento `astro:load` nunca é disparado
-3. As ilhas `<astro-island client="load">` ficam em estado de espera permanente
-4. Os componentes React nunca hidratam
-5. Os manipuladores de evento nunca são anexados ao DOM
+1. `Astro.load` is never defined
+2. The `astro:load` event is never dispatched
+3. `<astro-island client="load">` islands remain in a permanent waiting state
+4. React components never hydrate
+5. Event handlers are never attached to the DOM
 
-Isso afeta **todos** os componentes React com `client:load` ou `client:idle`.
+This affects **all** React components with `client:load` or `client:idle`.
 
-### Por que foi difícil de encontrar
+### Why it was hard to find
 
-1. **Build e servidor sem erros:** `pnpm build` e `pnpm dev` funcionam sem
-   nenhum erro ou warning relacionado a CSP.
-2. **Testes unitários passam:** Testes com Vitest + jsdom não passam pelo
-   middleware Astro, então a CSP nunca é aplicada.
-3. **SSR funciona:** O HTML é gerado perfeitamente no servidor — a página
-   parece completa.
-4. **CSP silenciosa:** Erros de CSP aparecem apenas no console do navegador,
-   não no terminal do servidor.
-5. **Testes isolados enganam:** Testes de unidade com `userEvent.click()` passam
-   porque não há CSP no ambiente de teste.
+1. **Build and server with no errors:** `pnpm build` and `pnpm dev` run without
+   any errors or warnings related to CSP.
+2. **Unit tests pass:** Vitest + jsdom tests do not go through the Astro
+   middleware, so CSP is never applied.
+3. **SSR works:** HTML is generated perfectly on the server — the page
+   looks complete.
+4. **Silent CSP:** CSP errors only appear in the browser console, not in the
+   server terminal.
+5. **Isolated tests mislead:** Unit tests with `userEvent.click()` pass because
+   there is no CSP in the test environment.
 
-### Lição Aprendida
+### Lesson Learned
 
-**Sempre verificar o console do navegador** quando um componente React com
-`client:*` renderiza mas não reage a interações. Erros de CSP são o diagnóstico
-mais rápido.
+**Always check the browser console** when a React component with `client:*`
+renders but does not react to interactions. CSP errors are the fastest
+diagnostic.
 
-### Solução
+### Fix
 
-Adicionar `'unsafe-inline'` à diretiva `script-src` no middleware:
+Add `'unsafe-inline'` to the `script-src` directive in the middleware:
 
 ```diff
 - "script-src 'self'",
 + "script-src 'self' 'unsafe-inline'",
 ```
 
-### Verificação
+### Verification
 
-Após a correção, o console do navegador não deve mostrar erros de CSP para
-scripts. Teste com:
+After the fix, the browser console should show no CSP errors for scripts. Test with:
 
 ```bash
 curl -I http://localhost:4321 | grep content-security-policy
 ```
 
-A resposta deve conter `'unsafe-inline'` em `script-src`.
+The response must contain `'unsafe-inline'` in `script-src`.
 
-### Alternativas mais seguras
+### Safer alternatives
 
-Se necessário restringir ainda mais os scripts inline, use **nonces**:
+If further restriction of inline scripts is needed, use **nonces**:
 
-1. Gere um nonce criptográfico no middleware
-2. Armazene em `context.locals.nonce`
-3. Inclua `'nonce-{nonce}'` na CSP
-4. Passe o nonce para o layout Astro via `Astro.locals.nonce`
+1. Generate a cryptographic nonce in the middleware
+2. Store it in `context.locals.nonce`
+3. Include `'nonce-{nonce}'` in the CSP
+4. Pass the nonce to the Astro layout via `Astro.locals.nonce`
 
-O Astro suporta nonces para scripts inline gerados por ele. Consulte a
-[documentação oficial do Astro sobre
+Astro supports nonces for its generated inline scripts. See the
+[official Astro documentation on
 nonce](https://docs.astro.build/en/guides/content-security-policy/).

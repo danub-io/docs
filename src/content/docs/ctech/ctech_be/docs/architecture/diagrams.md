@@ -1,123 +1,121 @@
 ---
-title: "Diagramas de Arquitetura - CTECH Painel"
+title: "Architecture Diagrams - CTECH Panel"
 ---
 
-
-
-## Pipeline Principal (M1 → M7)
+## Main Pipeline (M1 → M7)
 
 ```
-Texto Bruto (Usuário)
+Raw Text (User)
        │
        ▼
 ┌──────────────┐
-│   M1: ENTRADA │  IA extrai: marca, nome, specs, tier
-│  (Ingestão)   │  Detecta duplicidade semântica (SQL + IA)
+│   M1: ENTRY   │  AI extracts: brand, name, specs, tier
+│  (Ingestion)  │  Detects semantic duplicates (SQL + AI)
 └──────┬────────┘
-       │ Produtos validados
+       │ Validated products
        ▼
 ┌──────────────┐
-│   M2: DESCOBERTA │  Busca links de reviews (Google)
-│   (Reviews)      │  IA filtra: ignora lojas/fóruns
-└──────┬──────────┘
-       │ Links aprovados
-       ▼
-┌──────────────┐
-│   M3: EXTRAÇÃO │  Scraping → Markdown → IA analisa
-│   (Análise)    │  Output: nota (0-10), pros, contras, mini_review
+│   M2: DISCOVERY│  Searches review links (Google)
+│   (Reviews)    │  AI filters: discards stores/forums
 └──────┬────────┘
-       │ Reviews curadas
+       │ Approved links
        ▼
 ┌──────────────┐
-│  M4: CONSOLIDAÇÃO │  Agrega até 8 reviews
-│  (Consolidação)   │  Nota Bayesiana + Fator de Defasagem
-│                   │  IA sintetiza veredito final
+│   M3: EXTRACTION│  Scraping → Markdown → AI analysis
+│   (Analysis)    │  Output: score (0-10), pros, cons, mini_review
+└──────┬────────┘
+       │ Curated reviews
+       ▼
+┌──────────────┐
+│  M4: CONSOLIDATION│  Aggregates up to 8 reviews
+│  (Consolidation)  │  Bayesian Score + Lag Factor
+│                   │  AI synthesizes final verdict
 └──────┬────────────┘
-       │ Produto pronto (M4 aprovado)
+       │ Product ready (M4 approved)
        ▼
 ┌──────────────┐
-│   M5: PREÇOS    │  Busca preços (Google Shopping)
-│  (Comercial)    │  IA valida: é o modelo correto?
-│                  │  Monitora variação > R$ 5,00
+│   M5: PRICES    │  Fetches prices (Google Shopping)
+│  (Commercial)   │  AI validates: is this the correct model?
+│                  │  Monitors variation > R$ 5.00
 └──────┬──────────┘
-       │ Links afiliados validados
+       │ Validated affiliate links
        ▼
 ┌──────────────┐
-│  M6: CONFERÊNCIA │  Auditoria final do link
-│  (Auditoria)     │  Scraping: preço PIX/Boleto + estoque
-│                  │  Marca status_erro se sem estoque
+│  M6: CHECKOUT   │  Final link audit
+│  (Audit)        │  Scraping: PIX/Boleto price + stock
+│                  │  Marks status_erro if out of stock
 └──────┬───────────┘
-       │ Produto auditado
+       │ Audited product
        ▼
 ┌──────────────┐
-│   M7: CMS       │  Catálogo público (CRUD)
-│  (Catálogo)     │  Interface para listagem e edição
+│   M7: CMS       │  Public catalog (CRUD)
+│  (Catalog)      │  Interface for listing and editing
 └─────────────────┘
 ```
 
-## Sistema de Filas (Worker)
+## Queue System (Worker)
 
 ```
 ┌─────────────┐     CLAIM     ┌─────────────────┐
 │  fila_      │ ◄──────────── │   Worker        │
-│  processamento│             │ (worker.ts)     │
-│              │ ────────►    │                 │
-│ Status:      │  RESULTADO  │ processNextJob() │
+│  processamento│             │ (worker.ts)      │
+│              │ ────────►    │                  │
+│ Status:      │  RESULT      │ processNextJob() │
 │ - pendente   │             │ runWorkerBatch() │
-│ - processando│             └─────────────────┘
+│ - processando│             └──────────────────┘
 │ - concluido  │
-│ - erro       │    Após 3 falhas:
+│ - erro       │    After 3 failures:
 │ - falha_     │    ──────────► DLQ (Dead Letter Queue)
 │   critica    │
 └─────────────┘
 ```
 
-## Cascata de Resiliência (AI/Scraping)
+## Resilience Cascade (AI/Scraping)
 
 ```
-Tier 1 (Primário)
-    │ falha
+Tier 1 (Primary)
+    │ fail
     ▼
-Tier 2 (Reserva 1)
-    │ falha
+Tier 2 (Backup 1)
+    │ fail
     ▼
-Tier 3 (Reserva 2)
-    │ falha
+Tier 3 (Backup 2)
+    │ fail
     ▼
-Tier 4 (Reserva 3)
-    │ falha
+Tier 4 (Backup 3)
+    │ fail
     ▼
-Tier 5 (Fallback Final)
+Tier 5 (Final Fallback)
 ```
 
-## Banco de Dados (Turso SQLite)
+## Database (Turso SQLite)
 
 ```
 ┌────────────────┐
 │   Produtos     │ ◄────┐
-│ (catálogo)     │      │
+│ (catalog)      │      │
 └────────────────┘      │
        │                │
        ▼                │
 ┌────────────────┐      │
 │   Reviews      │      │ (1:N)
-│ (análises M3)  │      │
+│ (M3 analyses)  │      │
 └────────────────┘      │
        │                │
        ▼                │
 ┌────────────────┐      │
 │   Afiliados    │      │ (1:N)
-│ (lojas M5/M6)  │      │
+│ (stores M5/M6) │      │
 └────────────────┘      │
                        │
 ┌────────────────┐      │
 │ config_ai_     │      │
-│ models         │      │ (config M8)
+│ models         │      │ (M8 config)
 └────────────────┘      │
                        │
 ┌────────────────┐      │
 │ config_scraping│      │
-│ _services      │      │ (config M8)
+│ _services      │      │ (M8 config)
 └────────────────┘      │
                        │
 ┌────────────────┐      │
@@ -126,29 +124,29 @@ Tier 5 (Fallback Final)
 └────────────────┘      │
                        │
 ┌────────────────┐      │
-│ logs_entrada   │      │ (auditoria)
+│ logs_entrada   │      │ (audit)
 └────────────────┘      │
                        │
 ┌────────────────┐      │
 │ historico_     │      │
-│ precos         │      │ (90 dias)
+│ precos         │      │ (90 days)
 └────────────────┘      │
 ```
 
-## Fluxo de Dados M9 (Documentação)
+## M9 Data Flow (Documentation)
 
 ```
 /src/app/docs/
      │
      ├── page.tsx (UI: Sidebar + Reader)
      │
-     ├── Leitura de arquivos .md:
-     │   ├── README.md (raiz)
+     ├── Reads .md files:
+     │   ├── README.md (root)
      │   ├── API.md
      │   ├── ARCHITECTURE.md
      │   ├── CONTRIBUTING.md
      │   ├── CHANGELOG.md
      │   └── docs/**/*.md
      │
-     └── Renderização: react-markdown + remark-gfm
+     └── Rendering: react-markdown + remark-gfm
 ```

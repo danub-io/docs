@@ -1,9 +1,7 @@
 ---
-title: "Desenvolvimento"
+title: "Development"
 ---
 
+## Documents
 
-
-## Documentos
-
-- [setup-local.md](./setup-local.md) — Configuração do ambiente de desenvolvimento local
+- [setup-local.md](./setup-local.md) — Local development environment setup
