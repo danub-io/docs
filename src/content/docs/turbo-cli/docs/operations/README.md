@@ -1,7 +1,7 @@
 ---
-title: "Operações"
+title: "Operations"
 ---
 
-## Documentos
+## Documents
 
-- [commands.md](./commands.md) — Comandos de instalação e manutenção
+- [commands.md](./commands.md) — Installation and maintenance commands

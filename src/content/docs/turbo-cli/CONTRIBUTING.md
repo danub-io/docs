@@ -1,79 +1,79 @@
 ---
-title: "Contribuindo — turbo-cli"
+title: "Contributing — turbo-cli"
 ---
 
-Guia de contribuição para o projeto turbo-cli.
+Contribution guide for the turbo-cli project.
 
-## Pré-requisitos
+## Prerequisites
 
 - Python >= 3.12
 - pip/venv
 
-## Setup do Ambiente
+## Environment Setup
 
 ```bash
 # Clone
 git clone <repo-url> turbo-cli
 cd turbo-cli
 
-# Criar e ativar venv
+# Create and activate venv
 python3 -m venv .venv
 source .venv/bin/activate
 
-# Instalar dependências
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-## Boas Práticas
+## Best Practices
 
-- **Rich Console:** ao modificar configuração do `Console` do rich, nunca forçar `force_terminal` ou `color_system` fixo — usar autodetecção (deixar rich detectar as capacidades do terminal automaticamente)
-- **prompt_toolkit:** não criar um segundo `Application` concorrente; qualquer UI adicional deve usar os callbacks existentes (`bottom_toolbar`, etc.)
-- **Códigos ANSI manuais:** sempre verificar `sys.__stdout__.isatty()` antes de emitir escapes ANSI diretamente
+- **Rich Console:** when modifying `Console` configuration from rich, never force a fixed `force_terminal` or `color_system` — use auto-detection (let rich detect terminal capabilities automatically)
+- **prompt_toolkit:** do not create a second concurrent `Application`; any additional UI must use existing callbacks (`bottom_toolbar`, etc.)
+- **Manual ANSI codes:** always check `sys.__stdout__.isatty()` before emitting ANSI escape sequences directly
 
-## Estrutura para Contribuição
+## Contribution Structure
 
 ### Entrypoints
 - `main.py` — Thin wrapper → `from turbo_cli.cli import main; main()`
 - `turbo_cli/cli.py` — CLI argparse (--version, --model, --plain), asyncio.run()
-- `turbo_cli/__main__.py` — Suporte a `python -m turbo_cli`
+- `turbo_cli/__main__.py` — Support for `python -m turbo_cli`
 - `pyproject.toml` — Build system + entry point `turbo = "turbo_cli.cli:main"`
 
 ### App (`turbo_cli/`)
-- `app.py` — Loop principal prompt_toolkit, slash commands, tool dispatch (`_chat_completion_with_tools`)
+- `app.py` — Main prompt_toolkit loop, slash commands, tool dispatch (`_chat_completion_with_tools`)
 - `config.py` — ConfigModel pydantic, API key, load/save
-- `llm.py` — LLMClient (SDK OpenAI), streaming + chat completion
-- `messages.py` — Formatação rich (markdown, panels, spinner animado com braille)
+- `llm.py` — LLMClient (OpenAI SDK), streaming + chat completion
+- `messages.py` — Rich formatting (markdown, panels, animated braille spinner)
 
-### Agentes (`turbo_cli/agents/`)
-- `base.py` — Agent (ABC): modo + system prompt
-- `normal.py` — NormalAgent: assistente geral com bash
-- `plan.py` — PlanAgent: planejamento com project_inspector
-- `code.py` — CodeAgent: executor autônomo com planos e circuit breaker
-- `ask.py` — AskAgent: conversa geral + fetch
+### Agents (`turbo_cli/agents/`)
+- `base.py` — Agent (ABC): mode + system prompt
+- `normal.py` — NormalAgent: general assistant with bash
+- `plan.py` — PlanAgent: planning with project_inspector
+- `code.py` — CodeAgent: autonomous executor with plans and circuit breaker
+- `ask.py` — AskAgent: general conversation + fetch
 
 ### Shared (`turbo_cli/shared/`)
 - `modes.py` — AgentMode enum, MODE_TOOLS, MODE_LABELS
-- `state.py` — SessionState (modo, mensagens, plano, circuit breaker)
-- `tools.py` — Definições e execução de ferramentas (bash, read, write, edit, etc.)
+- `state.py` — SessionState (mode, messages, plan, circuit breaker)
+- `tools.py` — Tool definitions and execution (bash, read, write, edit, etc.)
 - `ui.py` — Branding, box chars, render_progress_bar
 - `widgets.py` — ProgressWidget, AskUserDialog (input/confirm/select)
-- `plan_parser.py` — Parse de planos (markdown checklist + JSON metadata)
-- `plan_writer.py` — Geração e extração de planos
+- `plan_parser.py` — Plan parsing (markdown checklist + JSON metadata)
+- `plan_writer.py` — Plan generation and extraction
 
-## Fluxo de Trabalho
+## Workflow
 
-1. Crie uma branch a partir de `main`
-2. Faça as alterações necessárias
-3. Teste manualmente com `turbo` ou `python main.py`
-4. Commit com mensagem descritiva
-5. Abra um Pull Request
+1. Create a branch from `main`
+2. Make the necessary changes
+3. Test manually with `turbo` or `python main.py`
+4. Commit with a descriptive message
+5. Open a Pull Request
 
-## Reportando Bugs
+## Reporting Bugs
 
-- Descreva o problema com passos para reproduzir
-- Inclua output relevante (erros do terminal, stack trace Python)
-- Informe versão do Python, modelo e provedor usado
+- Describe the problem with steps to reproduce
+- Include relevant output (terminal errors, Python stack trace)
+- Inform Python version, model, and provider used
 
-## Licença
+## License
 
-Ao contribuir, você concorda que suas contribuições serão licenciadas sob a MIT License.
+By contributing, you agree that your contributions will be licensed under the MIT License.

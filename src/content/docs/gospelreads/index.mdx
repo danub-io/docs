@@ -1,66 +1,66 @@
 ---
 title: GospelReads
-description: The Intellectual Archive — Blog de conteúdo teológico
+description: The Intellectual Archive — Theological Content Blog
 ---
 
 import { Badge } from '@astrojs/starlight/components';
 
-<Badge text="Estável" variant="success" /> <Badge text="v0.1.0" variant="note" /> <Badge text="Astro 6" variant="tip" />
+<Badge text="Stable" variant="success" /> <Badge text="v0.1.0" variant="note" /> <Badge text="Astro 6" variant="tip" />
 
-Bem-vindo à documentação do **GospelReads**, um blog de conteúdo teológico e reflexões cristãs com performance 100/100 Lighthouse.
+Welcome to the **GospelReads** documentation, a blog for theological content and Christian reflections with 100/100 Lighthouse performance.
 
 ---
 
-## Visão Geral
+## Overview
 
-Blog estático (SSG) construído com Astro 6 e React 19, hospedado no Firebase Hosting com cache agressivo.
+Static blog (SSG) built with Astro 6 and React 19, hosted on Firebase Hosting with aggressive caching.
 
 ```
-Markdown (MD) → Content Collections → Páginas Astro → HTML estático → Firebase Hosting
+Markdown (MD) → Content Collections → Astro Pages → Static HTML → Firebase Hosting
 ```
 
 ### Stack
 
-| Tecnologia | Função |
-|------------|--------|
-| **Astro 6** | Framework SSG |
-| **React 19** | Componentes interativos |
-| **Tailwind CSS v4** | Estilização + Typography |
-| **Content Collections** | Gerenciamento de conteúdo |
-| **Firebase Hosting** | Hospedagem com CDN global |
-| **date-fns** | Formatação de datas pt-BR |
+| Technology | Role |
+|------------|------|
+| **Astro 6** | SSG Framework |
+| **React 19** | Interactive components |
+| **Tailwind CSS v4** | Styling + Typography |
+| **Content Collections** | Content management |
+| **Firebase Hosting** | Hosting with global CDN |
+| **date-fns** | pt-BR date formatting |
 
-## Estrutura de Conteúdo
+## Content Structure
 
 ```
 src/content/
-├── posts/          # Artigos em MD com frontmatter
-├── authors/        # Perfis de autores
-└── pages/          # Páginas estáticas
+├── posts/          # MD articles with frontmatter
+├── authors/        # Author profiles
+└── pages/          # Static pages
 ```
 
-Os posts possuem schema com `title`, `description`, `date`, `authors`, `tags`, `image`.
+Posts have a schema with `title`, `description`, `date`, `authors`, `tags`, `image`.
 
-## Começando
+## Getting Started
 
 ```bash
 git clone <repo-url>
 cd gospelreads
 pnpm install
-pnpm dev          # Servidor local (localhost:4321)
+pnpm dev          # Local server (localhost:4321)
 ```
 
-### Build e Deploy
+### Build and Deploy
 
 ```bash
-pnpm build        # Gera dist/
-firebase deploy   # Publica no Firebase Hosting
+pnpm build        # Generates dist/
+firebase deploy   # Publishes to Firebase Hosting
 ```
 
 ## Performance
 
 - 100/100 Lighthouse performance
-- SSG puro sem JS no carregamento inicial
-- Cache de 1 ano para assets estáticos
-- Imagens otimizadas com filters CSS
+- Pure SSG with no JavaScript on initial load
+- 1-year cache for static assets
+- Optimized images with CSS filters
 

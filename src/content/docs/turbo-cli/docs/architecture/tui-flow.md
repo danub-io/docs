@@ -1,12 +1,12 @@
 ---
-title: "Fluxo do App Loop — 4 Agentes com Tool Dispatch"
+title: "App Loop Flow — 4 Agents with Tool Dispatch"
 ---
 
-## Visão Geral
+## Overview
 
-O app loop é construído com [prompt-toolkit](https://github.com/prompt-toolkit/python-prompt-toolkit) 3.x e opera com **4 modos de agente** (Normal, Plan, Code, Ask). Cada modo tem seu próprio system prompt e conjunto de ferramentas. O fluxo principal substitui o streaming direto por um loop de **tool dispatch** (`_chat_completion_with_tools`) que permite ao LLM chamar ferramentas como bash, read, write, edit, etc.
+The app loop is built with [prompt-toolkit](https://github.com/prompt-toolkit/python-prompt-toolkit) 3.x and operates with **4 agent modes** (Normal, Plan, Code, Ask). Each mode has its own system prompt and toolset. The main flow replaces direct streaming with a **tool dispatch** loop (`_chat_completion_with_tools`) that allows the LLM to call tools like bash, read, write, edit, etc.
 
-## Componentes
+## Components
 
 ```
 turbo / python -m turbo_cli / python main.py
@@ -16,43 +16,43 @@ turbo / python -m turbo_cli / python main.py
                     ├── load_config()               ← ~/.config/turbo-cli/config.json
                     ├── ensure_api_key()             ← auto-detect provider via env var
                     ├── LLMClient(config)             ← Factory: OpenAI / Anthropic / Gemini
-                    ├── agents: dict[AgentMode, Agent] ← 4 agentes instanciados
+                    ├── agents: dict[AgentMode, Agent] ← 4 agents instantiated
                     ├── PromptSession(history)        ← prompt_toolkit
                     ├── print_welcome()               ← rich panel
                     └── loop:
-                        ├── prompt_async(">>> ")      ← aguarda input
+                        ├── prompt_async(">>> ")      ← awaits input
                         ├── input.startswith("/") → _handle_slash_command()
                          │   ├── /model, /key, /provider  ← config
-                         │   ├── /mode [nome]          ← troca de modo
-                         │   ├── /plan <desc>          ← cria plano (PlanAgent)
-                         │   ├── /plan-menu            ← lista planos
-                         │   ├── /plan-abort           ← cancela planejamento
-                         │   ├── /code <path>          ← executa plano (CodeAgent)
+                         │   ├── /mode [name]          ← mode switch
+                         │   ├── /plan <desc>          ← create plan (PlanAgent)
+                         │   ├── /plan-menu            ← list plans
+                         │   ├── /plan-abort           ← cancel planning
+                         │   ├── /code <path>          ← execute plan (CodeAgent)
                          │   ├── /code-reset /code-status
-                         │   ├── /clear                ← limpa contexto
-                         │   ├── /new                  ← limpa tela e reinicia
-                         │   ├── /quit /end            ← sai
-                         │   └── /help                 ← ajuda
+                         │   ├── /clear                ← clear context
+                         │   ├── /new                  ← clear screen and restart
+                         │   ├── /quit /end            ← exit
+                         │   └── /help                 ← help
                         └── else:
                             ├── messages.append(user)
                             ├── _chat_completion_with_tools()
-                            │   ├── LLM envia tool_calls ou texto + reasoning_content
-                            │   ├── Se tool_calls: execute_tool() → resultado
-                            │   ├── Se texto: print_response() → append
-                            │   └── Máx 30 rounds de ferramentas
-                            └── _check_completion()   ← PlanAgent extrai plano
+                            │   ├── LLM sends tool_calls or text + reasoning_content
+                            │   ├── If tool_calls: execute_tool() → result
+                            │   ├── If text: print_response() → append
+                            │   └── Max 30 tool rounds
+                            └── _check_completion()   ← PlanAgent extracts plan
 ```
 
-## Fluxo Detalhado
+## Detailed Flow
 
-### 1. Inicialização (`app.py:81-131`)
+### 1. Initialization (`app.py:81-131`)
 
 ```python
 async def run(initial_model: str | None = None) -> None:
-    cfg = load_config()                      # Carrega config do disco
+    cfg = load_config()                      # Load config from disk
     if initial_model:
-        cfg.model = initial_model            # --model da CLI
-    ensure_api_key(cfg)                      # Pede key se vazia
+        cfg.model = initial_model            # --model from CLI
+    ensure_api_key(cfg)                      # Prompt for key if empty
     client = LLMClient(cfg)                   # SDK AsyncOpenAI
 
     messages = [{"role": "system",
@@ -63,100 +63,100 @@ async def run(initial_model: str | None = None) -> None:
     print_welcome()
 ```
 
-### 2. Tool Dispatch (`_chat_completion_with_tools`, linha 197)
+### 2. Tool Dispatch (`_chat_completion_with_tools`, line 197)
 
-O coração do app é um loop que alterna entre chamar o LLM e executar as tool_calls retornadas:
+The heart of the app is a loop that alternates between calling the LLM and executing the returned tool_calls:
 
-1. Chama `client.chat_completion(messages, tools=tools)` com as ferramentas do modo atual
-2. Se o LLM retorna `tool_calls`:
-   - Adiciona mensagem `assistant` com `tool_calls` ao histórico
-   - Para cada tool_call, executa `execute_tool(name, params, state)`
-   - Adiciona resultado como mensagem `tool`
-   - Repete (máx 100 rounds)
-3. Se o LLM retorna texto:
-   - No modo Code: força retry até 2x para obter tool_calls
-   - Exibe resposta via `print_response()` (rich Markdown)
-   - Adiciona mensagem `assistant` ao histórico
-   - Retorna
+1. Calls `client.chat_completion(messages, tools=tools)` with the current mode's tools
+2. If the LLM returns `tool_calls`:
+   - Adds an `assistant` message with `tool_calls` to history
+   - For each tool_call, executes `execute_tool(name, params, state)`
+   - Adds result as a `tool` message
+   - Repeats (max 100 rounds)
+3. If the LLM returns text:
+   - In Code mode: forces retry up to 2x to obtain tool_calls
+   - Displays response via `print_response()` (rich Markdown)
+   - Adds `assistant` message to history
+   - Returns
 
-### 3. Troca de Modo
+### 3. Mode Switching
 
-Shift+Tab ou `/mode` alterna entre os 4 modos:
+Shift+Tab or `/mode` cycles through the 4 modes:
 
 - **Normal** ⚙️ — read, bash, edit, write, grep, find, ls
-- **Plan** 📋 — read, grep, write, edit, project_inspector (sem bash)
+- **Plan** 📋 — read, grep, write, edit, project_inspector (no bash)
 - **Code** ⚡ — read, bash, edit, write, grep, find, ls, ask_user, update_task_progress
 - **Ask** 💬 — read, bash, grep, find, ls, fetch
 
-Cada troca limpa o histórico de mensagens e recarrega o system prompt do novo modo.
+Each switch clears the message history and reloads the new mode's system prompt.
 
-### 4. Sistema de Planos
+### 4. Plan System
 
-O PlanAgent gera planos com checklist `- [ ]` e bloco JSON de metadados. Quando o LLM finaliza com "Plano concluído.":
+The PlanAgent generates plans with a `- [ ]` checklist and a JSON metadata block. When the LLM finishes with "Plan completed.":
 
-1. `extract_and_save_plan()` salva em `.ai/plans/`
-2. Menu pergunta: executar (→ CodeAgent) ou ajustar
-3. CodeAgent carrega o plano e executa tarefas sequencialmente
-4. `update_task_progress` marca conclusão
-5. Circuit breaker (3 strikes) protege contra edições fora de `allowedFiles`
+1. `extract_and_save_plan()` saves to `.ai/plans/`
+2. Menu asks: execute (→ CodeAgent) or adjust
+3. CodeAgent loads the plan and executes tasks sequentially
+4. `update_task_progress` marks completion
+5. Circuit breaker (3 strikes) protects against edits outside of `allowedFiles`
 
 ### 5. LLMClient (`turbo_cli/llm.py`)
 
-O `LLMClient` é uma factory que instancia o cliente correto baseado no provider configurado:
+The `LLMClient` is a factory that instantiates the correct client based on the configured provider:
 
-| Provider | Classe | SDK | Modelos |
-|----------|--------|-----|---------|
-| `opencode` / `openai` / `ollama` | `OpenAICompatibleClient` | httpx (diretamente) | DeepSeek, GPT-4o, Llama, Qwen, etc. |
+| Provider | Class | SDK | Models |
+|----------|-------|-----|--------|
+| `opencode` / `openai` / `ollama` | `OpenAICompatibleClient` | httpx (directly) | DeepSeek, GPT-4o, Llama, Qwen, etc. |
 | `anthropic` | `AnthropicClient` | `anthropic` SDK | Claude 3/4 |
 | `gemini` | `GeminiClient` | `google-generativeai` | Gemini 1.5/2.0 |
 
-**Otimizações DeepSeek:** quando o modelo contém "deepseek" no nome, o `OpenAICompatibleClient` força `temperature=0.0` e desliga `parallel_tool_calls` para maior confiabilidade.
+**DeepSeek optimizations:** when the model name contains "deepseek", the `OpenAICompatibleClient` forces `temperature=0.0` and disables `parallel_tool_calls` for greater reliability.
 
-**Reasoning Content:** modelos DeepSeek R1 e outros modelos de raciocínio retornam `reasoning_content` separado do conteúdo principal, preservado em `UnifiedMessage.reasoning_content`.
+**Reasoning Content:** DeepSeek R1 and other reasoning models return `reasoning_content` separate from the main content, preserved in `UnifiedMessage.reasoning_content`.
 
 ```python
 class LLMClient(BaseLLMClient):
     def __init__(self, config: ConfigModel):
         self._inner = self._build_client(config)  # Factory dispatch
 
-    # Delega para _inner (OpenAICompatibleClient, GeminiClient ou AnthropicClient)
+    # Delegates to _inner (OpenAICompatibleClient, GeminiClient or AnthropicClient)
     async def chat_completion(self, messages, tools=None, tool_choice=None):
         return await self._inner.chat_completion(messages, tools, tool_choice)
 ```
 
 ### 6. Messages (`turbo_cli/messages.py`)
 
-Usa [rich](https://github.com/Textualize/rich) para formatação:
+Uses [rich](https://github.com/Textualize/rich) for formatting:
 
-- `print_welcome()` — Painel inicial com título
-- `print_response()` — Markdown dentro de Panel
-- `print_error()` / `print_info()` — Feedback visual colorido
-- `show_thinking_spinner()` — Spinner animado (braille) durante tool dispatch
+- `print_welcome()` — Welcome panel with title
+- `print_response()` — Markdown inside a Panel
+- `print_error()` / `print_info()` — Colored visual feedback
+- `show_thinking_spinner()` — Animated spinner (braille) during tool dispatch
 
-## Fluxo de Interação Completo
+## Complete Interaction Flow
 
 ```
-1. Usuário executa: turbo (ou python -m turbo_cli, python main.py)
+1. User runs: turbo (or python -m turbo_cli, python main.py)
 2. cli.py: main() → asyncio.run(run())
 3. app.run():
-   a. Carrega config de ~/.config/turbo-cli/config.json
-   b. Se API key vazia, pergunta e salva
-   c. Cria LLMClient, PromptSession, instancia 4 agentes
-   d. Exibe welcome
+   a. Loads config from ~/.config/turbo-cli/config.json
+   b. If API key is empty, prompts and saves
+   c. Creates LLMClient, PromptSession, instantiates 4 agents
+   d. Displays welcome
 4. Loop:
-   a. Mostra prompt ">>> " com toolbar (modo + modelo)
-   b. Usuário digita mensagem + Enter
-   c. Se "/mode code" → troca para CodeAgent
-   d. Se "/plan criar um endpoint" → troca para PlanAgent
-   e. Se "/plan-menu" → lista planos disponíveis
-   f. Se "/code .ai/plans/meu-plano.md" → carrega e executa
-   g. Se texto → _chat_completion_with_tools()
-      - LLM retorna tool_calls (bash, read, write, etc.)
-      - Executa cada ferramenta, retorna resultado
-      - LLM processa resultado, decide próximo passo
-      - Até resposta final em texto
-   h. Resposta exibida com rich
-5. Shift+Tab → alterna modo
+   a. Shows prompt ">>> " with toolbar (mode + model)
+   b. User types message + Enter
+   c. If "/mode code" → switches to CodeAgent
+   d. If "/plan create an endpoint" → switches to PlanAgent
+   e. If "/plan-menu" → lists available plans
+   f. If "/code .ai/plans/my-plan.md" → loads and executes
+   g. If text → _chat_completion_with_tools()
+      - LLM returns tool_calls (bash, read, write, etc.)
+      - Executes each tool, returns result
+      - LLM processes result, decides next step
+      - Until final text response
+   h. Response displayed with rich
+5. Shift+Tab → switches mode
 ```
 
 ## Layout
@@ -166,51 +166,51 @@ Usa [rich](https://github.com/Textualize/rich) para formatação:
 │  turbo-cli  |  Inline LLM Assistant        │
 ├──────────────────────────────────────────────┤
 │                                              │
-│  >>> liste os arquivos do projeto             │
+│  >>> list the project files                   │
 │                                              │
 │  ┌────────────────────────────────────────┐  │
-│  │  Vou usar o bash para listar.          │  │
+│  │  I'll use bash to list.                │  │
 │  │  [bash: ls -la]                        │  │
 │  │  total 48                              │  │
 │  │  drwxr-xr-x ... src/                   │  │
 │  │  ...                                   │  │
 │  └────────────────────────────────────────┘  │
 │                                              │
-│  >>> /plan criar README                      │
-│  📋 Modo alterado para: Plan                 │
-│  📄 Plano salvo em .ai/plans/plano.md        │
+│  >>> /plan create README                      │
+│  📋 Mode changed to: Plan                     │
+│  📄 Plan saved in .ai/plans/plan.md           │
 │                                              │
 ├──────────────────────────────────────────────┤
-│  ⚙️ Normal | Modelo: gpt-4o | Shift+Tab     │
+│  ⚙️ Normal | Model: gpt-4o | Shift+Tab      │
 └──────────────────────────────────────────────┘
 ```
 
-## Atalhos de Teclado
+## Keyboard Shortcuts
 
-| Tecla | Ação |
-|-------|------|
-| Enter | Enviar mensagem |
-| Esc+Enter | Nova linha no input |
-| Shift+Tab | Alternar entre os 4 modos |
-| Ctrl+C | Copiar seleção (quando houver seleção ativa) |
-| Ctrl+V | Colar da área de transferência |
+| Key | Action |
+|-----|--------|
+| Enter | Send message |
+| Esc+Enter | New line in input |
+| Shift+Tab | Cycle through the 4 modes |
+| Ctrl+C | Copy selection (when there is an active selection) |
+| Ctrl+V | Paste from clipboard |
 
 ## Slash Commands
 
-| Comando | Descrição |
-|---------|-----------|
-| `/model <nome>` | Trocar modelo (ex: `/model gpt-4o-mini`) |
-| `/key <chave>` | Trocar API key |
-| `/provider <nome>` | Trocar provedor (opencode/gemini/anthropic/ollama/openai) |
-| `/mode [nome]` | Ver/trocar modo (normal/plan/code/ask) |
-| `/plan <desc>` | Criar um plano automaticamente |
-| `/plan-menu` | Listar e selecionar planos salvos |
-| `/plan-abort` | Cancelar planejamento em andamento |
-| `/code <path>` | Carregar e executar um plano |
-| `/code-reset` | Resetar estado do CodeAgent |
-| `/code-status` | Ver progresso do plano atual |
-| `/clear` | Limpar contexto da conversa |
-| `/new` | Limpar tela e iniciar nova sessão |
-| `/quit` | Sair |
-| `/end` | Sair (atalho) |
-| `/help` | Mostrar ajuda completa |
+| Command | Description |
+|---------|-------------|
+| `/model <name>` | Switch model (e.g. `/model gpt-4o-mini`) |
+| `/key <key>` | Switch API key |
+| `/provider <name>` | Switch provider (opencode/gemini/anthropic/ollama/openai) |
+| `/mode [name]` | View/switch mode (normal/plan/code/ask) |
+| `/plan <desc>` | Create a plan automatically |
+| `/plan-menu` | List and select saved plans |
+| `/plan-abort` | Cancel ongoing planning |
+| `/code <path>` | Load and execute a plan |
+| `/code-reset` | Reset CodeAgent state |
+| `/code-status` | View current plan progress |
+| `/clear` | Clear conversation context |
+| `/new` | Clear screen and start a new session |
+| `/quit` | Exit |
+| `/end` | Exit (shortcut) |
+| `/help` | Show full help |

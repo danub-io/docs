@@ -2,6 +2,6 @@
 title: "Postmortems — GospelReads"
 ---
 
-Este diretório armazena postmortems do projeto GospelReads.
+This directory stores postmortems for the GospelReads project.
 
-Consulte o [template e convenções](/docs/ctech/postmortems) para criar novos postmortems.
+See the [template and conventions](/docs/ctech/postmortems) for creating new postmortems.

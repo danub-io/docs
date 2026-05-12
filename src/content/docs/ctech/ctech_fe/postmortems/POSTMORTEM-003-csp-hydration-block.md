@@ -1,34 +1,34 @@
 ---
-title: "Postmortem 003: CSP bloqueando hidratação de componentes React"
+title: "Postmortem 003: CSP blocking React component hydration"
 ---
 
-## Sumário
+## Summary
 
-- **Data:** 2026-05-07
-- **Componente:** `src/middleware.ts` (CSP headers)
-- **Sintoma:** Todos os componentes React com `client:load` falhavam silenciosamente — HTML SSR renderizava mas nada era interativo
-- **Severidade:** Crítica — Afetava **todos** os islands React do frontend
-- **Root cause:** `script-src 'self'` no middleware bloqueava os scripts inline que o Astro usa para hidratação de ilhas
+- **Date:** 2026-05-07
+- **Component:** `src/middleware.ts` (CSP headers)
+- **Symptom:** All React components with `client:load` failed silently — SSR HTML rendered but nothing was interactive
+- **Severity:** Critical — Affected **all** React islands on the frontend
+- **Root cause:** `script-src 'self'` in the middleware blocked the inline scripts that Astro uses for island hydration
 
 ## Timeline
 
-1. O menu hamburguer (NavDrawer) parou de responder a cliques
-2. Debugging inicial focou no componente: estado controlado, eventos, floating-ui
-3. Código do NavDrawer foi extensivamente analisado e modificado (estado controlado, `nativeButton={false}`, etc.)
-4. Testes unitários passavam — 5/5 no nav-drawer, 399/399 no total
-5. Testes E2E escritos confirmaram: o drawer não abria
-6. Investigou-se o código interno do `@base-ui/react/drawer` (DrawerRoot, DialogTrigger, FloatingRootStore, etc.) em busca de falha no encadeamento de eventos
-7. Teste E2E com captura de console revelou: **erros de CSP bloqueando scripts inline**
-8. Causa raiz identificada: `script-src 'self'` no middleware
+1. The hamburger menu (NavDrawer) stopped responding to clicks
+2. Initial debugging focused on the component: controlled state, events, floating-ui
+3. NavDrawer code was extensively analyzed and modified (controlled state, `nativeButton={false}`, etc.)
+4. Unit tests passed — 5/5 in nav-drawer, 399/399 total
+5. Written E2E tests confirmed: the drawer did not open
+6. Investigated the internal `@base-ui/react/drawer` code (DrawerRoot, DialogTrigger, FloatingRootStore, etc.) for event chaining failures
+7. E2E test with console capture revealed: **CSP errors blocking inline scripts**
+8. Root cause identified: `script-src 'self'` in the middleware
 
-## Sintomas
+## Symptoms
 
-- Componentes React com `client:load` renderizam o HTML inicial (SSR) perfeitamente
-- Nenhum evento JavaScript é acionado — cliques não produzem resposta alguma
-- Nenhum erro no terminal do servidor (`pnpm dev`)
-- Nenhum erro no build (`pnpm build`)
-- Todos os 399 testes unitários passam
-- Erro silencioso no console do navegador:
+- React components with `client:load` render the initial HTML (SSR) perfectly
+- No JavaScript events fire — clicks produce no response
+- No errors in the server terminal (`pnpm dev`)
+- No errors during build (`pnpm build`)
+- All 399 unit tests pass
+- Silent error in the browser console:
   ```
   Executing inline script violates the following Content Security Policy
   directive 'script-src 'self''. Either the 'unsafe-inline' keyword, a
@@ -38,7 +38,7 @@ title: "Postmortem 003: CSP bloqueando hidratação de componentes React"
 
 ## Root Cause
 
-A CSP em `src/middleware.ts` definia `script-src 'self'`, que bloqueia **todos os scripts inline**. O Astro depende de scripts inline para o sistema de hidratação de ilhas (`<astro-island>`):
+The CSP in `src/middleware.ts` set `script-src 'self'`, which blocks **all inline scripts**. Astro relies on inline scripts for the island hydration system (`<astro-island>`):
 
 ```html
 <script>
@@ -47,69 +47,69 @@ A CSP em `src/middleware.ts` definia `script-src 'self'`, que bloqueia **todos o
 </script>
 ```
 
-**Cadeia de falha:**
+**Failure chain:**
 
-1. Navegador carrega página com HTML SSR
-2. CSP bloqueia o script inline que define `Astro.load`
-3. CSP bloqueia o script inline que dispara `astro:load`
-4. `<astro-island client="load">` chama `start()`:
-   - Verifica `Astro['load']` → `undefined`
-   - Registra listener para evento `astro:load` → nunca chega
-   - Ilha fica em **espera permanente**
-5. Componente React nunca hidrata
-6. Nenhum event handler é anexado ao DOM
-7. Cliques no botão não produzem efeito
+1. Browser loads page with SSR HTML
+2. CSP blocks the inline script that defines `Astro.load`
+3. CSP blocks the inline script that fires `astro:load`
+4. `<astro-island client="load">` calls `start()`:
+   - Checks `Astro['load']` → `undefined`
+   - Registers listener for `astro:load` event → never arrives
+   - Island stays in **permanent waiting**
+5. React component never hydrates
+6. No event handler is attached to the DOM
+7. Button clicks produce no effect
 
-**Isso afeta TODOS os islands com `client:load`, `client:idle` ou `client:visible`.**
+**This affects ALL islands with `client:load`, `client:idle`, or `client:visible`.**
 
-## Por Que Foi Tão Difícil de Encontrar
+## Why It Was So Hard to Find
 
-| Razão | Explicação |
+| Reason | Explanation |
 |-------|-----------|
-| **Build silencioso** | `astro build` não valida CSP — compila sem warnings |
-| **Dev server silencioso** | `astro dev` não exibe erros de CSP no terminal |
-| **Testes sem middleware** | Vitest + jsdom não passam pelo middleware Astro — CSP nunca é aplicada |
-| **SSR intacto** | HTML gerado perfeitamente — página parece completa visualmente |
-| **Debug focado no componente errado** | O NavDrawer realmente tinha problemas (faltava estado controlado, `nativeButton`), então parecia que o debugging estava no caminho certo — mas o problema real era outro |
-| **CSP é silenciosa por design** | Erros de CSP aparecem **apenas** no console do navegador, sem exceção JavaScript |
-| **Testes enganam** | `userEvent.click()` passa nos testes porque jsdom não aplica CSP |
+| **Silent build** | `astro build` does not validate CSP — compiles without warnings |
+| **Silent dev server** | `astro dev` does not show CSP errors in the terminal |
+| **Tests bypass middleware** | Vitest + jsdom do not go through Astro middleware — CSP is never applied |
+| **Intact SSR** | HTML generates perfectly — page looks visually complete |
+| **Debug focused on wrong component** | NavDrawer really had issues (missing controlled state, `nativeButton`), so debugging felt on the right track — but the real problem was elsewhere |
+| **CSP is silent by design** | CSP errors appear **only** in the browser console, with no JavaScript exception |
+| **Tests mislead** | `userEvent.click()` passes in tests because jsdom does not enforce CSP |
 
-## Solução Aplicada
+## Applied Fix
 
-**Arquivo:** `src/middleware.ts` (linha 180)
+**File:** `src/middleware.ts` (line 180)
 
 ```diff
 - "script-src 'self'",
 + "script-src 'self' 'unsafe-inline'",
 ```
 
-## Verificação
+## Verification
 
 ```bash
-# 1. Verificar header CSP
+# 1. Verify CSP header
 curl -I http://localhost:4321 | grep content-security-policy
-# Deve conter: script-src 'self' 'unsafe-inline'
+# Should contain: script-src 'self' 'unsafe-inline'
 
-# 2. Verificar console do navegador
-# Nenhum erro de CSP relacionado a scripts
+# 2. Check browser console
+# No CSP errors related to scripts
 
-# 3. Teste E2E
+# 3. E2E test
 pnpm test:e2e -- --grep "NavDrawer"
-# Deve passar: drawer abre e fecha
+# Should pass: drawer opens and closes
 ```
 
-## Lições Aprendidas
+## Lessons Learned
 
-### 1. Console do navegador é a primeira fonte de verdade
+### 1. Browser console is the first source of truth
 
-Sempre que um componente React com `client:*` renderiza mas não interage, o **primeiro passo é abrir o console do navegador** e procurar erros de CSP, erros de rede, ou erros de hidratação. Isso teria economizado horas.
+Whenever a React component with `client:*` renders but does not interact, the **first step is to open the browser console** and look for CSP errors, network errors, or hydration errors. This would have saved hours.
 
-### 2. Testes E2E com captura de console são essenciais
+### 2. E2E tests with console capture are essential
 
-Testes E2E devem sempre capturar `console.error` e `pageerror`:
+E2E tests should always capture `console.error` and `pageerror`:
 
 ```typescript
-test('deve hidratar sem erros', async ({ page }) => {
+test('should hydrate without errors', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (err) => errors.push(err.message));
   page.on('console', (msg) => {
@@ -120,27 +120,27 @@ test('deve hidratar sem erros', async ({ page }) => {
 });
 ```
 
-### 3. CSP deve ser testada em todas as rotas
+### 3. CSP should be tested on all routes
 
-Adicione um teste E2E que verifica se o CSP permite a hidratação dos islands. O projeto já tem `tests/e2e/csp-server-defer.spec.ts`.
+Add an E2E test that verifies CSP allows island hydration. The project already has `tests/e2e/csp-server-defer.spec.ts`.
 
-### 4. Scripts inline do Astro são requisito, não opção
+### 4. Astro inline scripts are a requirement, not an option
 
-O Astro SSR gera scripts inline para:
-- Definir `Astro.load`, `Astro.idle`, etc.
-- Disparar eventos `astro:load`, `astro:idle`
-- Inicializar o sistema de ilhas
+Astro SSR generates inline scripts to:
+- Define `Astro.load`, `Astro.idle`, etc.
+- Fire events `astro:load`, `astro:idle`
+- Initialize the island system
 
-Sem `'unsafe-inline'` (ou nonce), **nenhuma hidratação acontece**.
+Without `'unsafe-inline'` (or nonce), **no hydration happens**.
 
-## Arquivos alterados
+## Files Changed
 
-- `src/middleware.ts` — adicionado `'unsafe-inline'` ao `script-src` da CSP
+- `src/middleware.ts` — added `'unsafe-inline'` to `script-src` in the CSP
 
-## Ações preventivas
+## Preventive Actions
 
-- [ ] Teste E2E verifica console do navegador após carregar página
-- [ ] Teste E2E verifica que island hidratou (botão + click + verifica conteúdo)
-- [ ] CSP é testada manualmente com `curl -I` em todas as rotas
-- [ ] Mudanças na CSP são revisadas por outro desenvolvedor
-- [ ] Erros de CSP são monitorados (Reporting API com `report-uri`)
+- [ ] E2E test checks browser console after page load
+- [ ] E2E test verifies island hydrated (button + click + check content)
+- [ ] CSP manually tested with `curl -I` on all routes
+- [ ] CSP changes are reviewed by another developer
+- [ ] CSP errors are monitored (Reporting API with `report-uri`)

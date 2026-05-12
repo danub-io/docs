@@ -1,38 +1,38 @@
 ---
-title: "Arquitetura do MBA Lite"
+title: "Architecture — MBA Lite"
 ---
 
 
 
-## Visão Geral
+## Overview
 
-Landing page estática (SSG) para o curso MBA Lite. O design é componentizado com seções independentes, todas pré-renderizadas no build.
+Static landing page (SSG) for the MBA Lite course. The design is component-based with independent sections, all pre-rendered at build time.
 
 ```
-Astro Components → HTML estático → dist/
+Astro Components → Static HTML → dist/
 ```
 
-## Componentes
+## Components
 
-| Componente | Descrição |
-|------------|-----------|
-| `Header` | Navegação superior com links âncora |
-| `Hero` | Seção principal com CTA |
-| `Features` | Grid de benefícios do curso |
-| `LeadCapture` | Formulário de captura de leads |
-| `AuthorBio` | Biografia do autor/instrutor |
-| `Footer` | Rodapé com links e informações |
+| Component | Description |
+|-----------|-------------|
+| `Header` | Top navigation with anchor links |
+| `Hero` | Main section with CTA |
+| `Features` | Grid of course benefits |
+| `LeadCapture` | Lead capture form |
+| `AuthorBio` | Author/instructor biography |
+| `Footer` | Footer with links and information |
 
 ## Design System
 
-- **Cores:** Variáveis CSS via `@theme` do Tailwind v4
-- **Tipografia:** Geist Variable (sans-serif)
-- **Componentes:** shadcn/ui com Radix UI primitives
+- **Colors:** CSS variables via Tailwind v4 `@theme`
+- **Typography:** Geist Variable (sans-serif)
+- **Components:** shadcn/ui with Radix UI primitives
 
 ## Stack
 
 - Astro 6 (SSG)
-- React 19 (ilhas de interatividade)
+- React 19 (islands of interactivity)
 - Tailwind CSS v4
 - shadcn/ui + Radix UI
 - Geist Variable font

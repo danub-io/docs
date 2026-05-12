@@ -2,39 +2,39 @@
 title: "Troubleshooting"
 ---
 
-Esta pasta contém soluções para problemas comuns encontrados durante o desenvolvimento e uso do turbo-cli.
+This folder contains solutions for common issues encountered during turbo-cli development and usage.
 
-## Conteúdo
+## Contents
 
-- `build-errors.md` — Erros de instalação Python/dependências
+- `build-errors.md` — Python/dependency installation errors
 
-## Diagnóstico Rápido
+## Quick Diagnosis
 
 ```bash
-# Verificar instalação Python
+# Check Python installation
 python --version
 
-# Verificar dependências
+# Check dependencies
 pip list | grep -E "prompt-toolkit|openai|rich|pydantic"
 
-# Verificar config
+# Check config
 cat ~/.config/turbo-cli/config.json
 
-# Testar API key
+# Test API key
 curl -H "Authorization: Bearer $(python3 -c "import json; print(json.load(open(f'{__import__('pathlib').Path.home()}/.config/turbo-cli/config.json'))['api_key'])" )" \
   https://api.openai.com/v1/models 2>/dev/null | head -c 100
 ```
 
-## Erros Comuns
+## Common Errors
 
-### API Key não configurada
+### API Key not configured
 
-O app pedirá a API key na primeira execução. Se pular, use `/key <chave>` dentro do app.
+The app will prompt for the API key on first run. If skipped, use `/key <key>` inside the app.
 
-### Conexão recusada / timeout
+### Connection refused / timeout
 
-Verificar `base_url` em `~/.config/turbo-cli/config.json` e conectividade de rede.
+Check `base_url` in `~/.config/turbo-cli/config.json` and network connectivity.
 
-### Modelo não encontrado
+### Model not found
 
-Verificar se o modelo está disponível para sua API key: `/model <modelo-existente>`.
+Check if the model is available for your API key: `/model <existing-model>`.

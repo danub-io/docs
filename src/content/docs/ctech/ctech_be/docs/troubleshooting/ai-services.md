@@ -1,86 +1,84 @@
 ---
-title: "Falhas em Modelos de IA"
+title: "AI Model Failures"
 ---
 
+## Error: "AI model unavailable"
 
-
-## Erro: "AI model unavailable"
-
-### Sintoma
+### Symptom
 ```
 Error: Model google/gemini-2.0-flash is not available
 ```
 
-### Solução
-1. Verifique se a chave API está correta no M8 (Configurações → AI Models)
-2. Confirme se o provedor suporta o modelo selecionado
-3. Verifique se há cotas/limites na conta do provedor
+### Solution
+1. Verify the API key is correct in M8 (Settings → AI Models)
+2. Confirm the provider supports the selected model
+3. Check for quota/rate limits on the provider account
 
 ---
 
-## Erro: "Invalid API Key"
+## Error: "Invalid API Key"
 
-### Sintoma
+### Symptom
 ```
 401 Unauthorized - Invalid API Key
 ```
 
-### Solução
-1. Re-criptografe a chave:
-   - Vá em M8 → AI Models → Editar
-   - Cole a chave novamente (será criptografada com `AES-256-CBC`)
-2. Verifique se a `ENCRYPTION_KEY` no `.env` não foi alterada (quebraria chaves salvas)
+### Solution
+1. Re-encrypt the key:
+   - Go to M8 → AI Models → Edit
+   - Paste the key again (it will be encrypted with `AES-256-CBC`)
+2. Check that the `ENCRYPTION_KEY` in `.env` has not been changed (would break saved keys)
 
 ---
 
-## Cascata de Resiliência não funciona
+## Resilience Cascade not working
 
-### Sintoma
+### Symptom
 ```
-Todas as tentativas falham sem tentar próximo tier
+All attempts fail without trying the next tier
 ```
 
-### Verificação
-1. Acesse M8 → AI Models
-2. Confirme que há modelos cadastrados em **múltiplos tiers** (1 a 5)
-3. Verifique se os modelos estão marcados como **Ativo**
+### Verification
+1. Go to M8 → AI Models
+2. Confirm there are models registered across **multiple tiers** (1 to 5)
+3. Verify the models are marked as **Active**
 
 ---
 
-## Erro de Parsing (JSON inválido da IA)
+## Parsing Error (invalid AI JSON)
 
-### Sintoma
+### Symptom
 ```
 Error: Failed to parse AI response as JSON
 ```
 
-### Causa
-A IA retornou texto fora do formato esperado (ex: markdown ```json ... ```).
+### Cause
+The AI returned text outside the expected format (e.g. markdown ```json ... ```).
 
-### Solução
-O projeto já possui fallback para limpar markdown (ver `atualizar-ia.ts`). Se persistir:
-1. Ajuste o `system_prompt` no M8 para ser mais rígido
-2. Use `generateObject` (Vercel AI SDK) em vez de `generateText` quando possível
+### Solution
+The project already has a fallback to clean markdown (see `atualizar-ia.ts`). If it persists:
+1. Adjust the `system_prompt` in M8 to be more strict
+2. Use `generateObject` (Vercel AI SDK) instead of `generateText` when possible
 
 ---
 
-## Timeouts em requisições IA
+## AI Request Timeouts
 
-### Sintoma
+### Symptom
 ```
 Timeout: AI request took longer than Xms
 ```
 
-### Solução
-1. Aumente o timeout no provedor de IA (se disponível)
-2. Use modelos menores/mais rápidos para tarefas simples
-3. Verifique a conexão com a internet (latência alta)
+### Solution
+1. Increase the timeout on the AI provider (if available)
+2. Use smaller/faster models for simple tasks
+3. Check internet connection (high latency)
 
 ---
 
-## Verificar Stats de Uso
+## Check Usage Stats
 
-Acesse M8 → Logs de Sistema para ver:
-- Top modelos por chamadas
-- Tokens consumidos
-- Custo estimado
+Go to M8 → System Logs to see:
+- Top models by calls
+- Tokens consumed
+- Estimated cost

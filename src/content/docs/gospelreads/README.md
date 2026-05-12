@@ -4,33 +4,33 @@ title: "GospelReads — The Intellectual Archive"
 
 
 
-Blog de conteúdo teológico e reflexões cristãs, construído com **Astro 6**, **React 19** e **Tailwind CSS v4**. Hospedado no **Firebase Hosting**.
+A blog for theological content and Christian reflections, built with **Astro 6**, **React 19**, and **Tailwind CSS v4**. Hosted on **Firebase Hosting**.
 
-## 🚀 Tecnologias
+## 🚀 Technologies
 
 - **Framework:** Astro 6+ (SSG)
-- **UI Interativa:** React 19
-- **Estilização:** Tailwind CSS v4 + Typography
-- **Conteúdo:** Content Collections (MDX)
-- **Hospedagem:** Firebase Hosting
-- **Fontes:** Google Fonts via CSS
+- **Interactive UI:** React 19
+- **Styling:** Tailwind CSS v4 + Typography
+- **Content:** Content Collections (MDX)
+- **Hosting:** Firebase Hosting
+- **Fonts:** Google Fonts via CSS
 
-## 📄 Estrutura de Conteúdo
+## 📄 Content Structure
 
 ```
 src/content/
-├── posts/          # Artigos do blog (MD)
-├── authors/        # Perfis de autores
-└── pages/          # Páginas estáticas
+├── posts/          # Blog articles (MD)
+├── authors/        # Author profiles
+└── pages/          # Static pages
 ```
 
-## 🛠️ Comandos
+## 🛠️ Commands
 
 ```bash
-pnpm install          # Instalar dependências
-pnpm dev              # Servidor local (localhost:4321)
-pnpm build            # Build de produção
-pnpm preview          # Preview do build
+pnpm install          # Install dependencies
+pnpm dev              # Local server (localhost:4321)
+pnpm build            # Production build
+pnpm preview          # Preview the build
 ```
 
 ## ☁️ Deploy (Firebase)
@@ -40,4 +40,4 @@ pnpm build
 firebase deploy
 ```
 
-O build gera os arquivos em `dist/`, que são servidos pelo Firebase Hosting com cache agressivo (1 ano para assets estáticos).
+The build outputs files to `dist/`, which are served by Firebase Hosting with aggressive caching (1 year for static assets).

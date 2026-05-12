@@ -1,58 +1,58 @@
 ---
-title: "Arquitetura do GospelReads"
+title: "Architecture — GospelReads"
 ---
 
 
 
-## Visão Geral
+## Overview
 
-Blog estático (SSG) com foco em performance, SEO e tipografia. O conteúdo é gerenciado via Content Collections do Astro e todo o site é pré-renderizado no build.
+Static blog (SSG) focused on performance, SEO, and typography. Content is managed via Astro Content Collections, and the entire site is pre-rendered at build time.
 
 ```
-Markdown (MD) → Content Collections → Páginas Astro → HTML estático → Firebase Hosting
+Markdown (MD) → Content Collections → Astro Pages → Static HTML → Firebase Hosting
 ```
 
-## Estrutura do Projeto
+## Project Structure
 
 ```
 src/
-├── assets/           # Imagens e assets estáticos
-├── components/       # Componentes React (UI)
+├── assets/           # Images and static assets
+├── components/       # React components (UI)
 ├── content/          # Content Collections
-│   ├── posts/        # Artigos em MD com frontmatter
-│   ├── authors/      # Perfis de autores
-│   └── pages/        # Páginas estáticas
-├── layouts/          # Layout base do site
-├── lib/              # Utilitários e helpers
-├── pages/            # Rotas Astro (index, posts/[slug])
-└── styles/           # Estilos globais + Tailwind v4
+│   ├── posts/        # MD articles with frontmatter
+│   ├── authors/      # Author profiles
+│   └── pages/        # Static pages
+├── layouts/          # Base site layout
+├── lib/              # Utilities and helpers
+├── pages/            # Astro routes (index, posts/[slug])
+└── styles/           # Global styles + Tailwind v4
 ```
 
 ## Content Collections
 
 ### Posts
 
-Schema com `title`, `description`, `date`, `authors`, `tags`, `image`, `draft`. Usa loader `glob` para ler arquivos `.md` de `src/content/posts/`.
+Schema with `title`, `description`, `date`, `authors`, `tags`, `image`, `draft`. Uses the `glob` loader to read `.md` files from `src/content/posts/`.
 
 ### Authors
 
-Perfis com `name`, `image`, `description` e links de redes sociais.
+Profiles with `name`, `image`, `description`, and social media links.
 
 ### Pages
 
-Páginas estáticas com `title` e `description`.
+Static pages with `title` and `description`.
 
 ## Performance
 
-- **100/100 Lighthouse** — SSG puro sem JS no carregamento inicial
-- **Imagens otimizadas** — `aspect-video`, `object-cover`, grayscale filter via CSS
-- **Tipografia refinada** — fontes serifadas para títulos, sans-serif para corpo
-- **Cache agressivo** — Firebase configurado com `max-age=31536000` para assets
+- **100/100 Lighthouse** — Pure SSG with no JavaScript on initial load
+- **Optimized images** — `aspect-video`, `object-cover`, grayscale filter via CSS
+- **Refined typography** — serif fonts for headings, sans-serif for body
+- **Aggressive caching** — Firebase configured with `max-age=31536000` for assets
 
 ## Stack
 
 - Astro 6 (SSG)
-- React 19 (ilhas de interatividade)
+- React 19 (islands of interactivity)
 - Tailwind CSS v4 + @tailwindcss/typography
-- date-fns (formatação de datas pt-BR)
-- Firebase Hosting (CDN global)
+- date-fns (pt-BR date formatting)
+- Firebase Hosting (global CDN)

@@ -6,27 +6,27 @@ title: "Changelog"
 
 ## [Unreleased]
 
-### Corrigido
+### Fixed
 
-- Nome do pacote no `package.json` (`proud-phase` → `gospelreads`)
-- Gerenciadores conflitantes: removidos `package-lock.json` e `.yarnrc` (padronizado para pnpm)
-- Artefato Next.js (`next-env.d.ts`) removido
-- `@types/react` e `@types/react-dom` movidos para `devDependencies`
-- `.gitignore` agora cobre `.next/` e `next-env.d.ts`
-- Teste quebrado: `content.ts` criado (módulo que o teste importava não existia)
-- `docs/` adicionado com índice de documentação
+- Package name in `package.json` (`proud-phase` → `gospelreads`)
+- Conflicting package managers: removed `package-lock.json` and `.yarnrc` (standardized on pnpm)
+- Removed Next.js artifact (`next-env.d.ts`)
+- `@types/react` and `@types/react-dom` moved to `devDependencies`
+- `.gitignore` now covers `.next/` and `next-env.d.ts`
+- Broken test: created `content.ts` (the module the test imported did not exist)
+- `docs/` added with documentation index
 
 ## [0.1.0] - 2026-04-15
 
-### Adicionado
+### Added
 
-- Blog com Content Collections (posts, authors, pages)
-- Layout responsivo com tipografia refinada
-- Suporte a MDX para conteúdo rico
-- Página inicial com hero post + sidebar
-- Páginas individuais de posts com SEO
-- Perfis de autores com redes sociais
-- Firebase Hosting com cache otimizado
+- Blog with Content Collections (posts, authors, pages)
+- Responsive layout with refined typography
+- MDX support for rich content
+- Homepage with hero post + sidebar
+- Individual post pages with SEO
+- Author profiles with social media links
+- Firebase Hosting with optimized caching
 - 100/100 Lighthouse performance
-- Tailwind CSS v4 com @tailwindcss/typography
-- Componentes React (Separator, UI)
+- Tailwind CSS v4 with @tailwindcss/typography
+- React components (Separator, UI)

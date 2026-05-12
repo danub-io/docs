@@ -1,42 +1,42 @@
 ---
-title: "ADR-002: Astro Islands + React para Componentes Interativos"
+title: "ADR-002: Astro Islands + React for Interactive Components"
 ---
 
 
 
-**Data:** 2026-04-15
-**Status:** Aceito
+**Date:** 2026-04-15
+**Status:** Accepted
 
-## Contexto
+## Context
 
-O frontend CTECH é um site de conteúdo (reviews, guias, comparações) com SEO crítico e algumas partes interativas (busca, drawer, collapsible). Precisávamos de um framework que:
+The CTECH frontend is a content site (reviews, guides, comparisons) with critical SEO and some interactive parts (search, drawer, collapsible). We needed a framework that:
 
-- Entregasse HTML estático com performance máxima
-- Tivesse SSR para SEO
-- Permitisse hidratação seletiva de componentes interativos
-- Suportasse React para componentes com estado
+- Delivers static HTML with maximum performance
+- Has SSR for SEO
+- Allows selective hydration of interactive components
+- Supports React for stateful components
 
-## Decisão
+## Decision
 
-Escolhemos **Astro 6** com **Islands Architecture** como framework principal, usando **React 19** apenas para componentes que exigem estado/eventos.
+We chose **Astro 6** with **Islands Architecture** as the main framework, using **React 19** only for components that require state/events.
 
-## Alternativas Consideradas
+## Alternatives Considered
 
-| Alternativa | Motivo da Rejeição |
+| Alternative | Reason for Rejection |
 |------------|-------------------|
-| Next.js SPA | Todo o JS é enviado ao cliente, prejudicando performance e SEO |
-| Remix | Similar ao Next.js, sem conceito de islands |
-| Qwik | Ecossistema menor, menos integrações |
-| Astro puro (sem React) | Perderia ecossistema de UI components (shadcn) |
+| Next.js SPA | All JS is sent to the client, hurting performance and SEO |
+| Remix | Similar to Next.js, no islands concept |
+| Qwik | Smaller ecosystem, fewer integrations |
+| Pure Astro (without React) | Would lose the UI component ecosystem (shadcn) |
 
-## Consequências
+## Consequences
 
-- Positivas: Zero JS na maioria das páginas, SEO excelente, carregamento instantâneo
-- Positivas: Componentes React hidratam só quando necessário (`client:visible`, `client:idle`)
-- Negativas: Complexidade de duas camadas (Astro + React), estado não compartilhável entre islands
-- Regra: Preferir Astro para apresentação, React só para interatividade inevitável
+- Positives: Zero JS on most pages, excellent SEO, instant loading
+- Positives: React components hydrate only when needed (`client:visible`, `client:idle`)
+- Negatives: Two-layer complexity (Astro + React), state not shareable between islands
+- Rule: Prefer Astro for presentation, React only for unavoidable interactivity
 
-## Referências
+## References
 
 - [Astro Islands](https://docs.astro.build/en/concepts/islands/)
 - `ctech_fe/docs/architecture/islands.md`

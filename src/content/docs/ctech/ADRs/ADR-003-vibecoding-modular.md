@@ -1,48 +1,48 @@
 ---
-title: "ADR-003: Estrutura Modular para Desenvolvimento com IA"
+title: "ADR-003: Modular Structure for AI-Assisted Development"
 ---
 
 
 
-**Data:** 2026-04-15
-**Status:** Aceito
+**Date:** 2026-04-15
+**Status:** Accepted
 
-## Contexto
+## Context
 
-O projeto é desenvolvido com auxílio intensivo de IA (agentes de código). Precisávamos de uma estrutura que:
-- Minimizasse o contexto necessário por tarefa
-- Isolasse domínios para evitar efeitos colaterais
-- Facilitasse a compreensão do código por IAs com janela de contexto limitada
+The project is developed with intensive AI assistance (code agents). We needed a structure that:
+- Minimizes the context needed per task
+- Isolates domains to prevent side effects
+- Makes the code easier for AIs with limited context windows to understand
 
-## Decisão
+## Decision
 
-Adotamos uma estrutura **modular (Vibecoding)** com separação clara entre `core/` (infraestrutura) e `modules/` (domínios de negócio). Cada módulo contém seus próprios componentes, serviços e testes.
+We adopted a **modular (Vibecoding)** structure with a clear separation between `core/` (infrastructure) and `modules/` (business domains). Each module contains its own components, services, and tests.
 
-## Estrutura
+## Structure
 
 ```
 src/
-├── core/       # Infraestrutura global (UI, lib, layouts, types, services globais)
-├── modules/    # Domínios isolados (inicio, produto, guia, busca, comparar, comunidade)
-└── pages/      # Camada fina de roteamento (apenas orquestra dados → componentes)
+├── core/       # Global infrastructure (UI, lib, layouts, types, global services)
+├── modules/    # Isolated domains (home, product, guide, search, compare, community)
+└── pages/      # Thin routing layer (only orchestrates data → components)
 ```
 
-## Alternativas Consideradas
+## Alternatives Considered
 
-| Alternativa | Motivo da Rejeição |
+| Alternative | Reason for Rejection |
 |------------|-------------------|
-| Flat (tudo em pastas por tipo) | Contexto muito grande para IAs, difícil isolar mudanças |
-| Feature-Sliced Design | Muita cerimônia para o tamanho do projeto |
-| Monolítico | Viola o princípio do vibecoding |
+| Flat (everything in folders by type) | Context too large for AIs, hard to isolate changes |
+| Feature-Sliced Design | Too much ceremony for the project size |
+| Monolithic | Violates the vibecoding principle |
 
-## Consequências
+## Consequences
 
-- Positivas: IA precisa de apenas 1-2 arquivos de contexto por tarefa
-- Positivas: Mudanças em um módulo raramente afetam outros
-- Negativas: Duplicação ocasional de tipos entre módulos
-- Regra: `@core/*` raramente é alterado — mudanças ficam em `@modules/*`
+- Positives: AI needs only 1-2 context files per task
+- Positives: Changes in one module rarely affect others
+- Negatives: Occasional type duplication between modules
+- Rule: `@core/*` is rarely changed — changes stay in `@modules/*`
 
-## Referências
+## References
 
 - `ctech_fe/ARCHITECTURE.md`
 - `ctech_fe/AGENTS.md`

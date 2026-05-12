@@ -1,27 +1,27 @@
 ---
-title: "Setup do Ambiente Local"
+title: "Local Environment Setup"
 ---
 
-## Pré-requisitos
+## Prerequisites
 
 - **Python** >= 3.12 — [Download](https://python.org/)
-- **pip** e **venv** (incluídos no Python)
+- **pip** and **venv** (included with Python)
 
 ## Setup
 
 ```bash
-# 1. Clone o repositório
+# 1. Clone the repository
 git clone <repo-url> turbo-cli
 cd turbo-cli
 
-# 2. Criar e ativar virtual environment
+# 2. Create and activate virtual environment
 python3 -m venv .venv
 source .venv/bin/activate
 
-# 3. Instalar dependências
+# 3. Install dependencies
 pip install -e .
 
-# 4. Executar localmente (3 formas equivalentes)
+# 4. Run locally (3 equivalent methods)
 turbo
 # python -m turbo_cli
 # python main.py
@@ -29,34 +29,34 @@ turbo
 
 ## API Key
 
-Na primeira execução, o app pedirá a API key. Você também pode:
+On first run, the app will prompt for the API key. You can also:
 
-- Definir a env var `TURBO_API_KEY` antes de executar
-- Copiar `.env.example` para `.env` e preencher
+- Set the `TURBO_API_KEY` env var before running
+- Copy `.env.example` to `.env` and fill it in
 
 ```bash
-export TURBO_API_KEY="sua-chave-aqui"
+export TURBO_API_KEY="your-key-here"
 turbo
 ```
 
-## Verificação
+## Verification
 
 ```bash
-# Verificar instalação
-turbo --version  # ou python main.py --version
+# Verify installation
+turbo --version  # or python main.py --version
 
-# Verificar config
+# Check config
 cat ~/.config/turbo-cli/config.json
 
-# Verificar histórico
+# Check history
 cat ~/.config/turbo-cli/history.txt
 ```
 
-## Estrutura de Desenvolvimento
+## Development Structure
 
 ```
 turbo-cli/
-├── main.py                  # Entrypoint thin (→ cli.py)
+├── main.py                  # Thin entrypoint (→ cli.py)
 ├── cli.py                   # CLI argparse + asyncio.run()
 ├── pyproject.toml           # Build system + entry point "turbo"
 ├── requirements.txt         # Dev-deps (pytest, mypy)
@@ -64,18 +64,18 @@ turbo-cli/
 ├── turbo_cli/
 │   ├── __init__.py          # __version__
 │   ├── __main__.py          # python -m turbo_cli
-│   ├── app.py               # Loop principal + tool dispatch
+│   ├── app.py               # Main loop + tool dispatch
 │   ├── config.py            # Config + API key
 │   ├── llm.py               # LLM client
-│   ├── messages.py          # Formatação rich
-│   ├── shared/              # Estado, ferramentas, planos
+│   ├── messages.py          # Rich formatting
+│   ├── shared/              # State, tools, plans
 │   │   ├── modes.py
 │   │   ├── state.py
 │   │   ├── tools.py
 │   │   ├── widgets.py
 │   │   ├── plan_parser.py
 │   │   └── plan_writer.py
-│   └── agents/              # 4 agentes
+│   └── agents/              # 4 agents
 │       ├── base.py
 │       ├── normal.py
 │       ├── plan.py
@@ -83,20 +83,20 @@ turbo-cli/
 │       └── ask.py
 ```
 
-## Comandos Úteis
+## Useful Commands
 
 ```bash
 # Python
-turbo                          # Executar (entry point global)
-python -m turbo_cli          # Executar via módulo
-python main.py                  # Executar via script
-turbo --version                # Ver versão
-turbo --plain                  # Modo plain (sem ANSI/Unicode)
+turbo                          # Run (global entry point)
+python -m turbo_cli          # Run via module
+python main.py                  # Run via script
+turbo --version                # Check version
+turbo --plain                  # Plain mode (no ANSI/Unicode)
 
 # Type checking
 python -m mypy turbo_cli/ tests/
 
-# Dependências
-pip install -e .                # Instalar em modo editável
+# Dependencies
+pip install -e .                # Install in editable mode
 pip install -r requirements.txt # Dev-deps
 ```

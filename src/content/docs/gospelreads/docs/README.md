@@ -1,25 +1,25 @@
 ---
-title: "Documentação — GospelReads"
+title: "Documentation — GospelReads"
 ---
 
 
 
-Índice da documentação do projeto.
+Project documentation index.
 
-## Documentos na Raiz
+## Root Documents
 
-- [README.md](../README.md) — Visão geral, tecnologias, comandos
-- [ARCHITECTURE.md](../ARCHITECTURE.md) — Arquitetura, Content Collections, performance
-- [CONTRIBUTING.md](../CONTRIBUTING.md) — Guia de contribuição
-- [CHANGELOG.md](../CHANGELOG.md) — Histórico de versões
+- [README.md](../README.md) — Overview, technologies, commands
+- [ARCHITECTURE.md](../ARCHITECTURE.md) — Architecture, Content Collections, performance
+- [CONTRIBUTING.md](../CONTRIBUTING.md) — Contribution guide
+- [CHANGELOG.md](../CHANGELOG.md) — Version history
 
 ## Deploy
 
-O projeto é hospedado no **Firebase Hosting**. Para deploy:
+The project is hosted on **Firebase Hosting**. To deploy:
 
 ```bash
 pnpm build
 firebase deploy
 ```
 
-Consulte `firebase.json` e `.firebaserc` para configuração.
+See `firebase.json` and `.firebaserc` for configuration.

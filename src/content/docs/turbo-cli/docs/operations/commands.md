@@ -1,120 +1,120 @@
 ---
-title: "Comandos"
+title: "Commands"
 ---
 
-## Execução
+## Execution
 
-| Comando | Descrição |
-|---------|-----------|
-| `python main.py` | Executa o app |
-| `python main.py -m gpt-4o` | Executa com modelo específico |
-| `python main.py --model claude-sonnet-4-20250514` | Executa com modelo específico |
-| `python main.py --provider anthropic` | Executa com provedor específico |
-| `python main.py --version` | Exibe versão |
-| `python main.py --plain` | Modo plain (sem ANSI/Unicode) |
+| Command | Description |
+|---------|-------------|
+| `python main.py` | Run the app |
+| `python main.py -m gpt-4o` | Run with a specific model |
+| `python main.py --model claude-sonnet-4-20250514` | Run with a specific model |
+| `python main.py --provider anthropic` | Run with a specific provider |
+| `python main.py --version` | Show version |
+| `python main.py --plain` | Plain mode (no ANSI/Unicode) |
 
-## Dependências
+## Dependencies
 
-| Comando | Descrição |
-|---------|-----------|
-| `pip install -r requirements.txt` | Instalar dependências |
+| Command | Description |
+|---------|-------------|
+| `pip install -r requirements.txt` | Install dependencies |
 | `python -m py_compile main.py` | Syntax check |
 
 ## Virtual Environment
 
-| Comando | Descrição |
-|---------|-----------|
-| `python3 -m venv .venv` | Criar venv |
-| `source .venv/bin/activate` | Ativar venv |
-| `deactivate` | Desativar venv |
+| Command | Description |
+|---------|-------------|
+| `python3 -m venv .venv` | Create venv |
+| `source .venv/bin/activate` | Activate venv |
+| `deactivate` | Deactivate venv |
 
 ## API Key
 
-| Método | Descrição |
-|--------|-----------|
-| Primeira execução | App detecta provider via env var ou menu interativo |
-| Variável de ambiente (genérica) | `export TURBO_API_KEY="sk-..."` |
-| Variável de ambiente (por provider) | `OPENCODE_GO_API_KEY`, `GEMINI_API_KEY`, `ANTHROPIC_API_KEY`, `OPENAI_API_KEY` |
-| Comando slash | `/key sk-...` dentro do app |
-| Comando slash (provedor) | `/provider opencode` para trocar de provedor |
+| Method | Description |
+|--------|-------------|
+| First run | App detects provider via env var or interactive menu |
+| Environment variable (generic) | `export TURBO_API_KEY="sk-..."` |
+| Environment variable (per provider) | `OPENCODE_GO_API_KEY`, `GEMINI_API_KEY`, `ANTHROPIC_API_KEY`, `OPENAI_API_KEY` |
+| Slash command | `/key sk-...` inside the app |
+| Slash command (provider) | `/provider opencode` to switch provider |
 
-## Instalação Global (pipx)
+## Global Installation (pipx)
 
 ```bash
-# Instalar via pipx (opcional)
+# Install via pipx (optional)
 pipx install turbo-cli
 
-# Executar
+# Run
 turbo-cli
 
-# Desinstalar
+# Uninstall
 pipx uninstall turbo-cli
 ```
 
 ## Config Directory
 
 ```bash
-# Localização
+# Location
 ~/.config/turbo-cli/
 
-# Arquivos
-config.json    # API key, modelo, base_url
-history.txt    # Histórico de comandos
+# Files
+config.json    # API key, model, base_url
+history.txt    # Command history
 
-# Remover config (reset)
+# Remove config (reset)
 rm -rf ~/.config/turbo-cli/
 ```
 
-## Verificação de Saúde
+## Health Check
 
 ```bash
-# 1. Python instalado
+# 1. Python installed
 python --version
 
-# 2. Dependências instaladas
+# 2. Dependencies installed
 pip list | grep -E "prompt-toolkit|openai|rich|pydantic"
 
-# 3. Config existe
+# 3. Config exists
 test -f ~/.config/turbo-cli/config.json && echo "✓ Config OK"
 ```
 
 ## CLI Flags
 
-| Flag | Descrição |
-|------|-----------|
-| `--version` | Exibe versão |
-| `--model`, `-m` | Especificar modelo (ex: `gpt-4o`) |
-| `--provider` | Especificar provedor (ex: `anthropic`, `gemini`, `opencode`) |
-| `--plain` | Modo plain (sem ANSI/Unicode) |
+| Flag | Description |
+|------|-------------|
+| `--version` | Show version |
+| `--model`, `-m` | Specify model (e.g. `gpt-4o`) |
+| `--provider` | Specify provider (e.g. `anthropic`, `gemini`, `opencode`) |
+| `--plain` | Plain mode (no ANSI/Unicode) |
 
-## Comandos Slash
+## Slash Commands
 
-| Comando | Descrição |
-|---------|-----------|
-| `/model <nome>` | Altera o modelo LLM |
-| `/key <chave>` | Altera a API key |
-| `/provider <nome>` | Altera o provedor (opencode/gemini/anthropic/ollama/openai) |
-| `/mode <nome>` | Troca para um modo específico (normal, plan, code, ask) |
-| `/plan <descrição>` | Cria um novo plano de execução (entra no modo Plan) |
-| `/plan-menu` | Lista planos salvos em `.ai/plans/` para seleção |
-| `/plan-abort` | Aborta o planejamento atual e volta ao modo Normal |
-| `/code <caminho-do-plano>` | Carrega um plano no modo Code para execução autônoma |
-| `/code-reset` | Reseta o estado do CodeAgent |
-| `/code-status` | Exibe o status atual da execução do plano |
-| `/add <caminho>` | Adiciona arquivo ao contexto ativo (active files) |
-| `/add --remove <caminho>` | Remove arquivo do contexto ativo |
-| `/clear` | Limpa o histórico da conversa |
-| `/quit` | Sai do app |
-| `/end` | Sai do app (atalho) |
-| `/new` | Limpa tela e inicia nova sessão |
-| `/help` | Exibe a lista de comandos disponíveis |
+| Command | Description |
+|---------|-------------|
+| `/model <name>` | Change the LLM model |
+| `/key <key>` | Change the API key |
+| `/provider <name>` | Change the provider (opencode/gemini/anthropic/ollama/openai) |
+| `/mode <name>` | Switch to a specific mode (normal, plan, code, ask) |
+| `/plan <description>` | Create a new execution plan (enters Plan mode) |
+| `/plan-menu` | List saved plans in `.ai/plans/` for selection |
+| `/plan-abort` | Abort current planning and return to Normal mode |
+| `/code <plan-path>` | Load a plan in Code mode for autonomous execution |
+| `/code-reset` | Reset CodeAgent state |
+| `/code-status` | Display the current plan execution status |
+| `/add <path>` | Add file to active context (active files) |
+| `/add --remove <path>` | Remove file from active context |
+| `/clear` | Clear conversation history |
+| `/quit` | Exit the app |
+| `/end` | Exit the app (shortcut) |
+| `/new` | Clear screen and start a new session |
+| `/help` | Display the list of available commands |
 
-### Atalhos de Teclado
+### Keyboard Shortcuts
 
-| Tecla | Ação |
-|-------|------|
-| Shift+Tab | Cicla entre os modos (Normal → Plan → Code → Ask → Normal) |
-| Esc + Enter | Insere nova linha no input |
-| Enter | Envia mensagem |
-| Ctrl+C | Copiar seleção para área de transferência |
-| Ctrl+V | Colar da área de transferência |
+| Key | Action |
+|-----|--------|
+| Shift+Tab | Cycle through modes (Normal → Plan → Code → Ask → Normal) |
+| Esc + Enter | Insert a new line in input |
+| Enter | Send message |
+| Ctrl+C | Copy selection to clipboard |
+| Ctrl+V | Paste from clipboard |

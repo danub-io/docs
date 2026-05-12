@@ -1,12 +1,12 @@
 ---
-title: "Contribuindo para o GospelReads"
+title: "Contributing — GospelReads"
 ---
 
 
 
-Obrigado por contribuir!
+Thanks for contributing!
 
-## Configuração do Ambiente
+## Environment Setup
 
 ```bash
 git clone <repo-url>
@@ -15,21 +15,21 @@ pnpm install
 pnpm dev
 ```
 
-## Padrões
+## Standards
 
 - **TypeScript:** Strict mode
 - **Linting:** `pnpm astro check`
 - **Commits:** Conventional Commits (`feat:`, `fix:`, `docs:`, `style:`)
 
-## Criar Novo Post
+## Creating a New Post
 
-1. Crie um arquivo `.md` em `src/content/posts/`
-2. Adicione frontmatter com `title`, `description`, `date`
-3. Escreva o conteúdo em Markdown
-4. Execute `pnpm dev` para ver o resultado
+1. Create a `.md` file in `src/content/posts/`
+2. Add frontmatter with `title`, `description`, `date`
+3. Write the content in Markdown
+4. Run `pnpm dev` to preview the result
 
-## Processo de PR
+## PR Process
 
-1. Crie branch a partir da `main`
-2. Faça as alterações
-3. Abra o PR descrevendo as mudanças
+1. Create a branch from `main`
+2. Make your changes
+3. Open a PR describing the changes

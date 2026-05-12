@@ -1,54 +1,54 @@
 ---
 title: MBA Lite
-description: Landing page do curso MBA Lite — Gestão para Alta Performance
+description: Landing page for the MBA Lite course — Gestao para Alta Performance
 ---
 
 import { Badge } from '@astrojs/starlight/components';
 
-<Badge text="Estável" variant="success" /> <Badge text="v0.1.0" variant="note" /> <Badge text="Astro 6" variant="tip" />
+<Badge text="Stable" variant="success" /> <Badge text="v0.1.0" variant="note" /> <Badge text="Astro 6" variant="tip" />
 
-Bem-vindo à documentação do **MBA Lite**, landing page do curso *MBA Lite — A Série Gestão para Alta Performance*.
+Welcome to the **MBA Lite** documentation, the landing page for the *MBA Lite — Gestao para Alta Performance* course.
 
 ---
 
-## Visão Geral
+## Overview
 
-Landing page estática (SSG) construída com Astro 6, Tailwind CSS v4 e shadcn/ui. Design componentizado com seções independentes, todas pré-renderizadas.
+Static landing page (SSG) built with Astro 6, Tailwind CSS v4, and shadcn/ui. Component-based design with independent sections, all pre-rendered.
 
 ### Stack
 
-| Tecnologia | Função |
-|------------|--------|
-| **Astro 6** | Framework SSG |
-| **React 19** | Ilhas de interatividade |
-| **Tailwind CSS v4** | Estilização com `@theme` |
-| **shadcn/ui (base-nova) + Base UI** | Componentes de UI |
-| **Geist Variable** | Tipografia |
+| Technology | Role |
+|------------|------|
+| **Astro 6** | SSG Framework |
+| **React 19** | Islands of interactivity |
+| **Tailwind CSS v4** | Styling with `@theme` |
+| **shadcn/ui (new base) + Base UI** | UI components |
+| **Geist Variable** | Typography |
 
-## Componentes da Página
+## Page Components
 
-| Componente | Descrição |
-|------------|-----------|
-| `Header` | Navegação superior com links âncora |
-| `Hero` | Seção principal com CTA |
-| `Features` | Grid de benefícios do curso |
-| `LeadCapture` | Formulário de captura de leads |
-| `AuthorBio` | Biografia do autor |
-| `Footer` | Rodapé com links |
+| Component | Description |
+|-----------|-------------|
+| `Header` | Top navigation with anchor links |
+| `Hero` | Main section with CTA |
+| `Features` | Grid of course benefits |
+| `LeadCapture` | Lead capture form |
+| `AuthorBio` | Author biography |
+| `Footer` | Footer with links |
 
-## Começando
+## Getting Started
 
 ```bash
 git clone <repo-url>
 cd mbalite
 pnpm install
-pnpm dev          # Servidor local
+pnpm dev          # Local server
 ```
 
 ### Build
 
 ```bash
-pnpm build        # Gera dist/
-pnpm preview      # Preview do build
+pnpm build        # Generates dist/
+pnpm preview      # Preview the build
 ```
 

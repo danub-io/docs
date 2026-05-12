@@ -1,18 +1,18 @@
 ---
-title: "Erros de Instalação"
+title: "Installation Errors"
 ---
 
-## `pip install` falha
+## `pip install` fails
 
-### Sintoma
+### Symptom
 ```
 error: externally-managed-environment
 ```
 
-### Causa
-Python 3.14+ no Arch Linux bloqueia instalação fora de venv.
+### Cause
+Python 3.14+ on Arch Linux blocks installation outside a venv.
 
-### Solução
+### Solution
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
@@ -23,14 +23,14 @@ pip install -r requirements.txt
 
 ## `ModuleNotFoundError: No module named 'prompt_toolkit'`
 
-### Sintoma
+### Symptom
 ```
 ModuleNotFoundError: No module named 'prompt_toolkit'
 ```
 
-### Solução
+### Solution
 ```bash
-source .venv/bin/activate  # se usar venv
+source .venv/bin/activate  # if using venv
 pip install -r requirements.txt
 ```
 
@@ -38,15 +38,15 @@ pip install -r requirements.txt
 
 ## `python: command not found`
 
-### Solução
+### Solution
 ```bash
-# Verificar se Python está instalado
+# Check if Python is installed
 which python3
 
-# Usar python3 explicitamente
+# Use python3 explicitly
 python3 main.py
 
-# Ou criar alias (opcional)
+# Or create an alias (optional)
 alias python=python3
 ```
 
@@ -54,16 +54,16 @@ alias python=python3
 
 ## OpenSSL / SSL errors
 
-### Sintoma
+### Symptom
 ```
 SSL: CERTIFICATE_VERIFY_FAILED
 ```
 
-### Solução
+### Solution
 ```bash
-# Verificar data/hora do sistema
+# Check system date/time
 date
 
-# Se macOS, reinstalar certificados
+# On macOS, reinstall certificates
 # /Applications/Python\ 3.x/Install\ Certificates.command
 ```

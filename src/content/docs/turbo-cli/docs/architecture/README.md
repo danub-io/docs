@@ -1,27 +1,27 @@
 ---
-title: "Arquitetura — Documentação"
+title: "Architecture — Documentation"
 ---
 
-Documentação detalhada sobre a arquitetura do turbo-cli.
+Detailed documentation about the turbo-cli architecture.
 
-## Conteúdo
+## Contents
 
-- `tui-flow.md` — Fluxo do app loop com 4 agentes e tool dispatch
-- `agent-system.md` — Sistema de 4 modos (Normal, Plan, Code, Ask)
+- `tui-flow.md` — App loop flow with 4 agents and tool dispatch
+- `agent-system.md` — 4-mode system (Normal, Plan, Code, Ask)
 
-## Visão Geral
+## Overview
 
-O turbo-cli segue uma arquitetura em camadas com 4 agentes:
+turbo-cli follows a layered architecture with 4 agents:
 
 ```
 turbo / python -m turbo_cli / main.py
   └── cli.py → asyncio.run()
-        └── app.py (loop prompt_toolkit + tool dispatch)
+        └── app.py (prompt_toolkit loop + tool dispatch)
               ├── config.py (config + API key)
               ├── llm.py (LLMClient)
-              ├── messages.py (formatação rich)
+              ├── messages.py (rich formatting)
               ├── agents/ (Normal, Plan, Code, Ask)
-              └── shared/ (ferramentas, estado, planos)
+              └── shared/ (tools, state, plans)
 ```
 
-Para detalhes completos, consulte o [ARCHITECTURE.md](../ARCHITECTURE.md) na raiz.
+For full details, see [ARCHITECTURE.md](../ARCHITECTURE.md) in the root.

@@ -2,6 +2,6 @@
 title: "Postmortems — ctech_be"
 ---
 
-Este diretório armazena postmortems do backend CTECH.
+This directory stores postmortems for the CTECH backend.
 
-Consulte o [template e convenções](/docs/ctech/postmortems) para criar novos postmortems.
+See the [template and conventions](/docs/ctech/postmortems) to create new postmortems.

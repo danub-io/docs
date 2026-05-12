@@ -1,90 +1,90 @@
 ---
 title: turbo-cli
-description: Assistente inline de terminal para conversar com LLMs via API
+description: Inline terminal assistant for chatting with LLMs via API
 ---
 
 import { Badge, Aside, Card } from '@astrojs/starlight/components';
 
 <Badge text="v0.3.1" variant="success" /> <Badge text="Python 3.12+" variant="note" /> <Badge text="prompt-toolkit" variant="tip" />
 
-Bem-vindo à documentação do **turbo-cli**, um assistente inline de terminal (estilo Claude Code) com 4 modos de agente (Normal, Plan, Code, Ask) para conversar com modelos LLM via API diretamente do terminal.
+Welcome to the **turbo-cli** documentation — an inline terminal assistant (Claude Code style) with 4 agent modes (Normal, Plan, Code, Ask) for chatting with LLM models via API directly from the terminal.
 
-<Card title="4 Modos de Agente">
-Normal (assistente geral com bash), Plan (planejamento com project_inspector), Code (execução autônoma de planos), Ask (conversa geral + fetch).
+<Card title="4 Agent Modes">
+Normal (general assistant with bash), Plan (planning with project_inspector), Code (autonomous plan execution), Ask (general conversation + fetch).
 </Card>
 
-<Card title="LLM Client (SDK OpenAI)">
-Cliente compatível com OpenAI, Groq, Together, Anthropic e qualquer provedor que implemente a API OpenAI-compatible.
+<Card title="LLM Client (OpenAI SDK)">
+Client compatible with OpenAI, Groq, Together, Anthropic, and any provider that implements the OpenAI-compatible API.
 </Card>
 
 <Card title="Slash Commands">
-Comandos `/model`, `/key`, `/mode`, `/plan`, `/plan-menu`, `/plan-abort`, `/code`, `/code-reset`, `/code-status`, `/add`, `/clear`, `/new`, `/quit`, `/end`, `/help`.
+Commands `/model`, `/key`, `/mode`, `/plan`, `/plan-menu`, `/plan-abort`, `/code`, `/code-reset`, `/code-status`, `/add`, `/clear`, `/new`, `/quit`, `/end`, `/help`.
 </Card>
 
-## Arquitetura
+## Architecture
 
 ```
 turbo-cli (Python CLI)
-  ├── main.py              # Entrypoint thin (→ cli.py)
+  ├── main.py              # Thin entrypoint (→ cli.py)
   ├── cli.py               # CLI argparse + asyncio.run()
   ├── pyproject.toml       # Build system + entry point "turbo"
   ├── requirements.txt     # Dev-deps (pytest, mypy)
   ├── turbo_cli/
   │   ├── __init__.py      # __version__
   │   ├── __main__.py      # python -m turbo_cli
-  │   ├── app.py           # Loop principal (prompt_toolkit), tool dispatch
+  │   ├── app.py           # Main loop (prompt_toolkit), tool dispatch
   │   ├── config.py        # ConfigModel (pydantic)
-  │   ├── llm.py           # LLMClient (SDK OpenAI)
-  │   ├── messages.py      # Formatação rich
-  │   ├── shared/          # Estado, ferramentas, planos, widgets
+  │   ├── llm.py           # LLMClient (OpenAI SDK)
+  │   ├── messages.py      # Rich formatting
+  │   ├── shared/          # State, tools, plans, widgets
   │   │   ├── modes.py     # AgentMode enum, MODE_TOOLS
   │   │   ├── state.py     # SessionState
-  │   │   ├── tools.py     # Definições e execução de ferramentas
+  │   │   ├── tools.py     # Tool definitions and execution
   │   │   ├── ui.py        # Branding, progress bar
   │   │   ├── widgets.py   # ProgressWidget, AskUserDialog
   │   │   ├── plan_parser.py
   │   │   └── plan_writer.py
-  │   └── agents/          # 4 agentes
+  │   └── agents/          # 4 agents
   │       ├── base.py      # Agent (ABC)
   │       ├── normal.py    # NormalAgent (bash)
   │       ├── plan.py      # PlanAgent (project_inspector)
-  │       ├── code.py      # CodeAgent (planos)
+  │       ├── code.py      # CodeAgent (plans)
   │       └── ask.py       # AskAgent (fetch)
   └── .env.example
 ```
 
-## Início Rápido
+## Quick Start
 
 ```bash
-# Clonar
+# Clone
 git clone <repo-url> turbo-cli
 cd turbo-cli
 
-# Criar venv e instalar
+# Create venv and install
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -e .
 
-# Executar (3 formas equivalentes)
+# Run (3 equivalent methods)
 turbo
 # python -m turbo_cli
 # python main.py
 ```
 
-## Stack Tecnológica
+## Technology Stack
 
-| Camada | Tecnologia |
-|--------|-----------|
+| Layer | Technology |
+|-------|-----------|
 | UI | prompt-toolkit 3.x |
-| Linguagem | Python 3.12+ |
+| Language | Python 3.12+ |
 | LLM | OpenAI SDK (streaming) |
-| Formatação | rich (markdown, syntax highlight) |
+| Formatting | rich (markdown, syntax highlighting) |
 | Config | pydantic |
 
-## Seções da Documentação
+## Documentation Sections
 
-- [README](./README/) — Visão geral, instalação, comandos
-- [ARCHITECTURE](./ARCHITECTURE/) — Arquitetura detalhada, fluxos, módulos
-- [CHANGELOG](./CHANGELOG/) — Histórico de versões
-- [CONTRIBUTING](./CONTRIBUTING/) — Guia de contribuição
-- [docs/](./docs/) — Documentação técnica (arquitetura, desenvolvimento, operações, troubleshooting)
+- [README](./README/) — Overview, installation, commands
+- [ARCHITECTURE](./ARCHITECTURE/) — Detailed architecture, flows, modules
+- [CHANGELOG](./CHANGELOG/) — Version history
+- [CONTRIBUTING](./CONTRIBUTING/) — Contribution guide
+- [docs/](./docs/) — Technical documentation (architecture, development, operations, troubleshooting)

@@ -1,41 +1,41 @@
 ---
-title: "ADR-001: Turso como Banco de Dados"
+title: "ADR-001: Turso as the Database"
 ---
 
 
 
-**Data:** 2026-04-15
-**Status:** Aceito
+**Date:** 2026-04-15
+**Status:** Accepted
 
-## Contexto
+## Context
 
-O ecossistema CTECH precisa de um banco de dados que:
-- Seja acessível tanto pelo backend (Next.js) quanto pelo frontend (Astro)
-- Suporte SSR com baixa latência
-- Tenha replicação global para leitura (dados consultados pelo frontend em todo o mundo)
-- Não exija gerenciamento de servidor (serverless)
-- Suporte SQL (relacional, com joins, indices)
+The CTECH ecosystem needs a database that:
+- Is accessible both from the backend (Next.js) and the frontend (Astro)
+- Supports SSR with low latency
+- Has global read replication (data queried by the frontend worldwide)
+- Does not require server management (serverless)
+- Supports SQL (relational, with joins, indexes)
 
-## Decisão
+## Decision
 
-Escolhemos **Turso** (SQLite distribuído via libsql) como banco de dados único do ecossistema.
+We chose **Turso** (distributed SQLite via libsql) as the single database for the ecosystem.
 
-## Alternativas Consideradas
+## Alternatives Considered
 
-| Alternativa | Motivo da Rejeição |
+| Alternative | Reason for Rejection |
 |------------|-------------------|
-| PostgreSQL (Supabase/Neon) | Mais complexidade operacional, custo maior para o volume atual |
-| MongoDB | Não-relacional, dificultaria queries com joins entre produtos, reviews e afiliados |
-| PlanetScale (MySQL) | Bom, mas Turso oferece SQLite com edge replication mais simples |
-| SQLite local | Sem replicação, sem acesso compartilhado entre BE e FE |
+| PostgreSQL (Supabase/Neon) | More operational complexity, higher cost for current volume |
+| MongoDB | Non-relational, would complicate queries with joins across products, reviews, and affiliates |
+| PlanetScale (MySQL) | Good, but Turso offers SQLite with simpler edge replication |
+| Local SQLite | No replication, no shared access between BE and FE |
 
-## Consequências
+## Consequences
 
-- Positivas: Banco compartilhado sem REST API intermediária, SQL puro, edge-ready, custo zero em baixo volume
-- Negativas: Sem triggers/stored procedures, sem migrações declarativas (usamos Drizzle), lock em escrita concorrente (mitigado por fila de processamento no BE)
-- Risco: Token de autenticação exposto (mitigado: acesso apenas SSR, nunca no cliente)
+- Positives: Shared database without an intermediate REST API, pure SQL, edge-ready, zero cost at low volume
+- Negatives: No triggers/stored procedures, no declarative migrations (we use Drizzle), lock on concurrent writes (mitigated by a processing queue in the BE)
+- Risk: Exposed auth token (mitigated: SSR-only access, never on the client)
 
-## Referências
+## References
 
 - [Turso Architecture](https://turso.tech)
 - [libsql-client](https://github.com/tursodatabase/libsql-client-ts)

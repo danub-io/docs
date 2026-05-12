@@ -1,18 +1,16 @@
 ---
-title: "Erros Comuns e Soluções Rápidas"
+title: "Common Errors and Quick Solutions"
 ---
 
+## Error: "Cannot find module @/lib/..."
 
-
-## Erro: "Cannot find module @/lib/..."
-
-### Sintoma
+### Symptom
 ```
 Module not found: @/lib/db
 ```
 
-### Solução
-Verifique se o `tsconfig.json` tem o path alias configurado:
+### Solution
+Check if `tsconfig.json` has the path alias configured:
 ```json
 {
   "compilerOptions": {
@@ -25,73 +23,73 @@ Verifique se o `tsconfig.json` tem o path alias configurado:
 
 ---
 
-## Erro: "validateAction() failed"
+## Error: "validateAction() failed"
 
-### Sintoma
+### Symptom
 ```
 Error: Unauthorized - validateAction() failed
 ```
 
-### Solução
-1. Verifique se está autenticado no painel
-2. O cookie de sessão pode ter expirado (faça login novamente)
-3. Em desenvolvimento, `validateAction()` pode ser bypassado (ver implementação em `@/lib/auth-utils`)
+### Solution
+1. Verify you are authenticated in the panel
+2. The session cookie may have expired (log in again)
+3. In development, `validateAction()` can be bypassed (see implementation in `@/lib/auth-utils`)
 
 ---
 
-## Erro: "revalidatePath() called outside of server action"
+## Error: "revalidatePath() called outside of server action"
 
-### Sintoma
+### Symptom
 ```
 Error: revalidatePath() can only be called in Server Actions
 ```
 
-### Solução
-Certifique-se de que a função está marcada com `"use server"` e está sendo chamada de um Client Component via form ou `action()`.
+### Solution
+Make sure the function is marked with `"use server"` and is being called from a Client Component via form or `action()`.
 
 ---
 
-## Erro: "Failed to decrypt API key"
+## Error: "Failed to decrypt API key"
 
-### Sintoma
+### Symptom
 ```
 Error: Decryption failed - invalid ciphertext
 ```
 
-### Causa
-A `ENCRYPTION_KEY` no `.env` foi alterada, quebrando as chaves salvas no banco.
+### Cause
+The `ENCRYPTION_KEY` in `.env` was changed, breaking keys saved in the database.
 
-### Solução
-1. Restaure a `ENCRYPTION_KEY` original
-2. Ou re-cadastre as chaves API no M8 (serão criptografadas com a nova chave)
+### Solution
+1. Restore the original `ENCRYPTION_KEY`
+2. Or re-enter the API keys in M8 (they will be encrypted with the new key)
 
 ---
 
-## Build falha no Next.js
+## Next.js Build Fails
 
-### Verificação rápida
+### Quick check
 ```bash
 cd /home/dan/Documentos/ctech/ctech_be
 pnpm build
 ```
 
-Erros comuns:
+Common errors:
 - **TypeScript errors:** `pnpm typecheck`
 - **Missing dependencies:** `pnpm install`
-- **Environment variables:** Verifique `.env`
+- **Environment variables:** Check `.env`
 
 ---
 
-## Worker não processa jobs
+## Worker not processing jobs
 
-### Verificação
-1. Acesse `/api/health` - o worker deve aparecer como `active: true`
-2. Verifique se há jobs pendentes: `SELECT * FROM fila_processamento WHERE status = 'pendente';`
-3. O worker roda via Server Actions (`processNextJob()`), precisa ser disparado manualmente ou via UI
+### Verification
+1. Visit `/api/health` — the worker should show `active: true`
+2. Check for pending jobs: `SELECT * FROM fila_processamento WHERE status = 'pendente';`
+3. The worker runs via Server Actions (`processNextJob()`), it must be triggered manually or via the UI
 
 ---
 
-## Limpar cache do Next.js
+## Clear Next.js Cache
 
 ```bash
 cd /home/dan/Documentos/ctech/ctech_be

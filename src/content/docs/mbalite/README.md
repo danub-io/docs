@@ -4,39 +4,39 @@ title: "MBA Lite"
 
 
 
-Landing page do curso **MBA Lite — A Série Gestão para Alta Performance**, construída com **Astro 6**, **React 19**, **Tailwind CSS v4** e **shadcn/ui**.
+Landing page for the **MBA Lite — Gestao para Alta Performance** course, built with **Astro 6**, **React 19**, **Tailwind CSS v4**, and **shadcn/ui**.
 
-## 🚀 Tecnologias
+## 🚀 Technologies
 
 - **Framework:** Astro 6
 - **UI:** React 19 + shadcn/ui (@base-ui/react)
-- **Estilização:** Tailwind CSS v4
-- **Fontes:** Geist Variable (Google Fonts)
-- **Build:** SSG puro
+- **Styling:** Tailwind CSS v4
+- **Fonts:** Geist Variable (Google Fonts)
+- **Build:** Pure SSG
 
-## 📄 Estrutura
+## 📄 Structure
 
 ```
 src/
-├── components/       # Componentes da landing page
+├── components/       # Landing page components
 │   ├── Header.astro
 │   ├── Hero.astro
 │   ├── Features.astro
 │   ├── LeadCapture.astro
 │   ├── AuthorBio.astro
 │   ├── Footer.astro
-│   └── ui/           # Componentes shadcn/ui
-├── layouts/          # Layout base
+│   └── ui/           # shadcn/ui components
+├── layouts/          # Base layout
 ├── pages/            # index.astro
-├── lib/              # Utilitários
+├── lib/              # Utilities
 └── styles/           # Tailwind CSS v4 (@theme)
 ```
 
-## 🛠️ Comandos
+## 🛠️ Commands
 
 ```bash
-pnpm install          # Instalar dependências
-pnpm dev              # Servidor local
-pnpm build            # Build de produção
-pnpm preview          # Preview do build
+pnpm install          # Install dependencies
+pnpm dev              # Local server
+pnpm build            # Production build
+pnpm preview          # Preview the build
 ```

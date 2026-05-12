@@ -1,26 +1,26 @@
 ---
-title: "Sistema de Agentes"
+title: "Agent System"
 ---
 
-## Visão Geral
+## Overview
 
-O turbo-cli opera com **4 agentes** (modos), cada um com system prompt próprio e um conjunto de ferramentas específicas. A troca entre modos é feita via Tab ou comando `/mode`.
+turbo-cli operates with **4 agents** (modes), each with its own system prompt and a specific set of tools. Switching between modes is done via Tab or the `/mode` command.
 
-Cada agente é uma classe que herda de `Agent` (ABC) e implementa `get_system_prompt()`. As ferramentas disponíveis são declaradas no dicionário `MODE_TOOLS` em `modes.py`.
+Each agent is a class that inherits from `Agent` (ABC) and implements `get_system_prompt()`. The available tools are declared in the `MODE_TOOLS` dictionary in `modes.py`.
 
-## Agentes
+## Agents
 
-| Modo | Ícone | Classe | Finalidade |
-|------|-------|--------|------------|
-| Normal | ⚙️ | `NormalAgent` | Assistente geral com bash |
-| Plan | 📋 | `PlanAgent` | Planejamento com `project_inspector` (sem bash) |
-| Code | ⚡ | `CodeAgent` | Execução autônoma de planos |
-| Ask | 💬 | `AskAgent` | Conversa geral + fetch |
+| Mode | Icon | Class | Purpose |
+|------|------|-------|---------|
+| Normal | ⚙️ | `NormalAgent` | General assistant with bash |
+| Plan | 📋 | `PlanAgent` | Planning with `project_inspector` (no bash) |
+| Code | ⚡ | `CodeAgent` | Autonomous plan execution |
+| Ask | 💬 | `AskAgent` | General conversation + fetch |
 
-## Ferramentas por Modo
+## Tools per Mode
 
-| Ferramenta | Normal | Plan | Code | Ask |
-|------------|--------|------|------|-----|
+| Tool | Normal | Plan | Code | Ask |
+|------|--------|------|------|-----|
 | bash | ✓ | | ✓ | ✓ |
 | read | ✓ | ✓ | ✓ | ✓ |
 | write | ✓ | ✓ | ✓ | |
@@ -34,107 +34,107 @@ Cada agente é uma classe que herda de `Agent` (ABC) e implementa `get_system_pr
 | project_inspector | | ✓ | | |
 | add_to_context | ✓ | ✓ | ✓ | |
 
-## Modo Plan (PlanAgent)
+## Plan Mode (PlanAgent)
 
-O `PlanAgent` é responsável por **criar planos de execução**. Ele **não tem acesso ao bash** — toda exploração do projeto é feita via `project_inspector` e `read`.
+The `PlanAgent` is responsible for **creating execution plans**. It **does not have access to bash** — all project exploration is done via `project_inspector` and `read`.
 
-### Fluxo de Perguntas
+### Question Flow
 
-O PlanAgent usa a ferramenta `ask_user` no modo `select` para interagir com o usuário durante a fase de levantamento de requisitos:
+The PlanAgent uses the `ask_user` tool in `select` mode to interact with the user during the requirements gathering phase:
 
-1. **Uma pergunta por vez** — o agente nunca faz múltiplas perguntas simultaneamente
-2. **Até 5 opções pré-definidas** — o usuário pode escolher um número
-3. **Texto customizado** — o usuário também pode ignorar as opções e digitar sua própria resposta
-4. **O plano só é criado após todas as dúvidas serem tiradas**
+1. **One question at a time** — the agent never asks multiple questions simultaneously
+2. **Up to 5 predefined options** — the user can choose a number
+3. **Custom text** — the user can also ignore the options and type their own response
+4. **The plan is only created after all questions are answered**
 
 ### AskUserDialog.select
 
-O método `select` da classe `AskUserDialog` (em `widgets.py`) exibe as opções numeradas e aceita:
+The `select` method of the `AskUserDialog` class (in `widgets.py`) displays numbered options and accepts:
 
-| Entrada do usuário | Resultado |
-|-------------------|-----------|
-| Número válido (1-N) | Retorna o texto da opção correspondente |
-| Texto livre | Retorna o texto digitado (resposta customizada) |
-| Enter (vazio) | Retorna `None` (cancelamento) |
+| User Input | Result |
+|------------|--------|
+| Valid number (1-N) | Returns the corresponding option text |
+| Free text | Returns the typed text (custom response) |
+| Enter (empty) | Returns `None` (cancellation) |
 
-## Modo Code (CodeAgent)
+## Code Mode (CodeAgent)
 
-O `CodeAgent` executa planos de forma autônoma:
-- Carrega um plano do diretório `.ai/plans/`
-- Executa tarefas sequencialmente com bash
-- Valida exit code de cada comando
-- Usa `update_task_progress` para marcar tarefas concluídas
-- Faz rollback via `git stash + reset --hard` em caso de falha
+The `CodeAgent` executes plans autonomously:
+- Loads a plan from the `.ai/plans/` directory
+- Executes tasks sequentially with bash
+- Validates exit code of each command
+- Uses `update_task_progress` to mark completed tasks
+- Rolls back via `git stash + reset --hard` on failure
 
 ### Circuit Breaker
 
-No modo Code, edições em arquivos fora de `allowedFiles` contam 3 strikes antes de bloquear o agente.
+In Code mode, edits to files outside of `allowedFiles` count 3 strikes before blocking the agent.
 
-### Ferramenta Edit no CodeAgent
+### Edit Tool in CodeAgent
 
-O system prompt do CodeAgent instrui o modelo a **sempre usar `startLine` e `endLine`** na ferramenta `edit`, deixando `searchBlock` vazio. Isso elimina falhas de indentação que modelos menores (como DeepSeek Flash) cometem ao replicar searchBlocks.
+The CodeAgent system prompt instructs the model to **always use `startLine` and `endLine`** in the `edit` tool, leaving `searchBlock` empty. This eliminates indentation failures that smaller models (such as DeepSeek Flash) make when replicating searchBlocks.
 
-A descrição da ferramenta `edit` em toda a aplicação também foi padronizada para instruir o uso de `startLine`/`endLine` com `searchBlock` vazio.
+The `edit` tool description throughout the application has also been standardized to instruct the use of `startLine`/`endLine` with an empty `searchBlock`.
 
 ### Repo Map
 
-O CodeAgent injeta um **repo map** (mapa estrutural do projeto usando tree-sitter) no system prompt, com limite de 4000 caracteres. O PlanAgent também injeta um repo map (2000 chars, 30 arquivos). Isso elimina chamadas redundantes a `project_inspector.get_repo_map`.
+The CodeAgent injects a **repo map** (structural project map using tree-sitter) into the system prompt, with a 4000-character limit. The PlanAgent also injects a repo map (2000 chars, 30 files). This eliminates redundant calls to `project_inspector.get_repo_map`.
 
-## Active Files (Contexto Ativo)
+## Active Files (Active Context)
 
-Active files são arquivos cujo conteúdo é injetado diretamente no system prompt do LLM, eliminando a necessidade de chamar `read` repetidamente.
+Active files are files whose content is injected directly into the LLM system prompt, eliminating the need to call `read` repeatedly.
 
-### Como funciona
+### How it works
 
-1. O tool `add_to_context` (disponível nos modos NORMAL, PLAN, CODE) adiciona/remove/list arquivos
-2. Arquivos adicionados são lidos do disco e anexados ao system prompt em formato XML
-3. O conteúdo é reinserido a cada reconstrução do prompt (sempre fresco)
-4. Quando active files mudam, `messages[0]` é reconstruído para o próximo round do LLM
+1. The `add_to_context` tool (available in NORMAL, PLAN, CODE modes) adds/removes/lists files
+2. Added files are read from disk and appended to the system prompt in XML format
+3. The content is re-read on every prompt rebuild (always fresh)
+4. When active files change, `messages[0]` is rebuilt for the next LLM round
 
-### Limites
+### Limits
 
-- Máximo **5 arquivos**
-- Cada arquivo limitado a **5000 chars** (middle truncation)
-- `add_to_context` com `operation=list` exibe os arquivos ativos
+- Maximum **5 files**
+- Each file limited to **5000 chars** (middle truncation)
+- `add_to_context` with `operation=list` displays the active files
 
-### Metadata e Prefix Caching
+### Metadata and Prefix Caching
 
-A metadata dos active files inclui apenas a **contagem de linhas** (`metadata: N lines`). Timestamps (`st_mtime`) e tamanho (`st_size`) foram removidos — eles invalidavam o Prefix Cache do provedor a cada edição, especialmente crítico para modelos **DeepSeek** que fazem cache automático do prefixo do system prompt. Com a metadata estabilizada, o cache hit rate em active files chega a ~100%.
+Active file metadata includes only the **line count** (`metadata: N lines`). Timestamps (`st_mtime`) and sizes (`st_size`) were removed — they invalidated the provider's Prefix Cache on every edit, especially critical for **DeepSeek** models that automatically cache the system prompt prefix. With stabilized metadata, the cache hit rate on active files reaches ~100%.
 
-### Orthogonalidade com allowedFiles
+### Orthogonality with allowedFiles
 
-Active files ≠ allowed_files. Um arquivo pode estar em active_files (leitura no contexto) sem estar em allowed_files (permissão de edição). O CodeAgent só edita arquivos em allowed_files.
+Active files ≠ allowed_files. A file can be in active_files (read in context) without being in allowed_files (edit permission). The CodeAgent only edits files in allowed_files.
 
 ### Slash command
 
-O comando `/add <caminho>` adiciona ao contexto ativo. `/add --remove <caminho>` remove.
+The `/add <path>` command adds to the active context. `/add --remove <path>` removes.
 
 ## Context Pruning (Ephemeral Tool Output)
 
-Para evitar que outputs de ferramentas acumulem e inflam o contexto, o sistema implementa pruning em dois níveis:
+To prevent tool outputs from accumulating and inflating the context, the system implements pruning at two levels:
 
-1. **`_compact_completed_task_history`**: quando uma tarefa do CodeAgent é concluída, remove todo o bloco de tool_calls + tool_results daquela tarefa do array de mensagens e substitui por um resumo textual (ex: `"✅ Tarefa concluída: Instalar dependências | Bash: exit 0"`)
-2. **`_compact_all_tool_outputs`**: varre tool messages residuais entre tarefas não concluídas e trunca qualquer conteúdo > 200 chars com `_middle_truncate`, preservando início e fim
-3. O pruning ocorre **tanto no caminho non-streaming quanto no streaming** (corrigido na v0.3+)
-4. Tool messages do **round atual** nunca são truncadas
+1. **`_compact_completed_task_history`**: when a CodeAgent task is completed, removes the entire tool_calls + tool_results block for that task from the messages array and replaces it with a textual summary (e.g. `"✅ Task completed: Install dependencies | Bash: exit 0"`)
+2. **`_compact_all_tool_outputs`**: scans residual tool messages between incomplete tasks and truncates any content > 200 chars with `_middle_truncate`, preserving the beginning and end
+3. Pruning occurs **both in the non-streaming and streaming paths** (fixed in v0.3+)
+4. Tool messages from the **current round** are never truncated
 
-## Modo Normal (NormalAgent)
+## Normal Mode (NormalAgent)
 
-Assistente geral com acesso total a bash, leitura e escrita de arquivos. É o modo padrão ao iniciar o app.
+General assistant with full access to bash, file reading, and writing. It is the default mode when starting the app.
 
-## Modo Ask (AskAgent)
+## Ask Mode (AskAgent)
 
-Modo de conversa geral e suporte a sistema operacional, com acesso a fetch para consultas web.
+General conversation and OS support mode, with access to fetch for web queries.
 
-## Cache de Prompts
+## Prompt Caching
 
-O sistema implementa cache em dois níveis para reduzir chamadas à API e latência:
+The system implements two-level caching to reduce API calls and latency:
 
-### `_prompt_cache` (por agente)
+### `_prompt_cache` (per agent)
 
-Cada agente (NormalAgent, PlanAgent, CodeAgent, AskAgent) faz cache lazy do seu system prompt
-via `get_cached_prompt()` em `agents/base.py`. O cache é populado na primeira chamada e reutilizado
-enquanto o agente estiver ativo.
+Each agent (NormalAgent, PlanAgent, CodeAgent, AskAgent) lazily caches its system prompt
+via `get_cached_prompt()` in `agents/base.py`. The cache is populated on first call and reused
+while the agent is active.
 
 ```python
 class Agent(ABC):
@@ -146,104 +146,104 @@ class Agent(ABC):
         return self._prompt_cache
 ```
 
-O cache pode ser invalidado via `invalidate_prompt_cache()` (disponível na classe base `Agent` desde v0.3+), útil para extensões que modificam o system prompt dinamicamente (ex: active files, refresh do repo map).
+The cache can be invalidated via `invalidate_prompt_cache()` (available on the base `Agent` class since v0.3+), useful for extensions that modify the system prompt dynamically (e.g. active files, repo map refresh).
 
-### `_tool_cache` (global por modo)
+### `_tool_cache` (global per mode)
 
-As definições de ferramentas (`get_tool_definitions` em `tools.py`) também são cacheadas por modo.
-Cada modo (NORMAL, PLAN, CODE, ASK) tem seu conjunto de ferramentas, que é computado uma única
-vez e reutilizado.
+Tool definitions (`get_tool_definitions` in `tools.py`) are also cached per mode.
+Each mode (NORMAL, PLAN, CODE, ASK) has its own set of tools, computed once
+and reused.
 
 ### `_log_cached_tokens`
 
-O método `_log_cached_tokens` em `llm.py` loga o número de tokens em cache retornados pela API
-(usando o campo `PromptTokensDetails.cached_tokens` do SDK OpenAI). Isso permite monitorar a
-eficácia do cache de contexto do provedor.
+The `_log_cached_tokens` method in `llm.py` logs the number of cached tokens returned by the API
+(using the `PromptTokensDetails.cached_tokens` field from the OpenAI SDK). This allows monitoring
+the effectiveness of the provider's context cache.
 
-## Execução Paralela de Tool Calls
+## Parallel Tool Call Execution
 
-O método `_process_tool_calls_batch` em `app.py` processa múltiplas tool_calls de forma otimizada:
+The `_process_tool_calls_batch` method in `app.py` processes multiple tool_calls in an optimized way:
 
-- **Calls não-interativas** (bash simples, read, grep, find, ls) são executadas em paralelo via
+- **Non-interactive calls** (simple bash, read, grep, find, ls) are executed in parallel via
   `asyncio.gather`
-- **Calls interativas** (ask_user, bash destrutivo, update_task_progress com rollback) são executadas
-  sequencialmente para preservar a ordem e permitir interação com o usuário
-- Em caso de 2+ erros consecutivos de bash, uma mensagem de sistema é injetada para orientar o LLM
+- **Interactive calls** (ask_user, destructive bash, update_task_progress with rollback) are executed
+  sequentially to preserve order and allow user interaction
+- In case of 2+ consecutive bash errors, a system message is injected to guide the LLM
 
-O classificador `_is_tool_interactive` determina se uma tool_call é interativa:
-- `ask_user`: sempre interativo
-- `bash` com comando destrutivo (`rm -rf`, `dd`, `mkfs`, etc.): interativo
-- `update_task_progress action=rollback`: interativo
+The classifier `_is_tool_interactive` determines whether a tool_call is interactive:
+- `ask_user`: always interactive
+- `bash` with destructive command (`rm -rf`, `dd`, `mkfs`, etc.): interactive
+- `update_task_progress action=rollback`: interactive
 
-## Streaming no Modo CODE
+## Streaming in CODE Mode
 
-O modo CODE (e também NORMAL e ASK) usa `_stream_tool_calls_from_stream` para processar
-respostas da API em streaming. O fluxo é:
+CODE mode (and also NORMAL and ASK) uses `_stream_tool_calls_from_stream` to process
+API responses in streaming. The flow is:
 
-1. Tenta streaming via `client.stream_chat()`
-2. Se streaming falhar (exceção), retorna `__FALLBACK__` para o caller usar modo tradicional
-3. Durante o streaming, coleta tokens de texto e tool_calls incrementalmente
-4. Chunks de `CompletionUsage` atualizam a contagem total de tokens
-5. Tool_calls acumuladas são processadas via `_process_tool_calls_batch`
+1. Tries streaming via `client.stream_chat()`
+2. If streaming fails (exception), returns `__FALLBACK__` for the caller to use the traditional mode
+3. During streaming, collects text tokens and tool_calls incrementally
+4. `CompletionUsage` chunks update the total token count
+5. Accumulated tool_calls are processed via `_process_tool_calls_batch`
 
 ## Benchmark
 
-O script `scripts/benchmark.py` mede performance do `LLMClient`:
+The `scripts/benchmark.py` script measures `LLMClient` performance:
 
-- Executa 3 rodadas de chat_completion com ferramentas (bash, read)
-- Coleta: prompt_tokens, completion_tokens, cached_tokens, latência por requisição
-- Salva resultados em `scripts/benchmark-results.json` com timestamp
-- Suporta `--save <label>` e `--compare <label_a> <label_b>`
+- Runs 3 rounds of chat_completion with tools (bash, read)
+- Collects: prompt_tokens, completion_tokens, cached_tokens, latency per request
+- Saves results to `scripts/benchmark-results.json` with timestamp
+- Supports `--save <label>` and `--compare <label_a> <label_b>`
 
-Uso:
+Usage:
 ```bash
-python scripts/benchmark.py --save baseline       # Antes das otimizações
-python scripts/benchmark.py --save after-otimizacao  # Depois
-python scripts/benchmark.py --compare baseline after-otimizacao  # Comparação
+python scripts/benchmark.py --save baseline       # Before optimizations
+python scripts/benchmark.py --save after-optimization  # After
+python scripts/benchmark.py --compare baseline after-optimization  # Comparison
 ```
 
-## LLMClient — Métricas de Performance
+## LLMClient — Performance Metrics
 
-O `LLMClient` em `llm.py` expõe `last_request_duration` (property) que retorna o tempo
-em segundos da última chamada à API, tanto para `chat_completion` quanto para `stream_chat`.
-Isso permite monitoramento de latência em tempo real.
+The `LLMClient` in `llm.py` exposes `last_request_duration` (property) that returns the time
+in seconds of the last API call, for both `chat_completion` and `stream_chat`.
+This allows real-time latency monitoring.
 
 ## Middle Truncation
 
-O histórico de mensagens passa por truncamento inteligente via `_middle_truncate` em `app.py`:
-- Preserva o início (60%) e o final (40%) de tool results muito longos
-- Insere marcador `[... truncated: N chars ...]` no meio
-- Evita perda de contexto relevante nas bordas das mensagens
+Message history goes through intelligent truncation via `_middle_truncate` in `app.py`:
+- Preserves the beginning (60%) and end (40%) of very long tool results
+- Inserts a `[... truncated: N chars ...]` marker in the middle
+- Prevents loss of relevant context at message boundaries
 
-## Comportamento Específico por Modelo (DeepSeek)
+## Model-Specific Behavior (DeepSeek)
 
-Modelos da família **DeepSeek** recebem otimizações automáticas quando detectados via `_is_deepseek()` no `OpenAICompatibleClient`:
+**DeepSeek** family models receive automatic optimizations when detected via `_is_deepseek()` in the `OpenAICompatibleClient`:
 
-| Parâmetro | DeepSeek | Outros modelos |
-|-----------|----------|----------------|
-| `temperature` | `0.0` (forçado) | Padrão da API (não enviado) |
-| `parallel_tool_calls` | `false` (forçado) | `true` (configurável via `ConfigModel`) |
+| Parameter | DeepSeek | Other models |
+|-----------|----------|--------------|
+| `temperature` | `0.0` (forced) | API default (not sent) |
+| `parallel_tool_calls` | `false` (forced) | `true` (configurable via `ConfigModel`) |
 
-### Por quê?
+### Why?
 
-- **temperature=0.0**: DeepSeek Flash tende a ser criativo demais em tool calling. Forçar temperatura zero elimina alucinações em nomes de arquivos, parâmetros e comandos bash.
-- **parallel_tool_calls=false**: DeepSeek Flash frequentemente alucina parâmetros ou mistura argumentos quando invoca 3+ ferramentas simultaneamente. Execução sequencial é mais confiável.
+- **temperature=0.0**: DeepSeek Flash tends to be overly creative in tool calling. Forcing zero temperature eliminates hallucinations in file names, parameters, and bash commands.
+- **parallel_tool_calls=false**: DeepSeek Flash often hallucinates parameters or mixes arguments when invoking 3+ tools simultaneously. Sequential execution is more reliable.
 
-### Ferramenta Edit
+### Edit Tool
 
-O system prompt do CodeAgent e a descrição da ferramenta `edit` instruem explicitamente o uso de `startLine`/`endLine` com `searchBlock` vazio. Modelos DeepSeek têm dificuldade em replicar indentação exata para searchBlock; o DIRECT REPLACEMENT por linhas é mais preciso.
+The CodeAgent system prompt and the `edit` tool description explicitly instruct the use of `startLine`/`endLine` with an empty `searchBlock`. DeepSeek models struggle to replicate exact indentation for searchBlock; DIRECT REPLACEMENT by lines is more accurate.
 
-## Arquivos Relacionados
+## Related Files
 
-| Arquivo | Descrição |
-|---------|-----------|
-| `turbo_cli/agents/base.py` | Classe base `Agent` (ABC) + cache de prompt |
+| File | Description |
+|------|-------------|
+| `turbo_cli/agents/base.py` | `Agent` base class (ABC) + prompt cache |
 | `turbo_cli/agents/normal.py` | `NormalAgent` |
 | `turbo_cli/agents/plan.py` | `PlanAgent` + `PLAN_SYSTEM_PROMPT` |
 | `turbo_cli/agents/code.py` | `CodeAgent` + repo_map injection |
 | `turbo_cli/agents/ask.py` | `AskAgent` |
-| `turbo_cli/shared/modes.py` | Enum `AgentMode`, `MODE_TOOLS`, `MODE_LABELS` |
+| `turbo_cli/shared/modes.py` | `AgentMode` enum, `MODE_TOOLS`, `MODE_LABELS` |
 | `turbo_cli/shared/widgets.py` | `AskUserDialog` (input, confirm, select) |
 | `turbo_cli/llm.py` | `LLMClient` + `_log_cached_tokens` + timing |
 | `turbo_cli/shared/tools.py` | Tool definitions (incl. `add_to_context`) + `_tool_cache` + `_validate_file_access` |
-| `scripts/benchmark.py` | Script de benchmark reproduzível |
+| `scripts/benchmark.py` | Reproducible benchmark script |

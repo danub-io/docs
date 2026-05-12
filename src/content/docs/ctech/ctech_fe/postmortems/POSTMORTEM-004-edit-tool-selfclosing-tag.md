@@ -1,35 +1,35 @@
 ---
-title: "Postmortem 004: Edit tool convertendo self-closing JSX tag em closing tag inválida"
+title: "Postmortem 004: Edit tool converting self-closing JSX tag into invalid closing tag"
 ---
 
-## Sumário
+## Summary
 
-- **Data:** 2026-05-07
-- **Componente:** `ComparadorInteractive.tsx` (página de comparação)
-- **Sintoma:** Build falhava com `Expected ">" but found "<"` após edição automatizada que trocou `/>` por `</SpecRowMobile>` sem fechar a tag de abertura
-- **Severidade:** Média — Bloqueava o build, mas apenas na página de comparação
-- **Root cause:** O edit tool substituiu `/>` por `</SpecRowMobile>` mas não adicionou `>` para fechar a tag de abertura `<SpecRowMobile`
+- **Date:** 2026-05-07
+- **Component:** `ComparadorInteractive.tsx` (comparison page)
+- **Symptom:** Build failed with `Expected ">" but found "<"` after an automated edit replaced `/>` with `</SpecRowMobile>` without closing the opening tag
+- **Severity:** Medium — Blocked the build, but only on the comparison page
+- **Root cause:** The edit tool replaced `/>` with `</SpecRowMobile>` but did not add `>` to close the opening tag `<SpecRowMobile`
 
 ## Timeline
 
-1. Foi solicitado aumentar o tamanho das badges `NotaBadge` na página de comparação (`ComparadorInteractive.tsx`)
-2. Primeira edição (desktop): `size="md"` → `size="lg"` — bem-sucedida
-3. Segunda edição (mobile): `size="sm"` → `size="md"` — reportada como bem-sucedida
-4. Build falha com `Expected ">" but found "<"` em `ComparadorInteractive.tsx:370:14`
-5. Investigação revelou: a tag self-closing `/>` do primeiro `<SpecRowMobile>` foi substituída por `</SpecRowMobile>`, mas a tag de abertura `<SpecRowMobile` continuou sem `>`
+1. A request was made to increase the size of `NotaBadge` badges on the comparison page (`ComparadorInteractive.tsx`)
+2. First edit (desktop): `size="md"` → `size="lg"` — successful
+3. Second edit (mobile): `size="sm"` → `size="md"` — reported as successful
+4. Build fails with `Expected ">" but found "<"` at `ComparadorInteractive.tsx:370:14`
+5. Investigation revealed: the self-closing tag `/>` of the first `<SpecRowMobile>` was replaced with `</SpecRowMobile>`, but the opening tag `<SpecRowMobile` was left without `>`
 
-## Sintomas
+## Symptoms
 
-- Build falha com erro do esbuild: `Expected ">" but found "<"`
-- TypeScript reporta: `Identifier expected`, `Expected corresponding JSX closing tag for 'div'`
-- O código parecia sintaticamente correto ao ler linha a linha
-- Apenas a página de comparação era afetada
+- Build fails with esbuild error: `Expected ">" but found "<"`
+- TypeScript reports: `Identifier expected`, `Expected corresponding JSX closing tag for 'div'`
+- The code appeared syntactically correct when read line by line
+- Only the comparison page was affected
 
 ## Root Cause
 
-O `edit` tool foi chamado com um `oldString` que continha `</SpecRowMobile>`. O arquivo original tinha `/>` (self-closing). Apesar disso, o tool reportou sucesso, mas substituiu incorretamente:
+The `edit` tool was called with an `oldString` that contained `</SpecRowMobile>`. The original file had `/>` (self-closing). Despite that, the tool reported success but incorrectly replaced:
 
-**Original (válido):**
+**Original (valid):**
 ```tsx
 <SpecRowMobile
   label="Crítico"
@@ -39,7 +39,7 @@ O `edit` tool foi chamado com um `oldString` que continha `</SpecRowMobile>`. O 
 />
 ```
 
-**Após edição (inválido):**
+**After edit (invalid):**
 ```tsx
 <SpecRowMobile
   label="Crítico"
@@ -49,52 +49,52 @@ O `edit` tool foi chamado com um `oldString` que continha `</SpecRowMobile>`. O 
 </SpecRowMobile>
 ```
 
-O problema: a tag de abertura `<SpecRowMobile` **nunca foi fechada** — faltou `>` após o fechamento do prop `values`. No original, `/>` servia tanto para fechar a abertura quanto marcar self-closing. A edição trocou `/>` por `</SpecRowMobile>` mas esqueceu de adicionar `>` para fechar a tag de abertura.
+The problem: the opening tag `<SpecRowMobile` was **never closed** — it was missing `>` after the closing of the `values` prop. In the original, `/>` served both to close the opening tag and mark it as self-closing. The edit replaced `/>` with `</SpecRowMobile>` but forgot to add `>` to close the opening tag.
 
-## Por Que Foi Difícil de Encontrar
+## Why It Was Hard to Find
 
-| Razão | Explicação |
+| Reason | Explanation |
 |-------|-----------|
-| **Código parece correto visualmente** | `<SpecRowMobile>...</SpecRowMobile>` parece um par válido para o olho humano |
-| **Edit tool reportou sucesso** | Não houve indicação de falha na edição |
-| **Erro do esbuild é enigmático** | `Expected ">" but found "<"` não diz explicitamente que uma tag de abertura não foi fechada |
+| **Code looks visually correct** | `<SpecRowMobile>...</SpecRowMobile>` looks like a valid pair to the human eye |
+| **Edit tool reported success** | There was no indication of editing failure |
+| **esbuild error is cryptic** | `Expected ">" but found "<"` does not explicitly say an opening tag was left unclosed |
 
-## Solução Aplicada
+## Applied Fix
 
-Reverter `</SpecRowMobile>` para `/>` (self-closing), mantendo apenas a mudança de `size`:
+Revert `</SpecRowMobile>` back to `/>` (self-closing), keeping only the `size` change:
 
 ```diff
 -              </SpecRowMobile>
 +              />
 ```
 
-## Verificação
+## Verification
 
 ```bash
 pnpm build
-# Deve completar sem erros
+# Should complete without errors
 ```
 
-## Lições Aprendidas
+## Lessons Learned
 
-### 1. Sempre verificar o diff após edições automatizadas
+### 1. Always review the diff after automated edits
 
-Após cada edição com ferramentas automatizadas, revisar o diff (`git diff`) antes de prosseguir. Isso teria capturado imediatamente que `/>` foi substituído por `</SpecRowMobile>`.
+After each automated tool edit, review the diff (`git diff`) before proceeding. This would have immediately caught that `/>` was replaced with `</SpecRowMobile>`.
 
-### 2. Self-closing vs explicit closing em JSX
+### 2. Self-closing vs explicit closing in JSX
 
-Componentes React sem children **devem** usar self-closing `/>`. Trocar para `<Tag>...</Tag>` requer adicionar `>` na tag de abertura — não é uma substituição direta de `/>` por `</Tag>`.
+React components without children **must** use self-closing `/>`. Switching to `<Tag>...</Tag>` requires adding `>` to the opening tag — it is not a direct replacement of `/>` with `</Tag>`.
 
-### 3. Build como gate de segurança
+### 3. Build as a safety gate
 
-Sempre rodar `pnpm build` (ou `pnpm lint`) após edições para capturar erros de sintaxe antes de deploy.
+Always run `pnpm build` (or `pnpm lint`) after edits to catch syntax errors before deploying.
 
-## Arquivos alterados
+## Files Changed
 
-- `ComparadorInteractive.tsx` — revertido `</SpecRowMobile>` para `/>`
+- `ComparadorInteractive.tsx` — reverted `</SpecRowMobile>` to `/>`
 
-## Ações preventivas
+## Preventive Actions
 
-- Após edições automatizadas, revisar `git diff` antes de confirmar
-- Desconfiar de edições que mudam a estrutura de tags (self-closing → explícito)
-- Rodar build após qualquer edição em JSX
+- After automated edits, review `git diff` before committing
+- Be wary of edits that change tag structure (self-closing → explicit)
+- Run build after any edit in JSX

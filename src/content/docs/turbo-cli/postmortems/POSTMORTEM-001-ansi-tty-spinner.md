@@ -1,40 +1,40 @@
 ---
-title: "Postmortem 001: Renderização ANSI corrompida e spinner inoperante"
+title: "Postmortem 001: Corrupted ANSI rendering and non-functional spinner"
 ---
 
-# Postmortem 001: Renderização ANSI corrompida e spinner inoperante
+# Postmortem 001: Corrupted ANSI rendering and non-functional spinner
 
-## Sumário
+## Summary
 
-- **Data:** 2026-05-11
-- **Componente:** `turbo_cli/messages.py`, `turbo_cli/app.py`, `turbo_cli/cli.py`
-- **Sintoma:** Caracteres `?` no terminal, escapes ANSI literais em pipes, toolbar concorrente quebrando layout, spinner "Pensando..." inoperante
-- **Severidade:** Média — afetava legibilidade do output e experiência do usuário
-- **Root cause:** `force_terminal=True` + `color_system="truecolor"` forçados no rich sem verificar TTY real; `footer_app` (segundo `Application` do `prompt_toolkit`) executado concorrentemente causando interferência no loop principal
+- **Date:** 2026-05-11
+- **Component:** `turbo_cli/messages.py`, `turbo_cli/app.py`, `turbo_cli/cli.py`
+- **Symptom:** `?` characters in the terminal, literal ANSI escapes in pipes, concurrent toolbar breaking layout, non-functional "Thinking..." spinner
+- **Severity:** Medium — affected output readability and user experience
+- **Root cause:** `force_terminal=True` + `color_system="truecolor"` forced in rich without checking real TTY; `footer_app` (second `prompt_toolkit` `Application`) running concurrently and interfering with the main loop
 
 ## Timeline
 
-1. Usuário reporta caracteres `?` aparecendo nas cores do terminal durante uso normal
-2. Investigação revela que `_get_console()` em `messages.py` força `force_terminal=True` e `color_system="truecolor"`, impedindo o rich de detectar corretamente as capacidades do terminal
-3. Descobre-se que `_use_ansi()` não verifica `sys.__stdout__.isatty()`, causando escapes ANSI literais em pipes
-4. Identifica-se que o `footer_app` (segundo `Application` do `prompt_toolkit`) roda em paralelo e corrompe o layout
-5. `show_thinking_spinner()` era um placeholder vazio; a intenção original era usar o toolbar para mostrar "PENSANDO..." mas a implementação concorrente falhava
-6. Solução aplicada em 5 commits: autodetecção do rich, TTY check, remoção do footer_app, spinner real com braille
+1. User reports `?` characters appearing in terminal colors during normal use
+2. Investigation reveals that `_get_console()` in `messages.py` forces `force_terminal=True` and `color_system="truecolor"`, preventing rich from correctly detecting terminal capabilities
+3. It is discovered that `_use_ansi()` does not check `sys.__stdout__.isatty()`, causing literal ANSI escapes in pipes
+4. The `footer_app` (second `prompt_toolkit` `Application`) is found to run in parallel and corrupts the layout
+5. `show_thinking_spinner()` was an empty placeholder; the original intent was to use the toolbar to show "THINKING..." but the concurrent implementation failed
+6. Solution applied in 5 commits: rich auto-detection, TTY check, footer_app removal, real braille spinner
 
 ## Root Cause
 
-**Camada rich:** `_get_console()` forçava `force_terminal=True` e `color_system="truecolor"` para garantir cores, mas isso impedia o rich de detectar quando o terminal não suportava truecolor ou quando o stdout não era um TTY. `_use_ansi()` também não verificava `sys.__stdout__.isatty()`.
+**Rich layer:** `_get_console()` forced `force_terminal=True` and `color_system="truecolor"` to ensure colors, but this prevented rich from detecting when the terminal did not support truecolor or when stdout was not a TTY. `_use_ansi()` also did not check `sys.__stdout__.isatty()`.
 
-**Camada prompt_toolkit:** O `footer_app` era um segundo `Application` do prompt_toolkit criado para exibir um footer persistente "PENSANDO..." durante tool dispatch. Como prompt_toolkit não suporta duas Applications no mesmo loop, o footer_app competia com o loop principal, causando:
-- Redraws inconsistentes
-- Conflito de input handling
-- Layout corrompido (especialmente ao trocar de modo)
+**prompt_toolkit layer:** The `footer_app` was a second `prompt_toolkit` `Application` created to display a persistent "THINKING..." footer during tool dispatch. Since prompt_toolkit does not support two Applications in the same loop, the footer_app competed with the main loop, causing:
+- Inconsistent redraws
+- Input handling conflicts
+- Corrupted layout (especially when switching modes)
 
-**Spinner:** `show_thinking_spinner()` e `stop_thinking_spinner()` continham apenas `pass` — o spinner nunca funcionou.
+**Spinner:** `show_thinking_spinner()` and `stop_thinking_spinner()` contained only `pass` — the spinner never worked.
 
-## Solução
+## Solution
 
-### 1. `_use_ansi()` — Adicionar TTY detection
+### 1. `_use_ansi()` — Add TTY detection
 ```python
 def _use_ansi() -> bool:
     if os.environ.get("NO_COLOR"):
@@ -46,7 +46,7 @@ def _use_ansi() -> bool:
     return True
 ```
 
-### 2. `_get_console()` — Autodetecção
+### 2. `_get_console()` — Auto-detection
 ```python
 def _get_console() -> Console:
     if not _use_ansi() or _plain_mode:
@@ -54,7 +54,7 @@ def _get_console() -> Console:
     return Console(file=sys.stdout)
 ```
 
-### 3. `app.py` — Remover `footer_app`
+### 3. `app.py` — Remove `footer_app`
 ```python
 state.set_thinking(True)
 try:
@@ -63,7 +63,7 @@ finally:
     state.set_thinking(False)
 ```
 
-### 4. `messages.py` — Spinner real com braille
+### 4. `messages.py` — Real braille spinner
 ```python
 _SPINNER_FRAMES = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
 
@@ -74,7 +74,7 @@ async def show_thinking_spinner() -> None:
     try:
         while True:
             frame = _SPINNER_FRAMES[i % len(_SPINNER_FRAMES)]
-            sys.stdout.write(f"\r\033[93m{frame} Pensando...\033[0m")
+            sys.stdout.write(f"\r\033[93m{frame} Thinking...\033[0m")
             sys.stdout.flush()
             i += 1
             await asyncio.sleep(0.1)
@@ -83,24 +83,24 @@ async def show_thinking_spinner() -> None:
         sys.stdout.flush()
 ```
 
-### 5. `cli.py` — Remover `--no-color`
-Removeu-se o argumento `--no-color` e o parâmetro `no_color` de `run()` e `configure_console()`, já que a autodetecção do rich + TTY check eliminam a necessidade do flag manual.
+### 5. `cli.py` — Remove `--no-color`
+The `--no-color` argument and the `no_color` parameter from `run()` and `configure_console()` were removed, since rich's auto-detection + TTY check eliminate the need for the manual flag.
 
-## Arquivos alterados
+## Files changed
 
-- `turbo_cli/messages.py` — TTY detection em `_use_ansi()`, autodetecção em `_get_console()`, spinner real com braille
-- `turbo_cli/app.py` — Remoção do `footer_app`, imports limpos (6 linhas removidas), toolbar simplificada, Ctrl+C/V, /end e /new
-- `turbo_cli/cli.py` — Remoção do `--no-color` flag e parâmetro `no_color`
+- `turbo_cli/messages.py` — TTY detection in `_use_ansi()`, auto-detection in `_get_console()`, real braille spinner
+- `turbo_cli/app.py` — Removal of `footer_app`, cleaned up imports (6 lines removed), simplified toolbar, Ctrl+C/V, /end and /new
+- `turbo_cli/cli.py` — Removal of `--no-color` flag and `no_color` parameter
 
-## Lições aprendidas
+## Lessons learned
 
-1. **Nunca force `force_terminal=True` ou `color_system` fixo no rich.** Deixe o rich fazer autodetecção — ele lida corretamente com TTY, pipes, redirecionamento e terminais sem suporte a truecolor.
-2. **prompt_toolkit não suporta duas Applications concorrentes.** Qualquer UI adicional deve ser implementada dentro do mesmo loop ou via ferramentas do próprio prompt_toolkit (como `bottom_toolbar` callback).
-3. **Sempre verificar `sys.__stdout__.isatty()`** antes de emitir códigos ANSI manuais. O rich faz isso automaticamente, mas código customizado precisa da verificação explícita.
-4. **Spinner via `\r` + ANSI é simples e eficaz** — não precisa de biblioteca adicional. O cancelamento via `asyncio.CancelledError` permite cleanup limpo.
+1. **Never force `force_terminal=True` or a fixed `color_system` in rich.** Let rich auto-detect — it handles TTY, pipes, redirection, and terminals without truecolor support correctly.
+2. **prompt_toolkit does not support two concurrent Applications.** Any additional UI must be implemented within the same loop or via prompt_toolkit's own facilities (such as the `bottom_toolbar` callback).
+3. **Always check `sys.__stdout__.isatty()`** before emitting manual ANSI codes. Rich does this automatically, but custom code needs the explicit check.
+4. **Spinner via `\r` + ANSI is simple and effective** — no additional library needed. Cancellation via `asyncio.CancelledError` allows clean cleanup.
 
-## Ações preventivas
+## Preventive actions
 
-- Adicionar ao guia de contribuição: "ao modificar configuração do rich, nunca forçar `force_terminal` ou `color_system` — usar autodetecção"
-- Todo novo recurso de UI do prompt_toolkit deve ser validado para conflitos com o loop principal do app
-- Adicionar teste de regressão para `_use_ansi()` que verifique comportamento em TTY vs pipe
+- Add to the contribution guide: "when modifying rich Console configuration, never force `force_terminal` or `color_system` — use auto-detection"
+- Every new prompt_toolkit UI feature must be validated for conflicts with the main app loop
+- Add a regression test for `_use_ansi()` that verifies behavior on TTY vs pipe

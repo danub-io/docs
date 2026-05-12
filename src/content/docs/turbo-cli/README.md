@@ -2,36 +2,36 @@
 title: "turbo-cli — Inline LLM Assistant CLI"
 ---
 
-Assistente inline de terminal (estilo Claude Code) com **4 modos de agente** para conversar com modelos LLM via API, construído com Python e [prompt-toolkit](https://github.com/prompt-toolkit/python-prompt-toolkit).
+Inline terminal assistant (Claude Code style) with **4 agent modes** for chatting with LLM models via API, built with Python and [prompt-toolkit](https://github.com/prompt-toolkit/python-prompt-toolkit).
 
-## Funcionalidades
+## Features
 
-- 🧠 **4 modos de agente:** Normal (bash geral), Plan (planejamento), Code (execução autônoma), Ask (conversa + fetch)
-- 🏆 **Multi-provedor:** OpenAI, Anthropic, Google Gemini, Ollama, e qualquer API OpenAI-compatible
-- ⚡ **DeepSeek otimizado:** Modelo padrão (`deepseek-v4-flash`) com `temperature=0.0`, `parallel_tool_calls=false`, e 100% de Prefix Cache hit em active files
-- 📝 Input multi-line (Esc+Enter para nova linha, Enter para enviar)
-- ⚡ Streaming em tempo real das respostas
-- 📋 Formatação markdown com syntax highlight (rich)
-- ⌨️ 15 comandos slash (`/model`, `/key`, `/mode`, `/provider`, `/plan`, `/plan-menu`, `/plan-abort`, `/code`, `/code-reset`, `/code-status`, `/clear`, `/new`, `/quit`, `/end`, `/help`)
-- 🔄 Compatível com qualquer API OpenAI-compatible (OpenAI, Anthropic, DeepSeek, Google Gemini, Ollama, Groq, Together, etc.)
-- 💾 Histórico de comandos persistente
-- ⚙️ Config em `~/.config/turbo-cli/config.json` (pydantic)
-- 🔒 Circuit breaker no modo Code (proteção contra edições fora de arquivos permitidos)
-- 📋 Sistema de planos com checklist + comentário HTML (sem JSON metadata)
-- 📁 Active files: até 5 arquivos em contexto inline via `add_to_context` tool ou `/add`
-- ✂️ Context pruning automático (ephemeral tool outputs) — redução de até 80% de tokens
+- 🧠 **4 agent modes:** Normal (general bash), Plan (planning), Code (autonomous execution), Ask (conversation + fetch)
+- 🏆 **Multi-provider:** OpenAI, Anthropic, Google Gemini, Ollama, and any OpenAI-compatible API
+- ⚡ **DeepSeek optimized:** Default model (`deepseek-v4-flash`) with `temperature=0.0`, `parallel_tool_calls=false`, and 100% Prefix Cache hit on active files
+- 📝 Multi-line input (Esc+Enter for new line, Enter to send)
+- ⚡ Real-time streaming of responses
+- 📋 Markdown formatting with syntax highlighting (rich)
+- ⌨️ 15 slash commands (`/model`, `/key`, `/mode`, `/provider`, `/plan`, `/plan-menu`, `/plan-abort`, `/code`, `/code-reset`, `/code-status`, `/clear`, `/new`, `/quit`, `/end`, `/help`)
+- 🔄 Compatible with any OpenAI-compatible API (OpenAI, Anthropic, DeepSeek, Google Gemini, Ollama, Groq, Together, etc.)
+- 💾 Persistent command history
+- ⚙️ Config at `~/.config/turbo-cli/config.json` (pydantic)
+- 🔒 Circuit breaker in Code mode (protection against edits outside of allowed files)
+- 📋 Plan system with checklist + HTML comment (no JSON metadata)
+- 📁 Active files: up to 5 files in inline context via `add_to_context` tool or `/add`
+- ✂️ Automatic context pruning (ephemeral tool outputs) — up to 80% token reduction
 
-## Tecnologias
+## Technologies
 
-- **UI:** prompt-toolkit 3.x (Textual 8.x na branch tui-textual)
-- **Linguagem:** Python 3.12+
-- **LLM:** SDK multi-provedor próprio (`OpenAICompatibleClient`, `AnthropicClient`, `GeminiClient`)
-- **Formatação:** rich 13.x (markdown, syntax highlight)
+- **UI:** prompt-toolkit 3.x (Textual 8.x on the tui-textual branch)
+- **Language:** Python 3.12+
+- **LLM:** Custom multi-provider SDK (`OpenAICompatibleClient`, `AnthropicClient`, `GeminiClient`)
+- **Formatting:** rich 13.x (markdown, syntax highlighting)
 - **Config:** pydantic 2.x
 
-## Instalação
+## Installation
 
-### Via pip install -e . (recomendado)
+### Via pip install -e . (recommended)
 
 ```bash
 git clone <repo-url> turbo-cli
@@ -41,14 +41,14 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -e .
 
-# Executar
+# Run
 turbo
 ```
 
-### Alternativas de execução
+### Alternative run methods
 
 ```bash
-# Após pip install -e .
+# After pip install -e .
 turbo
 
 # Via python -m
@@ -58,63 +58,63 @@ python -m turbo_cli
 python main.py
 ```
 
-## Uso
+## Usage
 
 ```bash
-# Ativar venv e iniciar
+# Activate venv and start
 source .venv/bin/activate
 turbo
 ```
 
-### Comandos Slash
+### Slash Commands
 
-| Comando | Descrição |
-|---------|-----------|
-| `/model <nome>` | Trocar modelo (ex: `/model gpt-4o-mini`) |
-| `/key <chave>` | Trocar API key |
-| `/mode [nome]` | Ver/trocar modo (normal/plan/code/ask) |
-| `/provider [nome]` | Ver/trocar provedor (opencode/gemini/anthropic/ollama/openai) |
-| `/plan <desc>` | Criar um plano automaticamente |
-| `/plan-menu` | Listar e selecionar planos salvos |
-| `/plan-abort` | Cancelar planejamento em andamento |
-| `/code <path>` | Carregar e executar um plano |
-| `/code-reset` | Resetar estado do CodeAgent |
-| `/code-status` | Ver progresso do plano atual |
-| `/add <path>` | Adicionar arquivo ao contexto ativo |
-| `/add --remove <path>` | Remover arquivo do contexto ativo |
-| `/clear` | Limpar contexto da conversa |
-| `/new` | Limpar tela e iniciar nova sessão |
-| `/quit` | Sair |
-| `/end` | Sair (atalho) |
-| `/help` | Mostrar ajuda completa |
+| Command | Description |
+|---------|-------------|
+| `/model <name>` | Switch model (e.g. `/model gpt-4o-mini`) |
+| `/key <key>` | Switch API key |
+| `/mode [name]` | View/switch mode (normal/plan/code/ask) |
+| `/provider [name]` | View/switch provider (opencode/gemini/anthropic/ollama/openai) |
+| `/plan <desc>` | Create a plan automatically |
+| `/plan-menu` | List and select saved plans |
+| `/plan-abort` | Cancel ongoing planning |
+| `/code <path>` | Load and execute a plan |
+| `/code-reset` | Reset CodeAgent state |
+| `/code-status` | View current plan progress |
+| `/add <path>` | Add file to active context |
+| `/add --remove <path>` | Remove file from active context |
+| `/clear` | Clear conversation context |
+| `/new` | Clear screen and start a new session |
+| `/quit` | Exit |
+| `/end` | Exit (shortcut) |
+| `/help` | Show full help |
 
-### Atalhos de Teclado
+### Keyboard Shortcuts
 
-| Tecla | Ação |
-|-------|------|
-| Enter | Enviar mensagem |
-| Esc+Enter | Nova linha no input |
-| Shift+Tab | Alternar entre os 4 modos |
-| Ctrl+C | Copiar seleção (quando houver seleção ativa) |
-| Ctrl+V | Colar da área de transferência |
+| Key | Action |
+|-----|--------|
+| Enter | Send message |
+| Esc+Enter | New line in input |
+| Shift+Tab | Cycle through the 4 modes |
+| Ctrl+C | Copy selection (when there is an active selection) |
+| Ctrl+V | Paste from clipboard |
 
-## Estrutura do Projeto
+## Project Structure
 
 ```
 turbo-cli/
-├── main.py                  # Entrypoint thin (→ cli.py)
+├── main.py                  # Thin entrypoint (→ cli.py)
 ├── cli.py                   # CLI argparse + asyncio.run()
 ├── pyproject.toml           # Build system + entry point "turbo"
 ├── requirements.txt         # Dev-deps (pytest, mypy)
-├── .env.example             # Template para API key
+├── .env.example             # Template for API key
 ├── turbo_cli/
 │   ├── __init__.py          # __version__
 │   ├── __main__.py          # python -m turbo_cli
-│   ├── app.py               # Loop principal (prompt_toolkit)
+│   ├── app.py               # Main loop (prompt_toolkit)
 │   ├── cli.py               # CLI argparse + asyncio.run()
 │   ├── config.py            # ConfigModel (pydantic)
-│   ├── llm.py               # LLMClient multi-provedor (OpenAI, Anthropic, Gemini)
-│   ├── messages.py          # Formatação rich
+│   ├── llm.py               # Multi-provider LLMClient (OpenAI, Anthropic, Gemini)
+│   ├── messages.py          # Rich formatting
 │   ├── commands/
 │   │   └── dispatcher.py    # Slash commands dispatch
 │   ├── core/
@@ -125,23 +125,23 @@ turbo-cli/
 │   ├── shared/
 │   │   ├── modes.py         # AgentMode enum + MODE_TOOLS
 │   │   ├── state.py         # SessionState
-│   │   ├── tools.py         # Ferramentas (bash, read, write, edit, etc.)
+│   │   ├── tools.py         # Tools (bash, read, write, edit, etc.)
 │   │   ├── plugin_core.py   # ToolRegistry, BaseTool
 │   │   ├── ui.py            # Branding, progress bar
 │   │   ├── widgets.py       # ProgressWidget, AskUserDialog
-│   │   ├── plan_parser.py   # Parse de planos (.md → tasks)
-│   │   ├── plan_writer.py   # Geração de planos
-│   │   ├── repo_map.py      # Repo map inteligente
+│   │   ├── plan_parser.py   # Plan parsing (.md → tasks)
+│   │   ├── plan_writer.py   # Plan generation
+│   │   ├── repo_map.py      # Intelligent repo map
 │   │   ├── mcp_bridge.py    # MCP tool discovery
 │   │   └── task_progress.py # CodeAgent task tracking
 │   └── agents/
 │       ├── base.py          # Agent (ABC)
 │       ├── normal.py        # NormalAgent
 │       ├── plan.py          # PlanAgent
-│       ├── code.py          # CodeAgent (execução autônoma)
+│       ├── code.py          # CodeAgent (autonomous execution)
 │       └── ask.py           # AskAgent
 ```
 
-## Licença
+## License
 
 MIT

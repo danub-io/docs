@@ -2,6 +2,6 @@
 title: "Postmortems — turbo-cli"
 ---
 
-Este diretório armazena postmortems do projeto turbo-cli.
+This directory stores turbo-cli project postmortems.
 
-Consulte o [template e convenções](/docs/ctech/postmortems) para criar novos postmortems.
+Refer to the [template and conventions](/docs/ctech/postmortems) for creating new postmortems.

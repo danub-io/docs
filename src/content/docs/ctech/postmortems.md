@@ -1,105 +1,105 @@
 ---
-title: "Postmortems — Template e Convenções"
-description: "Estrutura padronizada para registro de postmortems em todos os projetos do ecossistema"
+title: "Postmortems — Template and Conventions"
+description: "Standardized structure for recording postmortems across all projects in the ecosystem"
 ---
 
-Postmortems documentam bugs, descobertas e decisões importantes para que o conhecimento não se perca.
+Postmortems document bugs, discoveries, and important decisions so that knowledge is not lost.
 
-## Quando criar um postmortem
+## When to create a postmortem
 
-- Bug não trivial cuja investigação consumiu mais de 30min
-- Descoberta importante sobre comportamento de biblioteca/framework
-- Mudança de arquitetura ou refactor significativo
-- Problema de ambiente/infraestrutura que pode se repetir
-- Qualquer situação onde "aprendemos algo que vale registrar"
+- Non-trivial bug whose investigation took more than 30 minutes
+- Important discovery about library/framework behavior
+- Architecture change or significant refactor
+- Environment/infrastructure issue that may recur
+- Any situation where "we learned something worth recording"
 
-## Onde salvar
+## Where to save
 
 ```
-docs/src/content/docs/<projeto>/postmortems/POSTMORTEM-NNN-descricao-curta.md
+docs/src/content/docs/<project>/postmortems/POSTMORTEM-NNN-short-description.md
 ```
 
-Criar o diretório `postmortems/` dentro do projeto correspondente se não existir.
+Create the `postmortems/` directory within the corresponding project if it does not exist.
 
-## Numeração
+## Numbering
 
-Sequencial por projeto. O NNN é o próximo número disponível:
+Sequential per project. NNN is the next available number:
 
 - `POSTMORTEM-001-...`
 - `POSTMORTEM-002-...`
 - `POSTMORTEM-003-...`
 
-## Formato do Arquivo
+## File Format
 
 ```
-POSTMORTEM-NNN-descricao-curta.md
+POSTMORTEM-NNN-short-description.md
 ```
 
-Exemplo: `POSTMORTEM-003-carrossel-performance.md`
+Example: `POSTMORTEM-003-carrossel-performance.md`
 
-Usar kebab-case, descrição em português, sem artigos.
+Use kebab-case, description in English, no articles.
 
 ## Template
 
-Copie e adapte o template abaixo:
+Copy and adapt the template below:
 
 ```markdown
 ---
-title: "Postmortem NNN: Título curto do problema"
+title: "Postmortem NNN: Short problem title"
 ---
 
-# Postmortem NNN: Título curto do problema
+# Postmortem NNN: Short problem title
 
 ## Sumário
 
 - **Data:** YYYY-MM-DD
-- **Componente:** `caminho/do/componente` ou descrição do módulo
-- **Sintoma:** O que acontecia de errado
-- **Severidade:** Baixa / Média / Alta — impacto no usuário
-- **Root cause:** Causa raiz em 1-2 frases
+- **Componente:** `caminho/do/componente` or module description
+- **Sintoma:** What was going wrong
+- **Severidade:** Low / Medium / High — user impact
+- **Root cause:** Root cause in 1-2 sentences
 
 ## Timeline
 
-1. O que levou à descoberta
-2. Passos da investigação
-3. Onde o problema foi localizado
-4. Como a solução foi aplicada
+1. What led to the discovery
+2. Investigation steps
+3. Where the problem was located
+4. How the fix was applied
 
 ## Root Cause
 
-Explicação técnica detalhada da causa raiz. Inclua código, links ou referências relevantes.
+Detailed technical explanation of the root cause. Include relevant code, links, or references.
 
 ## Solução
 
-O que foi feito para corrigir. Inclua blocos de código antes/depois.
+What was done to fix it. Include before/after code blocks.
 
 ## Arquivos alterados
 
-- `caminho/do/arquivo` — descrição da alteração
+- `path/to/file` — description of the change
 
 ## Lições aprendidas
 
-1. O que aprendemos com este problema
-2. O que poderia ter sido feito diferente
-3. Dicas para debug mais rápido
+1. What we learned from this problem
+2. What could have been done differently
+3. Tips for faster debugging
 
 ## Ações preventivas
 
-- O que fazer para evitar que o problema se repita
-- Checklists, testes, ou alterações de processo sugeridas
+- What to do to prevent the problem from recurring
+- Suggested checklists, tests, or process changes
 ```
 
-## Exemplos existentes
+## Existing examples
 
 ### ctech_fe
 
-| # | Arquivo | Descrição |
+| # | File | Description |
 |---|---------|-----------|
-| 001 | `POSTMORTEM-001-select-scroll-lock` | Select dropdown causa encolhimento da página no mobile |
-| 002 | `POSTMORTEM-002-veredito-padding` | Padding inconsistente na seção Veredito (layout-boxed) |
-| 003 | `POSTMORTEM-003-csp-hydration-block` | CSP bloqueando hidratação de componentes React |
-| 004 | `POSTMORTEM-004-edit-tool-selfclosing-tag` | Edit tool convertendo self-closing JSX tag em closing tag inválida |
-| 005 | `POSTMORTEM-005-hero-horizontal-scroll-padding` | Padding horizontal do HeroCarousel quebrado em telas ultra-wide |
-| 006 | `POSTMORTEM-006-ssr-hooks-optimize-deps` | Erro de Hooks React no SSR (Vite + Cloudflare Workerd) |
+| 001 | `POSTMORTEM-001-select-scroll-lock` | Select dropdown causes page shrinkage on mobile |
+| 002 | `POSTMORTEM-002-veredito-padding` | Inconsistent padding in the Veredito section (layout-boxed) |
+| 003 | `POSTMORTEM-003-csp-hydration-block` | CSP blocking React component hydration |
+| 004 | `POSTMORTEM-004-edit-tool-selfclosing-tag` | Edit tool converting self-closing JSX tag into invalid closing tag |
+| 005 | `POSTMORTEM-005-hero-horizontal-scroll-padding` | HeroCarousel horizontal padding broken on ultra-wide screens |
+| 006 | `POSTMORTEM-006-ssr-hooks-optimize-deps` | React Hooks error in SSR (Vite + Cloudflare Workerd) |
 
-> **Nota:** A sidebar do Starlight é gerada automaticamente a partir do diretório `postmortems/`. Basta criar um novo arquivo `POSTMORTEM-NNN-descricao.md` no diretório do projeto correspondente que ele aparece na navegação sem precisar editar config.
+> **Note:** The Starlight sidebar is automatically generated from the `postmortems/` directory. Simply create a new `POSTMORTEM-NNN-description.md` file in the corresponding project directory and it will appear in the navigation without needing to edit the config.

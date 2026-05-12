@@ -1,18 +1,18 @@
 ---
-title: "Arquitetura — turbo-cli"
+title: "Architecture — turbo-cli"
 ---
 
-## Visão Geral
+## Overview
 
-turbo-cli é um cliente TUI inline para LLMs com sistema de múltiplos agentes, organizado em camadas:
+turbo-cli is an inline TUI client for LLMs with a multi-agent system, organized in layers:
 
-1. **Entrypoint** (`main.py` → `cli.py`) — Script Python que inicializa config, LLM client e app loop
-2. **Config** (`turbo_cli/config.py`) — Gerenciamento de API key, modelo, provedor e base_url via pydantic
-3. **LLM** (`turbo_cli/llm.py`) — Cliente multi-provedor: OpenAI, Anthropic, Gemini, Ollama
-4. **App Loop** (`turbo_cli/app.py`) — Loop principal com prompt_toolkit, dispatch de ferramentas, troca de modos
-5. **Core** (`turbo_cli/core/orchestrator.py`) — Tool dispatch, context pruning, construção de system prompt
-6. **Agentes** (`turbo_cli/agents/`) — 4 modos com system prompts e ferramentas distintas
-7. **Shared** (`turbo_cli/shared/`) — Ferramentas, estado de sessão, widgets de UI
+1. **Entrypoint** (`main.py` → `cli.py`) — Python script that initializes config, LLM client, and app loop
+2. **Config** (`turbo_cli/config.py`) — API key, model, provider, and base_url management via pydantic
+3. **LLM** (`turbo_cli/llm.py`) — Multi-provider client: OpenAI, Anthropic, Gemini, Ollama
+4. **App Loop** (`turbo_cli/app.py`) — Main loop with prompt_toolkit, tool dispatch, mode switching
+5. **Core** (`turbo_cli/core/orchestrator.py`) — Tool dispatch, context pruning, system prompt construction
+6. **Agents** (`turbo_cli/agents/`) — 4 modes with distinct system prompts and toolsets
+7. **Shared** (`turbo_cli/shared/`) — Tools, session state, UI widgets
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
@@ -26,9 +26,9 @@ turbo-cli é um cliente TUI inline para LLMs com sistema de múltiplos agentes, 
 │  │  app.py (prompt_toolkit)                                 │  │
 │  │  ├── load_config()     → ~/.config/turbo-cli/         │  │
 │  │  ├── ensure_api_key()  → auto-detect provider            │  │
-│  │  ├── LLMClient(config) → factory multi-provider           │  │
+│  │  ├── LLMClient(config) → multi-provider factory          │  │
 │  │  ├── agents[4]         → Normal/Plan/Code/Ask            │  │
-│  │  ├── loop: prompt → dispatcher ou chat_completion         │  │
+│  │  ├── loop: prompt → dispatcher or chat_completion         │  │
 │  │  └── idle_dream        → background memory consolidation  │  │
 │  └──────────────────┬───────────────────────────────────────┘  │
 │                     │                                           │
@@ -44,18 +44,18 @@ turbo-cli é um cliente TUI inline para LLMs com sistema de múltiplos agentes, 
 │  │  llm.py (BaseLLMClient factory)                          │  │
 │  │  ├── OpenAICompatibleClient → OpenAI, DeepSeek, Ollama   │  │
 │  │  │   ├── _is_deepseek() → temp=0, parallel=false         │  │
-│  │  ├── GeminiClient → Google Gemini (SDK nativo)           │  │
-│  │  ├── AnthropicClient → Anthropic Claude (SDK nativo)     │  │
+│  │  ├── GeminiClient → Google Gemini (native SDK)           │  │
+│  │  ├── AnthropicClient → Anthropic Claude (native SDK)     │  │
 │  │  └── chat_completion() / stream_chat()                   │  │
 │  └──────────────────────────────────────────────────────────┘  │
 │                                                               │
 │  ┌──────────────────────────────────────────────────────────┐  │
 │  │  agents/                                                 │  │
 │  │  ├── base.py          → Agent (ABC)                      │  │
-│  │  ├── normal.py        → NormalAgent (bash geral)         │  │
-│  │  ├── plan.py          → PlanAgent (planejamento)         │  │
-│  │  ├── code.py          → CodeAgent (execução autônoma)    │  │
-│  │  └── ask.py           → AskAgent (consulta + fetch)      │  │
+│  │  ├── normal.py        → NormalAgent (general bash)       │  │
+│  │  ├── plan.py          → PlanAgent (planning)             │  │
+│  │  ├── code.py          → CodeAgent (autonomous execution)  │  │
+│  │  └── ask.py           → AskAgent (query + fetch)         │  │
 │  └──────────────────────────────────────────────────────────┘  │
 │                                                               │
 │  ┌──────────────────────────────────────────────────────────┐  │
@@ -73,122 +73,122 @@ turbo-cli é um cliente TUI inline para LLMs com sistema de múltiplos agentes, 
 │  │  shared/                                                 │  │
 │  │  ├── modes.py        → AgentMode enum, MODE_TOOLS        │  │
 │  │  ├── state.py        → SessionState (active files, etc)  │  │
-│  │  ├── tools.py        → Ferramentas + tool registry       │  │
+│  │  ├── tools.py        → Tools + tool registry             │  │
 │  │  ├── plugin_core.py  → ToolRegistry, BaseTool, load_... │  │
 │  │  ├── widgets.py      → ProgressWidget, AskUserDialog     │  │
-│  │  ├── plan_parser.py  → Parse de planos                   │  │
-│  │  ├── plan_writer.py  → Geração de planos                 │  │
+│  │  ├── plan_parser.py  → Plan parsing                      │  │
+│  │  ├── plan_writer.py  → Plan generation                   │  │
 │  │  ├── ui.py           → Branding, progress bar            │  │
-│  │  ├── repo_map.py     → Repo map inteligente              │  │
+│  │  ├── repo_map.py     → Intelligent repo map              │  │
 │  │  ├── mcp_bridge.py   → MCP tool discovery                │  │
 │  │  └── task_progress.py→ CodeAgent task tracking           │  │
 │  └──────────────────────────────────────────────────────────┘  │
 │                                                               │
 │  ┌──────────────────────────────────────────────────────────┐  │
-│  │  messages.py (rich formatação)                           │  │
-│  │  ├── print_welcome() — painel inicial                    │  │
+│  │  messages.py (rich formatting)                           │  │
+│  │  ├── print_welcome() — welcome panel                    │  │
 │  │  ├── print_response() — Markdown + Panel                  │  │
 │  │  ├── print_error() / print_info() — feedback              │  │
-│  │  └── print_streaming_chunk() — output cru                │  │
+│  │  └── print_streaming_chunk() — raw output                │  │
 │  └──────────────────────────────────────────────────────────┘  │
 └──────────────────────────────────────────────────────────────┘
 ```
 
 ## ConfigModel
 
-Gerenciado por `turbo_cli/config.py` via pydantic `BaseModel`, salvo em `~/.config/turbo-cli/config.json`:
+Managed by `turbo_cli/config.py` via pydantic `BaseModel`, saved at `~/.config/turbo-cli/config.json`:
 
-| Campo | Tipo | Padrão | Descrição |
-|-------|------|--------|-----------|
-| `api_key` | `str` | `""` | Chave da API |
-| `model` | `str` | `"deepseek-v4-flash"` | Nome do modelo |
-| `base_url` | `str` | `""` (auto-resolvido) | URL base da API |
-| `provider` | `str` | `"opencode"` | Provedor (opencode/gemini/anthropic/ollama/openai) |
-| `plain_mode` | `bool` | `false` | Modo sem ANSI/Unicode |
-| `parallel_tool_calls` | `bool` | `true` | Paralelismo de tools (auto-desligado para DeepSeek) |
-| `max_tool_rounds` | `int` | `30` | Máx rounds de ferramentas por requisição |
-| `cheap_model` | `str` | `""` | Modelo barato para tarefas leves (idle-dream) |
-| `context_window` | `int` | `128000` | Janela de contexto em tokens |
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `api_key` | `str` | `""` | API key |
+| `model` | `str` | `"deepseek-v4-flash"` | Model name |
+| `base_url` | `str` | `""` (auto-resolved) | API base URL |
+| `provider` | `str` | `"opencode"` | Provider (opencode/gemini/anthropic/ollama/openai) |
+| `plain_mode` | `bool` | `false` | ANSI/Unicode-free mode |
+| `parallel_tool_calls` | `bool` | `true` | Tool parallelism (auto-disabled for DeepSeek) |
+| `max_tool_rounds` | `int` | `30` | Max tool rounds per request |
+| `cheap_model` | `str` | `""` | Cheap model for light tasks (idle-dream) |
+| `context_window` | `int` | `128000` | Context window in tokens |
 
-### Detecção de Provedor
+### Provider Detection
 
-O sistema detecta automaticamente o provedor baseado em variáveis de ambiente:
+The system automatically detects the provider based on environment variables:
 
-| Provider | Env Key | URL Padrão |
-|----------|---------|------------|
+| Provider | Env Key | Default URL |
+|----------|---------|-------------|
 | opencode | `OPENCODE_GO_API_KEY` | `https://opencode.ai/zen/go/v1` |
 | gemini | `GEMINI_API_KEY` | `https://generativelanguage.googleapis.com/v1beta` |
 | anthropic | `ANTHROPIC_API_KEY` | `https://api.anthropic.com/v1` |
-| ollama | — (sem key) | `http://localhost:11434/v1` |
+| ollama | — (no key) | `http://localhost:11434/v1` |
 | openai | `OPENAI_API_KEY` | `https://api.openai.com/v1` |
 
-Na primeira execução sem provider configurado, o app exibe um menu interativo de seleção. O modelo padrão é `deepseek-v4-flash` no provider `opencode`.
+On first run with no provider configured, the app displays an interactive selection menu. The default model is `deepseek-v4-flash` on the `opencode` provider.
 
-### Comportamento Específico por Modelo
+### Model-Specific Behavior
 
-Modelos da família **DeepSeek** recebem otimizações automáticas no `OpenAICompatibleClient`:
+**DeepSeek** family models receive automatic optimizations in `OpenAICompatibleClient`:
 
-| Parâmetro | DeepSeek | Outros modelos |
-|-----------|----------|----------------|
-| `temperature` | `0.0` (forçado) | Padrão da API |
-| `parallel_tool_calls` | `false` (forçado) | `true` (configurável) |
+| Parameter | DeepSeek | Other models |
+|-----------|----------|--------------|
+| `temperature` | `0.0` (forced) | API default |
+| `parallel_tool_calls` | `false` (forced) | `true` (configurable) |
 
-### Janela de Contexto
+### Context Window
 
-O sistema mantém um dicionário de janelas de contexto conhecidas (~35 modelos de 8 provedores) em `config.py:_MODEL_CONTEXT_WINDOWS`. A resolução é feita por `resolve_context_window(model_name)` com fallback fuzzy (substring match) e default de 128k tokens.
+The system maintains a dictionary of known context windows (~35 models from 8 providers) in `config.py:_MODEL_CONTEXT_WINDOWS`. Resolution is done via `resolve_context_window(model_name)` with fuzzy fallback (substring match) and a default of 128k tokens.
 
-## Fluxo de Mensagens com Ferramentas
+## Message Flow with Tools
 
-O app loop usa `chat_completion_with_tools()` em `core/orchestrator.py` para gerenciar chamadas de ferramentas:
+The app loop uses `chat_completion_with_tools()` in `core/orchestrator.py` to manage tool calls:
 
-1. Usuário envia mensagem → `messages.append({"role": "user", "content": text})`
-2. `client.chat_completion(messages, tools=TOOL_DEFS[modo])` → LLM responde com texto ou `tool_calls`
-3. Se `tool_calls`: executa a ferramenta, append do resultado como mensagem `tool`, repete passo 2
-4. Se texto: printa resposta com rich, append como `assistant`
+1. User sends a message → `messages.append({"role": "user", "content": text})`
+2. `client.chat_completion(messages, tools=TOOL_DEFS[mode])` → LLM responds with text or `tool_calls`
+3. If `tool_calls`: execute the tool, append the result as a `tool` message, repeat step 2
+4. If text: print response with rich, append as `assistant`
 
-## Sistema de Agentes
+## Agent System
 
-O app possui **4 modos** (agentes), cada um com um system prompt e conjunto de ferramentas dedicado:
+The app has **4 modes** (agents), each with a dedicated system prompt and toolset:
 
-| Modo | Ferramentas | Finalidade |
-|------|-------------|------------|
-| Normal | read, bash, edit, write, grep, find, ls | Assistente geral com bash |
-| Plan | read, grep, write, edit, project_inspector, ask_user | Planejamento (sem bash) |
-| Code | read, bash, edit, write, grep, find, ls, ask_user, update_task_progress | Execução autônoma de planos |
-| Ask | read, bash, grep, find, ls, fetch | Conversa geral + fetch |
+| Mode | Tools | Purpose |
+|------|-------|---------|
+| Normal | read, bash, edit, write, grep, find, ls | General assistant with bash |
+| Plan | read, grep, write, edit, project_inspector, ask_user | Planning (no bash) |
+| Code | read, bash, edit, write, grep, find, ls, ask_user, update_task_progress | Autonomous plan execution |
+| Ask | read, bash, grep, find, ls, fetch | General conversation + fetch |
 
-## Estados do App Loop
+## App Loop States
 
-| Estado | Descrição |
-|--------|-----------|
-| Aguardando | Prompt vazio, aguardando input |
-| Processando | Streaming de resposta em andamento |
-| Tool call | LLM solicitou execução de ferramenta |
-| Erro | Falha na requisição (timeout, auth, quota) |
+| State | Description |
+|-------|-------------|
+| Waiting | Empty prompt, awaiting input |
+| Processing | Streaming response in progress |
+| Tool call | LLM requested tool execution |
+| Error | Request failure (timeout, auth, quota) |
 
 ## Config Directory: ~/.config/turbo-cli/
 
-| Arquivo | Finalidade |
-|---------|-----------|
-| `config.json` | API key, modelo, provedor, base_url, modo plain, paralelismo |
-| `history.txt` | Histórico de comandos (prompt_toolkit) |
+| File | Purpose |
+|------|---------|
+| `config.json` | API key, model, provider, base_url, plain mode, parallelism |
+| `history.txt` | Command history (prompt_toolkit) |
 
-## Plano de Execução
+## Execution Plan
 
-Planos são salvos em `.ai/plans/*.md` com formato checklist (`- [ ]`) + comentário HTML para arquivos permitidos:
+Plans are saved in `.ai/plans/*.md` with a checklist format (`- [ ]`) + HTML comment for allowed files:
 
 ```markdown
-# Título do Plano
+# Plan Title
 
-## Objetivo
-Descrição do que será feito.
+## Objective
+Description of what will be done.
 
-## Tarefas
+## Tasks
 
-- [ ] Descrição clara e acionável da tarefa
-- [ ] Cada tarefa deve ser pequena (5-15 linhas de código no máximo)
+- [ ] Clear, actionable task description
+- [ ] Each task should be small (5-15 lines of code at most)
 
-<!-- allowedFiles: [caminho/do/arquivo.py] -->
+<!-- allowedFiles: [path/to/file.py] -->
 ```
 
-O CodeAgent carrega estes planos e executa as tarefas sequencialmente, com rollback via git em caso de falha e circuit breaker (3 strikes) para edições fora dos arquivos permitidos.
+The CodeAgent loads these plans and executes tasks sequentially, with git rollback on failure and a circuit breaker (3 strikes) for edits outside of allowed files.

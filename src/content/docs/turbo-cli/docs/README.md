@@ -1,22 +1,22 @@
 ---
-title: "Documentação — turbo-cli"
+title: "Documentation — turbo-cli"
 ---
 
-Índice da documentação técnica do turbo-cli.
+Index of turbo-cli technical documentation.
 
-## Arquitetura
+## Architecture
 
-- [ARCHITECTURE.md](../ARCHITECTURE.md) — Visão geral da arquitetura
-- [docs/architecture/](./architecture/) — Fluxo do app loop, LLM client, sistema de modos
+- [ARCHITECTURE.md](../ARCHITECTURE.md) — Architecture overview
+- [docs/architecture/](./architecture/) — App loop flow, LLM client, mode system
 
-## Desenvolvimento
+## Development
 
-- [docs/development/setup-local.md](./development/setup-local.md) — Setup do ambiente local
+- [docs/development/setup-local.md](./development/setup-local.md) — Local environment setup
 
-## Operações
+## Operations
 
-- [docs/operations/commands.md](./operations/commands.md) — Comandos de instalação e manutenção
+- [docs/operations/commands.md](./operations/commands.md) — Installation and maintenance commands
 
 ## Troubleshooting
 
-- [docs/troubleshooting/](./troubleshooting/) — Erros de API, instalação e configuração
+- [docs/troubleshooting/](./troubleshooting/) — API, installation, and configuration errors

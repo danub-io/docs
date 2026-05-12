@@ -1,10 +1,10 @@
 ---
-title: "Contribuindo para o MBA Lite"
+title: "Contributing — MBA Lite"
 ---
 
 
 
-## Configuração
+## Setup
 
 ```bash
 git clone <repo-url>
@@ -13,15 +13,15 @@ pnpm install
 pnpm dev
 ```
 
-## Padrões
+## Standards
 
 - **TypeScript:** Strict mode
 - **Commits:** Conventional Commits
-- **Componentes:** Prefira `.astro` para componentes estáticos, React apenas para interatividade
-- **Estilos:** Use `@theme` do Tailwind v4 em `global.css`
+- **Components:** Prefer `.astro` for static components, React only for interactivity
+- **Styles:** Use Tailwind v4 `@theme` in `global.css`
 
-## Processo
+## Process
 
-1. Crie branch a partir da `main`
-2. Faça as alterações
-3. Abra o PR descrevendo as mudanças
+1. Create a branch from `main`
+2. Make your changes
+3. Open a PR describing the changes

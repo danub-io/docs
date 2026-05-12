@@ -2,6 +2,6 @@
 title: "Postmortems — MBA Lite"
 ---
 
-Este diretório armazena postmortems do projeto MBA Lite.
+This directory stores postmortems for the MBA Lite project.
 
-Consulte o [template e convenções](/docs/ctech/postmortems) para criar novos postmortems.
+See the [template and conventions](/docs/ctech/postmortems) for creating new postmortems.

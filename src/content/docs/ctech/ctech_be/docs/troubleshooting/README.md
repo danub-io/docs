@@ -2,25 +2,23 @@
 title: "Troubleshooting"
 ---
 
+This folder contains solutions for common issues encountered during development and operation of the CTECH Panel.
 
+## Contents
 
-Esta pasta contém soluções para problemas comuns encontrados durante o desenvolvimento e operação do CTECH Painel.
-
-## Conteúdo
-
-- `database.md` - Problemas com Turso/banco de dados
-- `scraping.md` - Erros em web scraping e extração
-- `ai-services.md` - Falhas em modelos de IA
-- `common-errors.md` - Erros comuns e soluções rápidas
-- `security.md` - Vulnerabilidades e práticas de segurança
+- `database.md` — Turso/database problems
+- `scraping.md` — Web scraping and extraction errors
+- `ai-services.md` — AI model failures
+- `common-errors.md` — Common errors and quick solutions
+- `security.md` — Vulnerabilities and security practices
 
 ## Debug
 
-Para logs detalhados em desenvolvimento:
+For detailed logs during development:
 
 ```bash
 pnpm dev
-# Logs estruturados com Pino
+# Structured logs with Pino
 ```
 
-Para produção, configure `PINO_LOG_LEVEL` conforme necessário.
+For production, set `PINO_LOG_LEVEL` as needed.

@@ -1,50 +1,48 @@
 ---
-title: "Erros em Web Scraping e Extração"
+title: "Web Scraping and Extraction Errors"
 ---
 
+## Error: "Failed to fetch URL"
 
-
-## Erro: "Failed to fetch URL"
-
-### Sintoma
+### Symptom
 ```
 Error: Failed to fetch URL: https://... - Status 403
 ```
 
-### Causas Comuns
-1. **Bloqueio por User-Agent:** Site detectou scraping
-2. **Rate Limiting:** Muitas requisições em pouco tempo
-3. **CAPTCHA:** Site exigiu verificação humana
+### Common Causes
+1. **User-Agent Blocking:** Site detected scraping
+2. **Rate Limiting:** Too many requests in a short time
+3. **CAPTCHA:** Site required human verification
 
-### Soluções
-1. Verifique se o URL está na lista de URLs seguras (`@/lib/scrapers.ts` - `isSafeUrl()`)
-2. Ajuste o intervalo entre requisições no M8 (Configurações → Scraping Services)
-3. Use Playwright com stealth plugin (já configurado no projeto)
-
----
-
-## Erro: "Extraction failed - No content found"
-
-### Sintoma
-```
-Scraping realizado mas IA não conseguiu extrair conteúdo
-```
-
-### Solução
-1. Verifique se o seletor CSS está correto
-2. O site pode ter mudado a estrutura (HTML)
-3. Aumente o `timeout` no `fetch()` ou Playwright
+### Solutions
+1. Check if the URL is in the safe URL list (`@/lib/scrapers.ts` - `isSafeUrl()`)
+2. Adjust the request interval in M8 (Settings → Scraping Services)
+3. Use Playwright with stealth plugin (already configured in the project)
 
 ---
 
-## Playwright não encontrado
+## Error: "Extraction failed - No content found"
 
-### Erro
+### Symptom
+```
+Scraping succeeded but AI could not extract content
+```
+
+### Solution
+1. Check if the CSS selector is correct
+2. The site may have changed its HTML structure
+3. Increase the `timeout` in `fetch()` or Playwright
+
+---
+
+## Playwright not found
+
+### Error
 ```
 Error: playwright-chromium not found
 ```
 
-### Solução
+### Solution
 ```bash
 cd /home/dan/Documentos/ctech/ctech_be
 pnpm exec playwright install chromium
@@ -54,26 +52,26 @@ pnpm exec playwright install chromium
 
 ## Rate Limiting (Google Custom Search, etc.)
 
-### Sintoma
+### Symptom
 ```
 429 Too Many Requests
 ```
 
-### Solução
-1. Configure múltiplos tiers no M8 (Configurações → Scraping Services)
-2. Aumente o delay entre requisições
-3. Use chaves de API diferentes para diferentes tiers
+### Solution
+1. Configure multiple tiers in M8 (Settings → Scraping Services)
+2. Increase the delay between requests
+3. Use different API keys for different tiers
 
 ---
 
-## Debug de Scraping
+## Scraping Debug
 
-Para ver o HTML sendo extraído:
+To see the HTML being extracted:
 ```typescript
-// Em qualquer action de scraping
-console.log(html.substring(0, 1000)); // Log primeiro 1KB
+// In any scraping action
+console.log(html.substring(0, 1000)); // Log first 1KB
 ```
 
-Ou verifique os logs em:
-- M8 → Logs de Sistema (`/8-configuracoes/logs`)
-- Arquivo de log do Pino (se configurado)
+Or check the logs at:
+- M8 → System Logs (`/8-configuracoes/logs`)
+- Pino log file (if configured)
