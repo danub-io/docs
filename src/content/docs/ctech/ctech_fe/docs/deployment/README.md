@@ -1,27 +1,25 @@
 ---
-title: "Deploy — Documentação"
+title: "Deploy — Documentation"
 ---
 
+Guide for deploying the CTECH frontend in different environments.
 
+## Documents
 
-Guia para deploy do frontend CTECH em diferentes ambientes.
+- [vercel.md](./vercel.md) — Vercel deployment
+- [environment.md](./environment.md) — Environment variable configuration
 
-## Documentos
+## Other Guides
 
-- [vercel.md](./vercel.md) — Deploy na Vercel
-- [environment.md](./environment.md) — Configuração de variáveis de ambiente
-
-## Outros Guias
-
-- [docs/development/setup-local.md](../development/setup-local.md) — Setup do ambiente de desenvolvimento
-- [docs/security/seguranca.md](../security/seguranca.md) — Segurança e hardening
+- [docs/development/setup-local.md](../development/setup-local.md) — Development environment setup
+- [docs/security/security.md](../security/security.md) — Security and hardening
 
 ## Quick Start
 
 ```bash
 pnpm install
-pnpm build   # Gera dist/ com saída standalone
-pnpm preview # Testa localmente
+pnpm build   # Generates dist/ with standalone output
+pnpm preview # Test locally
 ```
 
-O build gera uma aplicação Node.js standalone em `dist/`. Sirva com qualquer servidor Node.js 22+.
+The build generates a standalone Node.js application in `dist/`. Serve it with any Node.js 22+ server.

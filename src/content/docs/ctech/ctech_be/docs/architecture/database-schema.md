@@ -1,187 +1,185 @@
 ---
-title: "Schema do Banco de Dados — Turso (SQLite)"
+title: "Database Schema — Turso (SQLite)"
 ---
 
+This document describes all tables, indexes, and relationships in the Turso database shared between the backend (ctech_be) and frontend (ctech_fe).
 
+## Overview
 
-Este documento descreve todas as tabelas, índices e relacionamentos do banco Turso compartilhado entre backend (ctech_be) e frontend (ctech_fe).
+The database is a serverless SQLite managed by Turso. The backend writes data via Server Actions + Drizzle ORM, and the frontend reads directly in SSR via `@libsql/client`.
 
-## Visão Geral
-
-O banco é um SQLite serverless gerenciado pelo Turso. O backend escreve dados via Server Actions + Drizzle ORM, e o frontend lê diretamente em SSR via `@libsql/client`.
-
-## Tabelas
+## Tables
 
 ### `Produtos`
 
-Tabela central. Cada linha é um produto de hardware curado pelo ecossistema.
+Central table. Each row represents a hardware product curated by the ecosystem.
 
-| Coluna | Tipo | Descrição |
-|--------|------|-----------|
+| Column | Type | Description |
+|--------|------|-------------|
 | `id` | INTEGER PK | Auto increment |
-| `nome_produto` | TEXT NOT NULL | Nome do produto |
-| `marca` | TEXT NOT NULL | Fabricante |
-| `slug` | TEXT | Slug único para URL (ex: `sony-wh-1000xm5`) |
-| `specs_json` | TEXT NOT NULL | Especificações técnicas em JSON |
-| `tier` | TEXT NOT NULL | Nível: `Premium`, `Intermediario`, `CustoBeneficio` |
-| `categoria` | TEXT | Categoria do produto (ex: `Notebook`, `Fone`) |
-| `lancamento` | TEXT | Ano de lançamento |
-| `nota_final` | REAL | Nota final compilada (0-10) |
-| `imagem_url` | TEXT | URL da imagem do produto |
+| `nome_produto` | TEXT NOT NULL | Product name |
+| `marca` | TEXT NOT NULL | Manufacturer |
+| `slug` | TEXT | Unique slug for URL (e.g. `sony-wh-1000xm5`) |
+| `specs_json` | TEXT NOT NULL | Technical specifications in JSON |
+| `tier` | TEXT NOT NULL | Tier: `Premium`, `Intermediario`, `CustoBeneficio` |
+| `categoria` | TEXT | Product category (e.g. `Notebook`, `Fone`) |
+| `lancamento` | TEXT | Release year |
+| `nota_final` | REAL | Final compiled score (0-10) |
+| `imagem_url` | TEXT | Product image URL |
 | `status` | TEXT DEFAULT `rascunho` | `rascunho` → `AprovadoM3` → `AprovadoM4` |
-| `review_ia` | TEXT | Review gerada por IA |
-| `pros_gerais` / `contras_gerais` | TEXT | Prós e contras consolidados |
-| `congelar_precos` | INTEGER DEFAULT 0 | Se `1`, preços não são atualizados automaticamente |
+| `review_ia` | TEXT | AI-generated review |
+| `pros_gerais` / `contras_gerais` | TEXT | Consolidated pros and cons |
+| `congelar_precos` | INTEGER DEFAULT 0 | If `1`, prices are not automatically updated |
 
-**Índices:** `status`, `categoria`, `tier`, `slug`, `nota_final`, `LOWER(nome_produto)`
+**Indexes:** `status`, `categoria`, `tier`, `slug`, `nota_final`, `LOWER(nome_produto)`
 
 ### `Reviews`
 
-Avaliações de imprensa (`critic`) e de usuários (`user`) para cada produto.
+Press (`critic`) and user (`user`) reviews for each product.
 
-| Coluna | Tipo | Descrição |
-|--------|------|-----------|
+| Column | Type | Description |
+|--------|------|-------------|
 | `id` | INTEGER PK | Auto increment |
-| `produto_id` | INTEGER FK → Produtos.id | Produto relacionado |
-| `review_type` | TEXT DEFAULT `critic` | `critic` (imprensa) ou `user` (usuário) |
-| `site` | TEXT | Nome do site/fonte |
-| `link` | TEXT | URL da review original |
-| `snippet` | TEXT | Trecho da review |
-| `nota_review` | REAL | Nota atribuída |
-| `pros` / `contras` | TEXT | Prós e contras mencionados |
-| `is_approved` | INTEGER DEFAULT 0 | Se `1`, aprovada para exibição |
+| `produto_id` | INTEGER FK → Produtos.id | Related product |
+| `review_type` | TEXT DEFAULT `critic` | `critic` (press) or `user` (user) |
+| `site` | TEXT | Site/source name |
+| `link` | TEXT | Original review URL |
+| `snippet` | TEXT | Review excerpt |
+| `nota_review` | REAL | Assigned score |
+| `pros` / `contras` | TEXT | Pros and cons mentioned |
+| `is_approved` | INTEGER DEFAULT 0 | If `1`, approved for display |
 
-**Índices:** `produto_id`, `(produto_id, review_type)`
+**Indexes:** `produto_id`, `(produto_id, review_type)`
 
 ### `Afiliados`
 
-Links de afiliados (lojas/parceiros) para cada produto.
+Affiliate links (stores/partners) for each product.
 
-| Coluna | Tipo | Descrição |
-|--------|------|-----------|
+| Column | Type | Description |
+|--------|------|-------------|
 | `id` | INTEGER PK | Auto increment |
-| `produto_id` | INTEGER FK → Produtos.id | Produto relacionado |
-| `loja` | TEXT | Nome da loja (ex: `Amazon`, `Kabum`) |
-| `url_afiliado` | TEXT | Link de afiliado |
-| `preco_atual` | REAL | Preço atual |
-| `ultima_atualizacao` | DATETIME | Timestamp da última atualização |
-| `nota_preco` | REAL | Avaliação do preço |
-| `status_erro` / `precisa_revisao` | BOOLEAN | Flags de erro/revisão |
-| `is_afiliado` | INTEGER | Se `1`, é link de afiliado (não direto) |
-| `snippet` | TEXT | Observação sobre a oferta |
-| `link_original` | TEXT | URL original antes de limpeza |
+| `produto_id` | INTEGER FK → Produtos.id | Related product |
+| `loja` | TEXT | Store name (e.g. `Amazon`, `Kabum`) |
+| `url_afiliado` | TEXT | Affiliate link |
+| `preco_atual` | REAL | Current price |
+| `ultima_atualizacao` | DATETIME | Last update timestamp |
+| `nota_preco` | REAL | Price rating |
+| `status_erro` / `precisa_revisao` | BOOLEAN | Error/review flags |
+| `is_afiliado` | INTEGER | If `1`, it's an affiliate link (not direct) |
+| `snippet` | TEXT | Remark about the offer |
+| `link_original` | TEXT | Original URL before cleaning |
 
-**Índices:** `produto_id`, `loja`
+**Indexes:** `produto_id`, `loja`
 
 ### `Guias`
 
-Guias de recomendação editoriais (modelo RTINGS). Agrupa produtos por tema.
+Editorial recommendation guides (RTINGS model). Groups products by topic.
 
-| Coluna | Tipo | Descrição |
-|--------|------|-----------|
+| Column | Type | Description |
+|--------|------|-------------|
 | `id` | INTEGER PK | Auto increment |
-| `slug` | TEXT UNIQUE NOT NULL | Slug para URL (`/guia/{slug}`) |
-| `titulo` | TEXT NOT NULL | Título do guia |
-| `descricao` | TEXT | Descrição curta (card) |
-| `descricao_longa` | TEXT | Descrição editorial completa |
-| `imagem_url` | TEXT | URL da imagem de capa |
-| `categoria_pai` | TEXT NOT NULL | Categoria de produto relacionada |
-| `grupo` | TEXT DEFAULT '' | Agrupamento temático (ex: `Por Uso`, `Por Preço`) |
-| `ordem` | INTEGER DEFAULT 0 | Ordem de exibição |
-| `ativo` | INTEGER DEFAULT 1 | Se `0`, oculto do frontend |
+| `slug` | TEXT UNIQUE NOT NULL | URL slug (`/guia/{slug}`) |
+| `titulo` | TEXT NOT NULL | Guide title |
+| `descricao` | TEXT | Short description (card) |
+| `descricao_longa` | TEXT | Full editorial description |
+| `imagem_url` | TEXT | Cover image URL |
+| `categoria_pai` | TEXT NOT NULL | Related product category |
+| `grupo` | TEXT DEFAULT '' | Thematic grouping (e.g. `Por Uso`, `Por Preço`) |
+| `ordem` | INTEGER DEFAULT 0 | Display order |
+| `ativo` | INTEGER DEFAULT 1 | If `0`, hidden from frontend |
 
-**Índices:** `slug` (único), `(categoria_pai, ativo)`
+**Indexes:** `slug` (unique), `(categoria_pai, ativo)`
 
 ### `Guia_Produtos`
 
-Relação many-to-many entre guias e produtos.
+Many-to-many relationship between guides and products.
 
-| Coluna | Tipo | Descrição |
-|--------|------|-----------|
-| `guia_id` | INTEGER FK → Guias.id | Guia relacionado |
-| `produto_id` | INTEGER FK → Produtos.id | Produto relacionado |
-| `ordem` | INTEGER DEFAULT 0 | Ordem dentro do guia |
+| Column | Type | Description |
+|--------|------|-------------|
+| `guia_id` | INTEGER FK → Guias.id | Related guide |
+| `produto_id` | INTEGER FK → Produtos.id | Related product |
+| `ordem` | INTEGER DEFAULT 0 | Order within the guide |
 
 **PK:** `(guia_id, produto_id)`
-**Índice:** `guia_id`
+**Index:** `guia_id`
 
 ### `fila_processamento`
 
-Fila de jobs assíncronos do backend (workers).
+Backend async job queue (workers).
 
-| Coluna | Tipo | Descrição |
-|--------|------|-----------|
+| Column | Type | Description |
+|--------|------|-------------|
 | `id` | INTEGER PK | Auto increment |
 | `modulo` | TEXT NOT NULL | `link-review`, `busca-texto`, `busca-precos` |
-| `referencia_id` | INTEGER NOT NULL | ID do produto/review alvo |
+| `referencia_id` | INTEGER NOT NULL | Target product/review ID |
 | `status` | TEXT DEFAULT `pendente` | `pendente`, `processando`, `concluido`, `erro`, `falha_critica` |
-| `tentativas` | INTEGER DEFAULT 0 | Número de tentativas (max 3 → DLQ) |
-| `erro` | TEXT | Mensagem de erro da última tentativa |
-| `prioridade` | INTEGER DEFAULT 0 | Prioridade do job |
+| `tentativas` | INTEGER DEFAULT 0 | Attempt count (max 3 → DLQ) |
+| `erro` | TEXT | Error message from last attempt |
+| `prioridade` | INTEGER DEFAULT 0 | Job priority |
 
-**Índices:** `status`, `referencia_id`
+**Indexes:** `status`, `referencia_id`
 
 ### `historico_precos`
 
-Histórico de preços dos afiliados ao longo do tempo.
+Price history for affiliates over time.
 
-| Coluna | Tipo | Descrição |
-|--------|------|-----------|
+| Column | Type | Description |
+|--------|------|-------------|
 | `id` | INTEGER PK | Auto increment |
-| `produto_id` | INTEGER FK → Produtos.id | Produto relacionado |
-| `loja` | TEXT | Nome da loja |
-| `preco` | REAL | Preço capturado |
-| `data_captura` | DATETIME | Timestamp da captura |
+| `produto_id` | INTEGER FK → Produtos.id | Related product |
+| `loja` | TEXT | Store name |
+| `preco` | REAL | Captured price |
+| `data_captura` | DATETIME | Capture timestamp |
 
-**Índice:** `(produto_id, data_captura)`
+**Index:** `(produto_id, data_captura)`
 
 ### `logs_entrada`
 
-Logs detalhados do sistema (operações de IA, scraping, erros).
+Detailed system logs (AI operations, scraping, errors).
 
-| Coluna | Tipo | Descrição |
-|--------|------|-----------|
+| Column | Type | Description |
+|--------|------|-------------|
 | `id` | INTEGER PK | Auto increment |
-| `timestamp` | DATETIME | Momento do log |
+| `timestamp` | DATETIME | Log time |
 | `level` | TEXT | `info`, `warn`, `error` |
-| `message` | TEXT | Mensagem do log |
-| `details` | TEXT | Detalhes adicionais (JSON) |
-| `tokens_prompt` / `tokens_completion` | INTEGER | Tokens usados (IA) |
-| `model_id` | TEXT | Modelo de IA usado |
-| `custo_est` | REAL | Custo estimado da operação |
-| `module_name` | TEXT | Módulo que gerou o log |
-| `input_payload` | TEXT | Payload de entrada |
+| `message` | TEXT | Log message |
+| `details` | TEXT | Additional details (JSON) |
+| `tokens_prompt` / `tokens_completion` | INTEGER | Tokens used (AI) |
+| `model_id` | TEXT | AI model used |
+| `custo_est` | REAL | Estimated operation cost |
+| `module_name` | TEXT | Module that generated the log |
+| `input_payload` | TEXT | Input payload |
 
-**Índice:** `timestamp`
+**Index:** `timestamp`
 
 ### `conflitos_entrada`
 
-Conflitos de duplicidade detectados durante a ingestão (M1).
+Duplicate conflicts detected during ingestion (M1).
 
-| Coluna | Tipo | Descrição |
-|--------|------|-----------|
+| Column | Type | Description |
+|--------|------|-------------|
 | `id` | INTEGER PK | Auto increment |
-| `nome_produto` | TEXT NOT NULL | Nome do produto conflitante |
-| `marca` | TEXT | Marca |
-| `dados_json` | TEXT NOT NULL | Dados completos da entrada |
-| `motivo` | TEXT | Motivo do conflito |
-| `match_candidato_id` | INTEGER | ID do produto candidato |
+| `nome_produto` | TEXT NOT NULL | Conflicting product name |
+| `marca` | TEXT | Brand |
+| `dados_json` | TEXT NOT NULL | Full entry data |
+| `motivo` | TEXT | Conflict reason |
+| `match_candidato_id` | INTEGER | Candidate product ID |
 | `status` | TEXT DEFAULT `pendente` | `pendente`, `resolvido`, `descartado` |
 
-**Índice:** `status`
+**Index:** `status`
 
-### Tabelas de Configuração
+### Configuration Tables
 
 #### `config_ai_models`
 
-Modelos de IA configurados (provedores, chaves, preços).
+Configured AI models (providers, keys, pricing).
 
-| Coluna | Tipo |
+| Column | Type |
 |--------|------|
 | `id` | INTEGER PK |
 | `provider` | TEXT |
 | `model_id` | TEXT |
-| `api_key` | TEXT (criptografada AES-256-CBC) |
+| `api_key` | TEXT (AES-256-CBC encrypted) |
 | `tier` | INTEGER DEFAULT 1 |
 | `is_active` | INTEGER DEFAULT 1 |
 | `system_prompt` | TEXT |
@@ -190,9 +188,9 @@ Modelos de IA configurados (provedores, chaves, preços).
 
 #### `config_scraping_services`
 
-Serviços de scraping configurados.
+Configured scraping services.
 
-| Coluna | Tipo |
+| Column | Type |
 |--------|------|
 | `id` | INTEGER PK |
 | `name` | TEXT |
@@ -203,11 +201,11 @@ Serviços de scraping configurados.
 
 #### `config_preferences`
 
-Preferências globais do painel (singleton, apenas 1 linha).
+Global panel preferences (singleton, only 1 row).
 
-| Coluna | Tipo |
+| Column | Type |
 |--------|------|
-| `id` | INTEGER PK (sempre 1) |
+| `id` | INTEGER PK (always 1) |
 | `theme` | TEXT DEFAULT `dark` |
 | `show_scanlines` | INTEGER DEFAULT 1 |
 | `animations_enabled` | INTEGER DEFAULT 1 |
@@ -215,31 +213,31 @@ Preferências globais do painel (singleton, apenas 1 linha).
 
 #### `worker_control`
 
-Controle de heartbeat dos workers.
+Worker heartbeat control.
 
-| Coluna | Tipo |
+| Column | Type |
 |--------|------|
 | `id` | TEXT PK |
 | `is_active` | INTEGER DEFAULT 0 |
 | `last_heartbeat` | DATETIME |
 
-## Migrações
+## Migrations
 
-Gerenciadas via Drizzle Kit. Migrações em `drizzle/migrations/`:
+Managed via Drizzle Kit. Migrations in `drizzle/migrations/`:
 
-| Migração | Descrição |
-|----------|-----------|
-| `0001_add_user_settings.sql` | Preferências do painel |
-| `0002_add_review_type.sql` | Coluna `review_type` em Reviews |
-| `0003_*` | Slug e índices em Produtos |
-| `0004_quick_mariko_yashida.sql` | Tabelas Guias, Guia_Produtos, índices adicionais |
+| Migration | Description |
+|-----------|-------------|
+| `0001_add_user_settings.sql` | Panel preferences |
+| `0002_add_review_type.sql` | `review_type` column in Reviews |
+| `0003_*` | Slug and indexes in Produtos |
+| `0004_quick_mariko_yashida.sql` | Guides, Guide_Products tables, additional indexes |
 
-Aplicar migrações:
+Apply migrations:
 ```bash
 pnpm exec drizzle-kit push
 ```
 
-## Relacionamentos (ER)
+## Relationships (ER)
 
 ```
 Produtos ──1:N──→ Reviews        (via produto_id)

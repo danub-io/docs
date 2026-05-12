@@ -1,89 +1,89 @@
 ---
-title: "Variáveis de Ambiente (ctech_fe)"
+title: "Environment Variables (ctech_fe)"
 ---
 
-O frontend requer as seguintes variáveis de ambiente:
+The frontend requires the following environment variables:
 
-## Obrigatórias
+## Required
 
 ```ini
-# URL do banco Turso (SQLite distribuído)
-# Obtida no dashboard do Turso (https://turso.tech)
-TURSO_DATABASE_URL=libsql://seu-banco-username.turso.io
+# Turso database URL (distributed SQLite)
+# Retrieved from the Turso dashboard (https://turso.tech)
+TURSO_DATABASE_URL=libsql://your-database-username.turso.io
 
-# Token de autenticação do Turso
-# Gere com: turso db tokens create <nome-do-banco>
-TURSO_AUTH_TOKEN=seu-token-aqui
+# Turso authentication token
+# Generate with: turso db tokens create <database-name>
+TURSO_AUTH_TOKEN=your-token-here
 
-# Chave secreta para assinatura de JWT
-# Gere com: openssl rand -hex 32
+# Secret key for JWT signing
+# Generate with: openssl rand -hex 32
 AUTH_SECRET=********************************
 ```
 
-## Google OAuth (Opcional)
+## Google OAuth (Optional)
 
 ```ini
-# Client ID e Secret do Google OAuth
-# Obtidos no Google Cloud Console (https://console.cloud.google.com)
-GOOGLE_CLIENT_ID=seu-google-client-id
-GOOGLE_CLIENT_SECRET=seu-google-client-secret
+# Google OAuth Client ID and Secret
+# Retrieved from Google Cloud Console (https://console.cloud.google.com)
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
 ```
 
-## Módulo Comunidade (Opcional)
+## Community Module (Optional)
 
 ```ini
-# Habilita/desabilita o módulo de comunidade (login, reviews de usuários, feed)
-# true = habilitado, false ou omitido = desabilitado (padrão)
+# Enables/disables the community module (login, user reviews, feed)
+# true = enabled, false or omitted = disabled (default)
 COMMUNITY_ENABLED=false
 ```
 
-> **Nota:** Quando desabilitado, todas as rotas `/comunidade`, `/painel`, `/api/auth/*`, `/api/reviews/*` e `user-reviews` retornam 404 e o middleware não carrega `currentUser`.
+> **Note:** When disabled, all `/community`, `/dashboard`, `/api/auth/*`, `/api/reviews/*`, and `user-reviews` routes return 404 and the middleware does not load `currentUser`.
 
-## Como Configurar
+## How to Configure
 
-### Desenvolvimento Local
+### Local Development
 
-1. Copie `.env.example` para `.env`:
+1. Copy `.env.example` to `.env`:
    ```bash
    cp .env.example .env
    ```
-2. Copie também para **`.dev.vars`** (obrigatório para o runtime Cloudflare Workers):
+2. Also copy to **`.dev.vars`** (required for the Cloudflare Workers runtime):
    ```bash
    cp .env.example .dev.vars
    ```
-3. Preencha os valores com suas credenciais
-4. Ambos os arquivos estão no `.gitignore` (não commitar)
+3. Fill in the values with your credentials
+4. Both files are in `.gitignore` (do not commit)
 
-> **`.dev.vars`** é exigido pelo runtime Cloudflare Workers (miniflare) usado pelo `@astrojs/cloudflare`. Sem ele, `import.meta.env.TURSO_DATABASE_URL` será `undefined` e a inicialização falhará.
+> **`.dev.vars`** is required by the Cloudflare Workers runtime (miniflare) used by `@astrojs/cloudflare`. Without it, `import.meta.env.TURSO_DATABASE_URL` will be `undefined` and initialization will fail.
 
-### Produção (Cloudflare Workers)
+### Production (Cloudflare Workers)
 
-Configure os secrets no Worker via `pnpm wrangler secret put <NOME>`. Veja [vercel.md](./vercel.md) para detalhes do deploy.
+Configure Worker secrets via `pnpm wrangler secret put <NAME>`. See [vercel.md](./vercel.md) for deployment details.
 
-> **Importante:** No runtime Cloudflare Workers, `import.meta.env` não expõe secrets automaticamente. Os módulos usam o padrão `import.meta.env.X || process.env.X`.
+> **Important:** In the Cloudflare Workers runtime, `import.meta.env` does not expose secrets automatically. Modules use the pattern `import.meta.env.X || process.env.X`.
 
-## Obter Credenciais Turso
+## Getting Turso Credentials
 
 ```bash
-# Instalar Turso CLI
+# Install Turso CLI
 curl -sSfL https://get.turso.tech | bash
 
 # Login
 turso auth login
 
-# Listar bancos
+# List databases
 turso db list
 
-# Obter URL e token
-turso db show <nome-do-banco>
-turso db tokens create <nome-do-banco>
+# Get URL and token
+turso db show <database-name>
+turso db tokens create <database-name>
 ```
 
-## Diferença para o Backend (ctech_be)
+## Differences from the Backend (ctech_be)
 
-O ctech_fe **não** utiliza:
-- `ENCRYPTION_KEY` (só o backend precisa para criptografar chaves de IA)
-- `NEXTAUTH_SECRET` / `NEXTAUTH_URL` (o frontend usa JWT próprio com `jose`)
-- Chaves de API de provedores de IA (`GOOGLE_API_KEY`, `GROQ_API_KEY`, etc.)
+ctech_fe does **not** use:
+- `ENCRYPTION_KEY` (only the backend needs it to encrypt AI keys)
+- `NEXTAUTH_SECRET` / `NEXTAUTH_URL` (the frontend uses its own JWT with `jose`)
+- AI provider API keys (`GOOGLE_API_KEY`, `GROQ_API_KEY`, etc.)
 
-As únicas variáveis compartilhadas entre os dois projetos são `TURSO_DATABASE_URL` e `TURSO_AUTH_TOKEN`.
+The only shared variables between the two projects are `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN`.
