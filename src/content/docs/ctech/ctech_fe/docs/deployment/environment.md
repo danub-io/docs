@@ -6,7 +6,7 @@ O frontend requer as seguintes variáveis de ambiente:
 
 ## Obrigatórias
 
-```env
+```ini
 # URL do banco Turso (SQLite distribuído)
 # Obtida no dashboard do Turso (https://turso.tech)
 TURSO_DATABASE_URL=libsql://seu-banco-username.turso.io
@@ -22,7 +22,7 @@ AUTH_SECRET=********************************
 
 ## Google OAuth (Opcional)
 
-```env
+```ini
 # Client ID e Secret do Google OAuth
 # Obtidos no Google Cloud Console (https://console.cloud.google.com)
 GOOGLE_CLIENT_ID=seu-google-client-id
@@ -31,7 +31,7 @@ GOOGLE_CLIENT_SECRET=seu-google-client-secret
 
 ## Módulo Comunidade (Opcional)
 
-```env
+```ini
 # Habilita/desabilita o módulo de comunidade (login, reviews de usuários, feed)
 # true = habilitado, false ou omitido = desabilitado (padrão)
 COMMUNITY_ENABLED=false

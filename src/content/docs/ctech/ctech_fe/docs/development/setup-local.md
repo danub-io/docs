@@ -38,7 +38,7 @@ cp .env.example .env
 
 Edite `.env` com suas credenciais Turso:
 
-```env
+```ini
 TURSO_DATABASE_URL=libsql://seu-banco-usuario.turso.io
 TURSO_AUTH_TOKEN=seu-token-aqui
 ```
@@ -75,7 +75,7 @@ Para desenvolvimento offline, use SQLite local:
 
 1. Crie um arquivo `local.db` no projeto
 2. Aponte `.env` para ele:
-   ```env
+   ```ini
    TURSO_DATABASE_URL=file:./local.db
    TURSO_AUTH_TOKEN=
    ```

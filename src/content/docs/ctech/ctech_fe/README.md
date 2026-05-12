@@ -33,7 +33,7 @@ Interface pública de alta performance para o ecossistema CTECH. Construída com
 
 Copie `.env.example` para `.dev.vars` (exigido pelo runtime Cloudflare Workers):
 
-```env
+```ini
 TURSO_DATABASE_URL=libsql://seu-banco.turso.io
 TURSO_AUTH_TOKEN=seu-token-aqui
 AUTH_SECRET=seu-secret-jwt

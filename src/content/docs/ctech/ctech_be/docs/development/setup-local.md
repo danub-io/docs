@@ -38,7 +38,7 @@ cp .env.example .env
 
 Edite `.env` com suas credenciais:
 
-```env
+```ini
 TURSO_DATABASE_URL=libsql://seu-banco-usuario.turso.io
 TURSO_AUTH_TOKEN=seu-token-aqui
 ADMIN_SECRET=sua-chave-secreta
