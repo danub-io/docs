@@ -17,7 +17,7 @@ src/
 │   │   └── reviews/             # PressCard, CollapsibleReviewCard
 │   ├── layouts/                 # Layout, Navbar, Footer
 │   ├── lib/                     # DB connection, cache, logger, utilities (cn, scoreColor)
-│   ├── services/                # Global cached services (catalogService, menuService)
+│   ├── services/                # Global cached services (servicoCatalogo, servicoMenu)
 │   ├── styles/                  # Global CSS and design tokens (Tailwind v4)
 │   └── types/                   # Zod schemas and TypeScript types (product, review, guide)
 │
@@ -63,7 +63,7 @@ Astro/React Components (props → render)
 - **Never on the client:** The database is not accessed in the browser
 - **Components with `server:defer`** can fetch their own data (e.g., Trends, WhereToBuy)
 - **Error handling:** Services return `[]` or `null` on failure
-- **Aggregate function:** `productService.getFullProduct()` parallelizes 3 queries (product + press reviews + affiliates)
+- **Aggregate function:** `servicoProduto.getFullProduct()` parallelizes 3 queries (product + press reviews + affiliates)
 
 ## In-Memory Cache
 
@@ -71,11 +71,11 @@ Stampede-protected cache (Map-based TTL + shared `pendingFetch`):
 
 | Service | Method | TTL |
 |---------|--------|-----|
-| `catalogService` | `getCategories()` | 5 min |
-| `menuService` | `getMenu()` | 5 min |
-| `productService` | `getAllSlugs()` | 1h |
-| `guideService` | `getCategoriesWithGuides()` | 30 min |
-| `homeService` | `getFeaturedProduct()`, `getRecentProducts()` | 2 min |
+| `servicoCatalogo` | `getCategories()` | 5 min |
+| `servicoMenu` | `getMenu()` | 5 min |
+| `servicoProduto` | `getAllSlugs()` | 1h |
+| `servicoGuia` | `getCategoriesWithGuides()` | 30 min |
+| `servicoInicio` | `getFeaturedProduct()`, `getRecentProducts()` | 2 min |
 
 Cache is invalidated only on server restart.
 
@@ -87,21 +87,21 @@ Each domain has a service that encapsulates SQL queries and transformations.
 
 | Service | File | Functions |
 |---------|------|-----------|
-| `catalogService` | `src/core/services/catalogService.ts` | `getCategories()` |
-| `menuService` | `src/core/services/menuService.ts` | `getMenu()` |
+| `servicoCatalogo` | `src/core/services/servicoCatalogo.ts` | `getCategories()` |
+| `servicoMenu` | `src/core/services/servicoMenu.ts` | `getMenu()` |
 
 ### Module Services
 
 | Module | Service | Functions |
 |--------|---------|-----------|
-| Home | `homeService` | `getFeaturedProduct()`, `getRecentProducts()` |
-| Product | `productService` | `getProductBySlug()`, `getAllSlugs()`, `getPressReviews()`, `getUserReviews()`, `getAffiliates()`, `getFullProduct()` |
-| Category | `categoryService` + `categorySectionsService` | `getProductsByCategory()`, `getSections()` |
-| Guide | `guideService` | `getGuidesByCategory()`, `getGuideBySlug()`, `getGuideProducts()` |
-| Search | `searchService` | `search()` |
-| Compare | `comparisonService` | `getComparisonProducts()`, `getTopProducts()`, `getSearchSuggestions()` |
-| Community | `communityService` | `getRecentReviews()` |
-| Auth | `authService` | `verifyToken()`, `getUserById()`, `userToPublic()` |
+| Home | `servicoInicio` | `getFeaturedProduct()`, `getRecentProducts()` |
+| Product | `servicoProduto` | `getProductBySlug()`, `getAllSlugs()`, `getPressReviews()`, `getUserReviews()`, `getAffiliates()`, `getFullProduct()` |
+| Category | `servicoCategoria` + `categorySectionsService` | `getProductsByCategory()`, `getSections()` |
+| Guide | `servicoGuia` | `getGuidesByCategory()`, `getGuideBySlug()`, `getGuideProducts()` |
+| Search | `servicoBusca` | `search()` |
+| Compare | `servicoComparacao` | `getComparisonProducts()`, `getTopProducts()`, `getSearchSuggestions()` |
+| Community | `servicoComunidade` | `getRecentReviews()` |
+| Auth | `servicoAuth` | `verifyToken()`, `getUserById()`, `userToPublic()` |
 
 ## Islands Architecture
 
@@ -181,7 +181,7 @@ The project uses Astro Islands — interactive React components embedded in stat
 
 Module at `src/modules/auth/`:
 
-- `services/authService.ts` — Registration, login, 2FA verification (JWT with jose, bcryptjs, otplib)
+- `services/servicoAuth.ts` — Registration, login, 2FA verification (JWT with jose, bcryptjs, otplib)
 - `services/rateLimitService.ts` — Rate limiting (in-memory in dev, D1 in prod)
 - `services/cryptoService.ts` — Password hashing, JWT, 2FA
 

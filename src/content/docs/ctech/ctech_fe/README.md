@@ -110,11 +110,11 @@ In-memory cache (Map) with stampede protection (shared `pendingFetch`):
 
 | Service | Cached Methods | TTL |
 |---------|---------------|-----|
-| `catalogService` | `getCategories()` | 5 min |
-| `menuService` | `getMenu()` | 5 min |
-| `productService` | `getAllSlugs()` | 1h |
-| `guideService` | `getCategoriesWithGuides()` | 30 min |
-| `homeService` | `getFeaturedProduct()`, `getRecentProducts()` | 2 min |
+| `servicoCatalogo` | `getCategories()` | 5 min |
+| `servicoMenu` | `getMenu()` | 5 min |
+| `servicoProduto` | `getAllSlugs()` | 1h |
+| `servicoGuia` | `getCategoriesWithGuides()` | 30 min |
+| `servicoInicio` | `getFeaturedProduct()`, `getRecentProducts()` | 2 min |
 
 Cache is invalidated only on server restart (in-memory only).
 

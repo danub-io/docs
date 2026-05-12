@@ -13,13 +13,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - **Typography System (RT-inspired):** 14 `type-*` utility classes in
   `src/core/styles/global.css`
 - **Font tokens:** `--font-body` and `--font-display` in Tailwind `@theme inline`
-- **Slug cache (1h):** `productService.getAllSlugs()`
-- **Category-with-guides cache (30min):** `guideService.getCategoriesWithGuides()`
+- **Slug cache (1h):** `servicoProduto.getAllSlugs()`
+- **Category-with-guides cache (30min):** `servicoGuia.getCategoriesWithGuides()`
 - **Aggregate function `getFullProduct`:** Parallelizes 3 queries (product + reviews + affiliates)
 - **Recommendation Guide Hub:** Category pages as editorial hubs with guide cards
 - **`/guide/[slug]` route:** Individual guide pages with Schema.org `ItemList`
 - **`Guides` and `Guide_Products` tables:** Turso entities for the guide system
-- **`guideService.ts`:** Full service with 4 query methods
+- **`servicoGuia.ts`:** Full service with 4 query methods
 - **Components:** `GuideCard.astro`, `GuideGroup.astro`, `GuideHeader.astro`
 - **User Reviews:** Section on product page + `/product/[slug]/user-reviews` page
 - **Components:** `ProductUserReviews.astro`, `PressReviewCard.astro`
@@ -66,7 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Removes unused `fill` prop in apple-cards-carousel
 - Fixes Base UI v1.4.1 types (sideOffset, delay, ItemIndicator) and SubMenuItem
 - Disables no-unsafe-function-type in test files
-- Removes unused catch variable in authService
+- Removes unused catch variable in servicoAuth
 - Allows any and unused vars in test files (eslint)
 - Fixes build_section regex to avoid false positives in changelog
 - Hamburger opens with native Drawer, hero with client:load, categories with border
@@ -107,7 +107,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Removes unused `fill` prop in apple-cards-carousel
 - Fixes Base UI v1.4.1 types (sideOffset, delay, ItemIndicator) and SubMenuItem
 - Disables no-unsafe-function-type in test files
-- Removes unused catch variable in authService
+- Removes unused catch variable in servicoAuth
 - Allows any and unused vars in test files (eslint)
 - Fixes build_section regex to avoid false positives in changelog
 - Hamburger opens with native Drawer, hero with client:load, categories with border

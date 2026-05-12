@@ -12,7 +12,7 @@ Search is **server-side** (SSR): the form submits query params to `/search`, and
 
 ## Service
 
-**File:** `src/modules/search/services/searchService.ts`
+**File:** `src/modules/search/services/servicoBusca.ts`
 
 ### Interface
 
@@ -52,9 +52,9 @@ interface SearchResult {
 ### Usage Example
 
 ```typescript
-import { searchService } from '@/modules/search/services/searchService';
+import { servicoBusca } from '@/modules/search/services/servicoBusca';
 
-const result = await searchService.search({
+const result = await servicoBusca.search({
   search: 'notebook',
   sort: 'rating',
   category: 'Notebook',
@@ -77,7 +77,7 @@ const result = await searchService.search({
 
 ## Route
 
-`/search` — Astro page that reads query params (`q`, `category`, `sort`, `page`), calls `searchService.search()`, and renders the components.
+`/search` — Astro page that reads query params (`q`, `category`, `sort`, `page`), calls `servicoBusca.search()`, and renders the components.
 
 ## Example URLs
 

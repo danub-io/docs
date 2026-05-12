@@ -39,22 +39,22 @@ Each domain has a service that encapsulates SQL queries and transformations.
 
 | Service | File | Functions | Cache | Description |
 |---------|------|-----------|-------|-------------|
-| `catalogService` | `src/core/services/catalogService.ts` | `getCategories()` | 5 min | Lists unique categories |
-| `menuService` | `src/core/services/menuService.ts` | `getMenu()` | 5 min | Navigation menu with subcategories |
-| `productService` | `src/modules/product/services/productService.ts` | `getAllSlugs()` | 1h | Product slugs for pre-rendering |
-| `guideService` | `src/modules/guide/services/guideService.ts` | `getCategoriesWithGuides()` | 30 min | Categories with at least 1 active guide |
+| `servicoCatalogo` | `src/core/services/servicoCatalogo.ts` | `getCategories()` | 5 min | Lists unique categories |
+| `servicoMenu` | `src/core/services/servicoMenu.ts` | `getMenu()` | 5 min | Navigation menu with subcategories |
+| `servicoProduto` | `src/modules/product/services/servicoProduto.ts` | `getAllSlugs()` | 1h | Product slugs for pre-rendering |
+| `servicoGuia` | `src/modules/guide/services/servicoGuia.ts` | `getCategoriesWithGuides()` | 30 min | Categories with at least 1 active guide |
 
 ### Module Services
 
 | Module | Service | Functions | Cache | Description |
 |--------|---------|-----------|-------|-------------|
-| **Home** | `homeService` | `getFeaturedProduct()`, `getRecentProducts()` | 2 min | Featured and recent products |
-| **Compare** | `comparisonService` | `getComparisonProducts(ids)`, `getTopProducts(limit)`, `getSearchSuggestions(query)` | — | Comparison and search |
-| **Category** | `categoryService` | `getProductsByCategory(category, filters?)`, `getProductsGroupedByTier(category, filters?)`, `getTierLabel(tier)` | — | Category pages |
-| **Search** | `searchService` | `search(filters)` | — | Full-text search with pagination and facets |
-| **Product** | `productService` | `getProductBySlug(slug)`, `getAllSlugs()`, `getPressReviews(productId)`, `getUserReviews(productId)`, `getAffiliates(productId)`, `getFullProduct(slug)` | — (1h slugs) | Product pages, reviews, affiliates, and aggregate function |
-| **Guide** | `guideService` | `getGuidesByCategory(category)`, `getGuideBySlug(slug)`, `getGuideProducts(guideId)`, `getAllActiveGuides()`, `getCategoriesWithGuides()` | — (30min cats) | Recommendation guides |
-| **Community** | `communityService` | `getRecentReviews(limit)` | — | Community feed |
+| **Home** | `servicoInicio` | `getFeaturedProduct()`, `getRecentProducts()` | 2 min | Featured and recent products |
+| **Compare** | `servicoComparacao` | `getComparisonProducts(ids)`, `getTopProducts(limit)`, `getSearchSuggestions(query)` | — | Comparison and search |
+| **Category** | `servicoCategoria` | `getProductsByCategory(category, filters?)`, `getProductsGroupedByTier(category, filters?)`, `getTierLabel(tier)` | — | Category pages |
+| **Search** | `servicoBusca` | `search(filters)` | — | Full-text search with pagination and facets |
+| **Product** | `servicoProduto` | `getProductBySlug(slug)`, `getAllSlugs()`, `getPressReviews(productId)`, `getUserReviews(productId)`, `getAffiliates(productId)`, `getFullProduct(slug)` | — (1h slugs) | Product pages, reviews, affiliates, and aggregate function |
+| **Guide** | `servicoGuia` | `getGuidesByCategory(category)`, `getGuideBySlug(slug)`, `getGuideProducts(guideId)`, `getAllActiveGuides()`, `getCategoriesWithGuides()` | — (30min cats) | Recommendation guides |
+| **Community** | `servicoComunidade` | `getRecentReviews(limit)` | — | Community feed |
 
 ## Types and Validation
 
@@ -85,8 +85,8 @@ export type Product = z.infer<typeof ProductSchema>;
 | `CommunityReviewSchema` | `src/core/types/review.ts` | Review with product name (JOIN) |
 | `GuideSchema` | `src/core/types/guide.ts` | Recommendation guide |
 | `GuideProductSchema` | `src/core/types/guide.ts` | Guide-to-product relationship |
-| `CategorySchema` | `src/core/services/catalogService.ts` | Product category |
-| `AffiliateSchema` | `src/modules/product/services/productService.ts` | Affiliate (store, price, link) |
+| `CategorySchema` | `src/core/services/servicoCatalogo.ts` | Product category |
+| `AffiliateSchema` | `src/modules/product/services/servicoProduto.ts` | Affiliate (store, price, link) |
 
 ### Return Types
 
@@ -101,7 +101,7 @@ All services follow the pattern:
 The project uses an in-memory cache with TTL on specific services. To prevent **cache stampede** (multiple requests hitting the database simultaneously when the cache expires), each cache shares a `pendingFetch` across concurrent requests:
 
 ```typescript
-// Implementation pattern (e.g., catalogService)
+// Implementation pattern (e.g., servicoCatalogo)
 let cached: Category[] | null = null;
 let lastFetch = 0;
 let pendingFetch: Promise<Category[]> | null = null;
@@ -129,11 +129,11 @@ async getData() {
 
 | Service | Cached methods | TTL |
 |---------|----------------|-----|
-| `catalogService` | `getCategories()` | 5 min |
-| `menuService` | `getMenu()` | 5 min |
-| `productService` | `getAllSlugs()` | 1h |
-| `guideService` | `getCategoriesWithGuides()` | 30 min |
-| `homeService` | `getFeaturedProduct()`, `getRecentProducts()` | 2 min |
+| `servicoCatalogo` | `getCategories()` | 5 min |
+| `servicoMenu` | `getMenu()` | 5 min |
+| `servicoProduto` | `getAllSlugs()` | 1h |
+| `servicoGuia` | `getCategoriesWithGuides()` | 30 min |
+| `servicoInicio` | `getFeaturedProduct()`, `getRecentProducts()` | 2 min |
 
 Cache is invalidated only on server restart. Dynamic data (product, reviews, affiliates) does not use caching — it queries the database on every SSR request.
 

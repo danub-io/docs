@@ -28,7 +28,7 @@ src/modules/community/
 │   │   ├── UserMenu.tsx             # Authenticated user menu
 │   │   └── DashboardPanel.tsx       # Dashboard panel
 │   ├── services/
-│   │   ├── authService.ts           # Authentication (JWT, OAuth, 2FA)
+│   │   ├── servicoAuth.ts           # Authentication (JWT, OAuth, 2FA)
 │   │   ├── rateLimitService.ts      # Rate limiting
 │   │   └── cryptographyService.ts   # TOTP cryptography
 │   └── schemas/
@@ -40,13 +40,13 @@ src/modules/community/
 │   │   ├── ProductUserReviews.astro          # Review section on product page
 │   │   └── CollapsibleReviewCard.tsx          # Review card with expand/collapse
 │   └── services/
-│       └── reviewsService.ts        # User review CRUD
+│       └── servicoReviews.ts        # User review CRUD
 ├── feed/
 │   ├── components/
 │   │   ├── ReviewsFeed.astro     # Recent reviews feed
 │   │   └── CommunityHeader.astro # Community page header
 │   └── services/
-│       └── communityService.ts     # Feed queries
+│       └── servicoComunidade.ts     # Feed queries
 ├── index.ts                         # Public barrel
 ├── feature.ts                       # COMMUNITY_ENABLED() function
 └── __tests__/                       # Module tests
@@ -69,7 +69,7 @@ pnpm wrangler secret put COMMUNITY_ENABLED
 - **DB**: Uses the same Turso connection (`@/core/lib/db`) as the rest of the site
 - **Middleware**: `src/middleware.ts` imports `COMMUNITY_ENABLED` to control rate limiting, CSRF, and currentUser
 - **Components**: `WriteReviewButton` and `ProductUserReviews` are conditionally rendered in `[slug].astro`
-- **Cache**: `reviewsService.ts` has its own cache independent of `productService.ts`
+- **Cache**: `servicoReviews.ts` has its own cache independent of `servicoProduto.ts`
 
 ## UI States
 
