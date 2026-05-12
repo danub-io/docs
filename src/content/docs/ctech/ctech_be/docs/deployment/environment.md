@@ -1,26 +1,24 @@
 ---
-title: "Configuração de Variáveis de Ambiente"
+title: "Environment Variables Configuration"
 ---
 
+## `.env.example` File
 
-
-## Arquivo `.env.example`
-
-O projeto deve conter um arquivo `.env.example` na raiz com todas as variáveis necessárias:
+The project must include an `.env.example` file at the root with all required variables:
 
 ```bash
-# Banco de Dados (Turso)
-TURSO_DATABASE_URL=libsql://seu-banco.turso.io
+# Database (Turso)
+TURSO_DATABASE_URL=libsql://your-database.turso.io
 TURSO_AUTH_TOKEN=eyJhbGciOiJF...
 
-# Criptografia (AES-256-CBC)
+# Encryption (AES-256-CBC)
 ENCRYPTION_KEY=1234567890abcdef1234567890abcdef
 
 # NextAuth
-NEXTAUTH_SECRET=seu-secret-aqui-32-chars-minimum
+NEXTAUTH_SECRET=your-secret-here-32-chars-minimum
 NEXTAUTH_URL=http://localhost:3000
 
-# Opcionais (Provedores de IA)
+# Optional (AI Providers)
 GOOGLE_API_KEY=AIza...
 GROQ_API_KEY=gsk_...
 CEREBRAS_API_KEY=...
@@ -31,48 +29,48 @@ GITHUB_TOKEN=ghp_...
 PINO_LOG_LEVEL=info  # trace|debug|info|warn|error|fatal
 ```
 
-## Como Configurar
+## How to Configure
 
-### Desenvolvimento Local
+### Local Development
 
-1. Copie o exemplo:
+1. Copy the example:
 ```bash
 cp .env.example .env
 ```
 
-2. Preencha com seus valores reais
-3. O arquivo `.env` está no `.gitignore` (não commitar!)
+2. Fill in your actual values
+3. The `.env` file is in `.gitignore` (do not commit!)
 
-### Produção (Vercel)
+### Production (Vercel)
 
-Adicione via dashboard ou CLI:
+Add via dashboard or CLI:
 ```bash
 vercel env add TURSO_DATABASE_URL
 vercel env add TURSO_AUTH_TOKEN
-# ... repetir para cada variável
+# ... repeat for each variable
 ```
 
-### Verificação
+### Verification
 
-Ao iniciar o projeto, verifique se todas as variáveis estão carregadas:
+When starting the project, verify that all variables are loaded:
 ```bash
 pnpm dev
-# Verifique os logs de inicialização
+# Check the startup logs
 ```
 
-## Variáveis Obrigatórias vs Opcionais
+## Required vs Optional Variables
 
-### Obrigatórias
+### Required
 - `TURSO_DATABASE_URL`
 - `TURSO_AUTH_TOKEN`
-- `ENCRYPTION_KEY` (32 caracteres hex = 16 bytes)
+- `ENCRYPTION_KEY` (32 hex characters = 16 bytes)
 - `NEXTAUTH_SECRET`
 
-### Opcionais
-- Chaves de API para provedores de IA (configuradas via M8)
-- `PINO_LOG_LEVEL` (padrão: `info`)
+### Optional
+- API keys for AI providers (configured via M8)
+- `PINO_LOG_LEVEL` (default: `info`)
 
-## Gerar Chaves Seguras
+## Generating Secure Keys
 
 ```bash
 # ENCRYPTION_KEY (16 bytes = 32 hex chars)
