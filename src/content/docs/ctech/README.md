@@ -1,36 +1,36 @@
 ---
-title: "CTECH — Ecossistema de Curadoria Técnica de Hardware"
+title: "CTECH — Hardware Curation Ecosystem"
 ---
 
-Bem-vindo ao **CTECH** (TechReveal), um ecossistema automatizado para análise, comparação e curadoria de hardware. Este projeto utiliza Inteligência Artificial e automação web para transformar dados brutos em insights comerciais valiosos.
+Welcome to **CTECH** (TechReveal), an automated ecosystem for hardware analysis, comparison, and curation. This project leverages Artificial Intelligence and web automation to turn raw data into valuable business insights.
 
-## Estrutura do Projeto
+## Project Structure
 
-O ecossistema é dividido em dois repositórios principais que compartilham o mesmo banco de dados **Turso (SQLite)**.
+The ecosystem is split into two main repositories that share the same **Turso (SQLite)** database.
 
-| Repositório | Tecnologia | Papel no Ecossistema |
+| Repository | Technology | Role in the Ecosystem |
 | :--- | :--- | :--- |
-| [**ctech_be**](./ctech_be) | Next.js 16+, Turso, Pino | **Backend / Painel:** Automação (M1-M6), Scrapers e Processamento de IA |
-| [**ctech_fe**](./ctech_fe) | Astro 6+, React 19, Tailwind v4 | **Frontend / Público:** Interface de alta performance otimizada para SEO |
+| [**ctech_be**](./ctech_be) | Next.js 16+, Turso, Pino | **Backend / Panel:** Automation (M1-M6), Scrapers, and AI Processing |
+| [**ctech_fe**](./ctech_fe) | Astro 6+, React 19, Tailwind v4 | **Frontend / Public:** High-performance interface optimized for SEO |
 
-## Fluxo de Dados
+## Data Flow
 
 ```
 ctech_be (Server Actions) → Turso DB (SQLite) ← ctech_fe (Astro SSR)
 ```
 
-O **Backend** injeta dados processados (reviews, preços, imagens). O **Frontend** lê esses dados em tempo real via Server-side Rendering (SSR).
+The **Backend** injects processed data (reviews, prices, images). The **Frontend** reads that data in real-time via Server-side Rendering (SSR).
 
 ## ADRs (Architecture Decision Records)
 
-- **ADR-001:** Escolha do Turso (SQLite distribuído) como banco de dados
-- **ADR-002:** Adoção de Astro Islands para o frontend
-- **ADR-003:** Estrutura modular (Vibecoding) para desenvolvimento com IA
-- **ADR-004:** Cache em memória com proteção contra stampede
+- **ADR-001:** Choosing Turso (distributed SQLite) as the database
+- **ADR-002:** Adopting Astro Islands for the frontend
+- **ADR-003:** Modular structure (Vibecoding) for AI-assisted development
+- **ADR-004:** In-memory cache with stampede protection
 
-## Documentação
+## Documentation
 
-| Projeto | Documentos |
+| Project | Documents |
 |---------|-----------|
 | **ctech_fe** | [README](./ctech_fe/README.md), [ARCHITECTURE](./ctech_fe/ARCHITECTURE.md), [CONTRIBUTING](./ctech_fe/CONTRIBUTING.md), [DATA_LAYER](./ctech_fe/DATA_LAYER.md), [CHANGELOG](./ctech_fe/CHANGELOG.md) |
 | **ctech_be** | [README](./ctech_be/README.md), [ARCHITECTURE](./ctech_be/ARCHITECTURE.md), [CONTRIBUTING](./ctech_be/CONTRIBUTING.md), [API](./ctech_be/API.md), [CHANGELOG](./ctech_be/CHANGELOG.md) |

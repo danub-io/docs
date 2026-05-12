@@ -1,81 +1,81 @@
 ---
-title: "Editora Web - Interface Web"
+title: "Editora Web — Web Interface"
 ---
 
 
 
-Interface web moderna para a Editora, construída com Next.js, Tailwind CSS e shadcn/ui.
+Modern web interface for Editora, built with Next.js, Tailwind CSS, and shadcn/ui.
 
-## 🚀 Tecnologias
+## Technologies
 
-- **Next.js 16** - Framework React full-stack
-- **TypeScript** - Type safety
-- **Tailwind CSS** - Estilização utility-first
-- **shadcn/ui** - Componentes acessíveis
-- **Tiptap** - Editor de texto rico
-- **Zustand** - Gerenciamento de estado
-- **Drizzle ORM** - Banco de dados (SQLite)
+- **Next.js 16** — Full-stack React framework
+- **TypeScript** — Type safety
+- **Tailwind CSS** — Utility-first styling
+- **shadcn/ui** — Accessible components
+- **Tiptap** — Rich text editor
+- **Zustand** — State management
+- **Drizzle ORM** — Database (SQLite)
 
-## 📦 Instalação
+## Installation
 
 ```bash
-# Instalar dependências
+# Install dependencies
 pnpm install
 
-# Rodar em desenvolvimento
+# Run in development
 pnpm dev
 
-# Build de produção
+# Production build
 pnpm build
 
-# Iniciar produção
+# Start production
 pnpm start
 ```
 
-## 🏗️ Estrutura
+## Project Structure
 
 ```
 src/
 ├── app/                    # Next.js App Router
-│   ├── layout.tsx          # Layout raiz
-│   ├── page.tsx            # Página inicial
-│   └── globals.css         # Estilos globais
+│   ├── layout.tsx          # Root layout
+│   ├── page.tsx            # Home page
+│   └── globals.css         # Global styles
 ├── components/
-│   └── ui/                 # Componentes shadcn/ui
+│   └── ui/                 # shadcn/ui components
 ├── lib/
-│   └── utils.ts            # Utilitários
+│   └── utils.ts            # Utilities
 ├── stores/
 │   └── projectStore.ts     # Zustand store
 └── types/
     └── index.ts            # TypeScript types
 ```
 
-## 🎨 Design System
+## Design System
 
-### Cores
-- **Primary**: Azul (#3B82F6)
-- **Secondary**: Cinza (#64748B)
-- **Background**: Branco/Cinza claro
-- **Text**: Cinza escuro
+### Colors
+- **Primary**: Blue (#3B82F6)
+- **Secondary**: Gray (#64748B)
+- **Background**: White/Light gray
+- **Text**: Dark gray
 
-### Tipografia
+### Typography
 - **Interface**: Inter (sans-serif)
 - **Editor**: Georgia (serif)
 
-## 📱 Funcionalidades
+## Features
 
-- **Gerenciamento de projetos** — Criar, editar e organizar projetos de livros
-- **Editor de capítulos** — Editor rico com Tiptap, barra de formatação e lista de capítulos
-- **Ferramentas narrativas** — Banco de personagens, locais, timeline e anotações
-- **IA integrada** — Edição, proofreading e sugestões via backend Python
-- **Exportação** — Geração de PDF e EPUB
+- **Project management** — Create, edit, and organize book projects
+- **Chapter editor** — Rich editor with Tiptap, formatting toolbar, and chapter list
+- **Narrative tools** — Character database, locations, timeline, and notes
+- **Integrated AI** — Editing, proofreading, and suggestions via Python backend
+- **Export** — PDF and EPUB generation
 
-## 🔗 Integração com Backend
+## Backend Integration
 
-A interface se comunica com o backend Python através de API REST:
+The interface communicates with the Python backend via REST API:
 
 ```typescript
-// Exemplo de chamada
+// Example call
 const response = await fetch('/api/ai/edit', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
@@ -86,6 +86,6 @@ const response = await fetch('/api/ai/edit', {
 });
 ```
 
-## 📄 Licença
+## License
 
 MIT

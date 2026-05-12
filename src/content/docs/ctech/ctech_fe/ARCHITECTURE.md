@@ -1,233 +1,233 @@
 ---
-title: "Arquitetura — CTECH Frontend"
+title: "Architecture — CTECH Frontend"
 ---
 
-Este documento detalha as decisões arquiteturais, fluxo de dados e padrões de desenvolvimento do frontend.
+This document details the architectural decisions, data flow, and development patterns for the frontend.
 
-## Design Modular e Vibecoding
+## Modular Design and Vibecoding
 
-O projeto foi estruturado para manter baixo custo cognitivo para desenvolvimento assistido por IA, com isolamento claro entre módulos.
+The project is structured to keep cognitive load low for AI-assisted development, with clear isolation between modules.
 
-### Estrutura de Diretórios
+### Directory Structure
 
 ```
 src/
-├── core/                        # Infraestrutura e base do sistema
-│   ├── ui/                      # Componentes ShadCN (button, card, badge, etc.)
-│   │   └── reviews/             # CartaoImprensa, CartaoAvaliacaoColapsavel
+├── core/                        # System infrastructure and foundation
+│   ├── ui/                      # ShadCN components (button, card, badge, etc.)
+│   │   └── reviews/             # PressCard, CollapsibleReviewCard
 │   ├── layouts/                 # Layout, Navbar, Footer
-│   ├── lib/                     # Conexão DB, cache, logger, utilitários (cn, corNota)
-│   ├── services/                # Serviços globais com cache (servicoCatalogo, servicoMenu)
-│   ├── styles/                  # CSS Global e design tokens (Tailwind v4)
-│   └── types/                   # Schemas Zod e tipos TypeScript (product, avaliacao, guia)
+│   ├── lib/                     # DB connection, cache, logger, utilities (cn, scoreColor)
+│   ├── services/                # Global cached services (catalogService, menuService)
+│   ├── styles/                  # Global CSS and design tokens (Tailwind v4)
+│   └── types/                   # Zod schemas and TypeScript types (product, review, guide)
 │
-├── modules/                     # Domínios isolados por funcionalidade
-│   ├── inicio/                  # Página inicial (Hero, Categorias, Tendencias)
-│   ├── produto/                 # Páginas de detalhes do produto
-│   ├── categoria/               # Páginas de categoria com agrupamento por labels
-│   ├── guia/                    # Guias de recomendação editoriais
-│   ├── comparar/                # Motor de comparação de produtos
-│   ├── comunidade/              # Feed da comunidade
-│   ├── auth/                    # Autenticação (serviços, componentes, schemas)
-│   └── rolagem_horizontal/      # Componentes de carrossel horizontal
+├── modules/                     # Isolated feature domains
+│   ├── home/                    # Home page (Hero, Categories, Trends)
+│   ├── product/                 # Product detail pages
+│   ├── category/                # Category pages with label grouping
+│   ├── guide/                   # Editorial recommendation guides
+│   ├── compare/                 # Product comparison engine
+│   ├── community/               # Community feed
+│   ├── auth/                    # Authentication (services, components, schemas)
+│   └── horizontalScroll/        # Horizontal carousel components
 │
-├── pages/                       # Camada de roteamento (Astro)
+├── pages/                       # Routing layer (Astro)
 │   ├── index.astro              # Home
-│   ├── [categoria]/[slug]       # Produto individual
-│   ├── [categoria]/             # Listagem por categoria
-│   ├── guia/[slug].astro        # Guia individual
-│   ├── painel/                  # Painel do usuário
-│   └── api/auth/                # Endpoints de autenticação
+│   ├── [category]/[slug]        # Individual product
+│   ├── [category]/              # Category listing
+│   ├── guide/[slug].astro       # Individual guide
+│   ├── dashboard/               # User dashboard
+│   └── api/auth/                # Authentication endpoints
 ```
 
-### Metodologia "Vibecoding"
+### Vibecoding Methodology
 
-1. **Isolamento de Escopo:** Forneça apenas o contexto do módulo relevante para a IA
-2. **Modificações Locais:** Evite alterar `@core/*` a menos que estritamente necessário
-3. **Contratos Claros:** Componentes em `@modules` recebem dados via props tratadas nas páginas
+1. **Scope Isolation:** Only provide the relevant module context to the AI
+2. **Local Modifications:** Avoid changing `@core/*` unless strictly necessary
+3. **Clear Contracts:** Components in `@modules` receive data via props handled at the page level
 
-## Fluxo de Dados
+## Data Flow
 
 ```
-Turso DB (libsql) ← ctech_be (escrita)
-    ↑↓ SSR queries (parametrizadas com placeholders ?)
+Turso DB (libsql) ← ctech_be (writes)
+    ↑↓ SSR queries (parameterized with ? placeholders)
     ↓
 Services (try/catch → safeParse Zod)
     ↓
-Páginas Astro (chamadas SSR no frontmatter)
+Astro Pages (SSR calls in frontmatter)
     ↓
-Componentes Astro/React (props → render)
+Astro/React Components (props → render)
 ```
 
-- **Server-Side Rendering:** Todo dado é buscado no frontmatter de páginas Astro
-- **Nunca em cliente:** O banco não é acessado no navegador
-- **Componentes com `server:defer`** podem buscar dados próprios (ex: Tendencias, ProdutoOndeComprar)
-- **Tratamento de erros:** Serviços retornam `[]` ou `null` em caso de falha
-- **Função agregada:** `servicoProduto.obterProdutoCompleto()` paraleliza 3 queries (produto + reviews críticas + afiliados)
+- **Server-Side Rendering:** All data is fetched in Astro page frontmatter
+- **Never on the client:** The database is not accessed in the browser
+- **Components with `server:defer`** can fetch their own data (e.g., Trends, WhereToBuy)
+- **Error handling:** Services return `[]` or `null` on failure
+- **Aggregate function:** `productService.getFullProduct()` parallelizes 3 queries (product + press reviews + affiliates)
 
-## Cache em Memória
+## In-Memory Cache
 
-Cache com proteção contra stampede (Map-based TTL + `pendingFetch` compartilhado):
+Stampede-protected cache (Map-based TTL + shared `pendingFetch`):
 
-| Serviço | Método | TTL |
+| Service | Method | TTL |
 |---------|--------|-----|
-| `servicoCatalogo` | `obterCategorias()` | 5 min |
-| `servicoMenu` | `obterMenu()` | 5 min |
-| `servicoProduto` | `obterTodosSlugs()` | 1h |
-| `servicoGuia` | `obterCategoriasComGuias()` | 30 min |
-| `servicoInicio` | `obterProdutoDestaque()`, `obterProdutosRecentes()` | 2 min |
+| `catalogService` | `getCategories()` | 5 min |
+| `menuService` | `getMenu()` | 5 min |
+| `productService` | `getAllSlugs()` | 1h |
+| `guideService` | `getCategoriesWithGuides()` | 30 min |
+| `homeService` | `getFeaturedProduct()`, `getRecentProducts()` | 2 min |
 
-Cache é invalidado apenas no restart do servidor.
+Cache is invalidated only on server restart.
 
-## Serviços
+## Services
 
-Cada domínio possui um serviço que encapsula consultas SQL e transformações.
+Each domain has a service that encapsulates SQL queries and transformations.
 
 ### Core Services
 
-| Serviço | Arquivo | Funções |
-|---------|---------|---------|
-| `servicoCatalogo` | `src/core/services/servicoCatalogo.ts` | `obterCategorias()` |
-| `servicoMenu` | `src/core/services/servicoMenu.ts` | `obterMenu()` |
+| Service | File | Functions |
+|---------|------|-----------|
+| `catalogService` | `src/core/services/catalogService.ts` | `getCategories()` |
+| `menuService` | `src/core/services/menuService.ts` | `getMenu()` |
 
 ### Module Services
 
-| Módulo | Serviço | Funções |
-|--------|---------|---------|
-| Início | `servicoInicio` | `obterProdutoDestaque()`, `obterProdutosRecentes()` |
-| Produto | `servicoProduto` | `obterProdutoPorSlug()`, `obterTodosSlugs()`, `obterAvaliacoesCriticas()`, `obterAvaliacoesUsuarios()`, `obterAfiliados()`, `obterProdutoCompleto()` |
-| Categoria | `servicoCategoria` + `servicoSecoesCategoria` | `obterProdutosPorCategoria()`, `obterSecoes()` |
-| Guia | `servicoGuia` | `obterGuiasPorCategoria()`, `obterGuiaPorSlug()`, `obterProdutosDoGuia()` |
-| Busca | `servicoBusca` | `buscar()` |
-| Comparar | `servicoComparacao` | `obterProdutosComparacao()`, `obterTopProdutos()`, `obterSugestoesBusca()` |
-| Comunidade | `servicoComunidade` | `obterAvaliacoesRecentes()` |
-| Auth | `servicoAuth` | `verificarToken()`, `buscarUsuarioPorId()`, `usuarioParaPublico()` |
+| Module | Service | Functions |
+|--------|---------|-----------|
+| Home | `homeService` | `getFeaturedProduct()`, `getRecentProducts()` |
+| Product | `productService` | `getProductBySlug()`, `getAllSlugs()`, `getPressReviews()`, `getUserReviews()`, `getAffiliates()`, `getFullProduct()` |
+| Category | `categoryService` + `categorySectionsService` | `getProductsByCategory()`, `getSections()` |
+| Guide | `guideService` | `getGuidesByCategory()`, `getGuideBySlug()`, `getGuideProducts()` |
+| Search | `searchService` | `search()` |
+| Compare | `comparisonService` | `getComparisonProducts()`, `getTopProducts()`, `getSearchSuggestions()` |
+| Community | `communityService` | `getRecentReviews()` |
+| Auth | `authService` | `verifyToken()`, `getUserById()`, `userToPublic()` |
 
 ## Islands Architecture
 
-O projeto usa Astro Islands — componentes React interativos ilhados em HTML estático:
+The project uses Astro Islands — interactive React components embedded in static HTML:
 
-| Tipo | Uso | Hidratação |
-|------|-----|-----------|
-| **Astro nativo** | Layouts, páginas, listas | Zero JS no cliente |
-| **React Island** | NotaBadge, CartaoAvaliacaoColapsavel | `client:visible` ou `client:idle` |
-| **React Interativo** | LoginDialog, UserMenu, SearchCommand | `client:load` / `client:idle` |
+| Type | Usage | Hydration |
+|------|-------|-----------|
+| **Native Astro** | Layouts, pages, lists | Zero JS on client |
+| **React Island** | ScoreBadge, CollapsibleReviewCard | `client:visible` or `client:idle` |
+| **Interactive React** | LoginDialog, UserMenu, SearchCommand | `client:load` / `client:idle` |
 
-### Critério de Escolha
+### Selection Criteria
 
-- Prefira **Astro** puro para componentes de apresentação
-- Use **React** apenas quando precisar de estado, eventos ou hooks
-- Priorize `client:visible` sobre `client:load` para performance
+- Prefer **Astro** for presentation components
+- Use **React** only when state, events, or hooks are needed
+- Prefer `client:visible` over `client:load` for performance
 
-## Tipos e Validação (Zod v4)
+## Types and Validation (Zod v4)
 
-| Schema | Arquivo | Uso |
-|--------|---------|-----|
-| `ProductSchema` | `src/core/types/product.ts` | Validação de produtos |
-| `AvaliacaoSchema` | `src/core/types/avaliacao.ts` | Reviews de imprensa e usuários |
-| `GuiaSchema` | `src/core/types/guia.ts` | Guias de recomendação |
-| `LabelSchema` | `src/core/types/label.ts` | Labels de categoria |
+| Schema | File | Usage |
+|--------|------|-------|
+| `ProductSchema` | `src/core/types/product.ts` | Product validation |
+| `ReviewSchema` | `src/core/types/review.ts` | Press and user reviews |
+| `GuideSchema` | `src/core/types/guide.ts` | Recommendation guides |
+| `LabelSchema` | `src/core/types/label.ts` | Category labels |
 
-## Estratégia de CSS (Tailwind v4)
+## CSS Strategy (Tailwind v4)
 
-- **Mobile First:** Classes base = mobile. `md:`, `lg:` para breakpoints
-- **Design Tokens:** Cores e tipografia definidas em `src/core/styles/global.css`
-- **Componentes:** Prefira compor classes Tailwind em vez de CSS avulso
-- **cn() utility:** Use `cn()` para merge condicional de classes
+- **Mobile First:** Base classes = mobile. `md:`, `lg:` for breakpoints
+- **Design Tokens:** Colors and typography defined in `src/core/styles/global.css`
+- **Components:** Prefer composing Tailwind classes over standalone CSS
+- **cn() utility:** Use `cn()` for conditional class merging
 
 ### Layout Tokens
 
-| Token | Valor | Uso |
-|-------|-------|-----|
-| `--spacing-container-max` | 1280px | Largura máxima do container |
-| `--spacing-gutter` | 24px | Gap entre itens em grids |
-| `--spacing-section-gap` | 32px | Espaçamento entre seções |
-| `--spacing-box-padding` | 24px | Padding interno de cards |
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--spacing-container-max` | 1280px | Max container width |
+| `--spacing-gutter` | 24px | Gap between grid items |
+| `--spacing-section-gap` | 32px | Spacing between sections |
+| `--spacing-box-padding` | 24px | Card inner padding |
 
 ### Typography Tokens
 
-| Token | Valor | Uso |
-|-------|-------|-----|
-| `--font-heading` | 'Inter Variable' | Títulos (display, page-title, section-title) |
-| `--font-body` | 'Inter Variable' | Corpo de texto |
-| `--font-display` | 'Inter Variable' | Seções em uppercase (section-title) |
-| `--font-sans` | 'Inter Variable' | UI geral (nav, meta, labels) |
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--font-heading` | 'Inter Variable' | Headings (display, page-title, section-title) |
+| `--font-body` | 'Inter Variable' | Body text |
+| `--font-display` | 'Inter Variable' | Uppercase sections (section-title) |
+| `--font-sans` | 'Inter Variable' | General UI (nav, meta, labels) |
 
 ### Typography Utilities
 
-14 classes utilitárias `type-*` em `src/core/styles/global.css`, inspiradas no sistema tipográfico da RTINGS.com:
+14 `type-*` utility classes in `src/core/styles/global.css`, inspired by the RTINGS.com typography system:
 
-| Classe | Uso | Font | Size | Weight |
-|--------|-----|------|------|--------|
-| `type-display` | Título hero da home | heading | 4xl/5xl | medium |
-| `type-page-title` | Título de página | heading | 2xl/4xl | medium |
-| `type-section-title` | Título de seção (uppercase) | display | xl | normal |
-| `type-subsection` | Subtítulo de seção | heading | xl | medium |
-| `type-card-title` | Título de card | heading | base | semibold |
-| `type-body` | Corpo de texto | (herdado) | base | normal |
-| `type-body-sm` | Corpo pequeno | (herdado) | sm | normal |
-| `type-body-lg` | Corpo grande | (herdado) | lg | normal |
-| `type-meta` | Metadados UI | sans | xs | medium |
-| `type-caption` | Legendas | sans | xs | normal |
+| Class | Usage | Font | Size | Weight |
+|-------|-------|------|------|--------|
+| `type-display` | Hero title on home | heading | 4xl/5xl | medium |
+| `type-page-title` | Page title | heading | 2xl/4xl | medium |
+| `type-section-title` | Section title (uppercase) | display | xl | normal |
+| `type-subsection` | Section subtitle | heading | xl | medium |
+| `type-card-title` | Card title | heading | base | semibold |
+| `type-body` | Body text | (inherited) | base | normal |
+| `type-body-sm` | Small body | (inherited) | sm | normal |
+| `type-body-lg` | Large body | (inherited) | lg | normal |
+| `type-meta` | UI metadata | sans | xs | medium |
+| `type-caption` | Captions | sans | xs | normal |
 | `type-overline` | Overline label | sans | 10px | bold |
 | `type-micro` | Micro label | sans | 10px | bold |
-| `type-card-meta` | Metadados de card | sans | 11px | normal |
-| `type-nav-link` | Links de navegação | sans | sm | normal |
-| `type-view-all` | Link "Ver todos" | sans | xs | medium |
+| `type-card-meta` | Card metadata | sans | 11px | normal |
+| `type-nav-link` | Navigation links | sans | sm | normal |
+| `type-view-all` | "View all" link | sans | xs | medium |
 
-> Componentes ShadCN UI agora declaram `font-sans` explicitamente em vez de herdar do `html`.
+> ShadCN UI components now declare `font-sans` explicitly instead of inheriting from `html`.
 
-## Autenticação
+## Authentication
 
-Módulo em `src/modules/auth/`:
+Module at `src/modules/auth/`:
 
-- `services/servicoAuth.ts` — Registro, login, verificação 2FA (JWT com jose, bcryptjs, otplib)
-- `services/servicoRateLimit.ts` — Rate limiting (memória em dev, D1 em prod)
-- `services/servicoCriptografia.ts` — Hash de senha, JWT, 2FA
+- `services/authService.ts` — Registration, login, 2FA verification (JWT with jose, bcryptjs, otplib)
+- `services/rateLimitService.ts` — Rate limiting (in-memory in dev, D1 in prod)
+- `services/cryptoService.ts` — Password hashing, JWT, 2FA
 
-### Middleware de Segurança
+### Security Middleware
 
-O middleware (`src/middleware.ts`) aplica:
+The middleware (`src/middleware.ts`) applies:
 
-- Verificação de token JWT em todas as rotas (não-assets)
-- Rate limiting em rotas `/api/auth/*` (5 req/min login, 3 req/min 2FA, 10 req/h register)
-- Headers de segurança: CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy
+- JWT token verification on all routes (non-assets)
+- Rate limiting on `/api/auth/*` routes (5 req/min login, 3 req/min 2FA, 10 req/h register)
+- Security headers: CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy
 
-### CSP bloqueia inline scripts do Astro
+### CSP blocks Astro inline scripts
 
-A política `script-src 'self'` no middleware (`src/middleware.ts`) **bloqueia os inline scripts** que o Astro usa para hidratação de componentes React (`<astro-island>`, definição de `Astro.load`, etc.).
+The `script-src 'self'` policy in the middleware (`src/middleware.ts`) **blocks the inline scripts** that Astro uses for React component hydration (`<astro-island>`, `Astro.load` definition, etc.).
 
-**Sintoma:** Todos os islands React com `client:load` falham silenciosamente — o HTML SSR é renderizado mas os componentes nunca hidratam. Nenhum erro visível no console do navegador, apenas avisos de CSP no console.
+**Symptom:** All React islands with `client:load` fail silently — the SSR HTML is rendered but components never hydrate. No visible errors in the browser console, only CSP warnings in the console.
 
-**Diagnóstico:** Verificar se `<astro-island>` mantém o atributo `ssr` após carregamento da página. Se sim, a hidratação não ocorreu. Usar devtools ou `page.evaluate(() => document.querySelector('astro-island').hasAttribute('ssr'))`.
+**Diagnosis:** Check whether `<astro-island>` retains the `ssr` attribute after page load. If it does, hydration did not occur. Use devtools or `page.evaluate(() => document.querySelector('astro-island').hasAttribute('ssr'))`.
 
-**Fix:** Adicionar `'unsafe-inline'` ao `script-src`:
+**Fix:** Add `'unsafe-inline'` to `script-src`:
 ```
 script-src 'self' 'unsafe-inline'
 ```
 
-**Localização do código:** `src/middleware.ts:180`
+**Code location:** `src/middleware.ts:180`
 
-## Testes
+## Tests
 
-### Unitários (Vitest)
+### Unit (Vitest)
 
 ```bash
-pnpm test:run          # Execução única
-pnpm test:coverage     # Com relatório
+pnpm test:run          # Single run
+pnpm test:coverage     # With coverage report
 ```
 
-**Cobertura alvo:** lines 80%, functions 75%, branches 70%
+**Target coverage:** lines 80%, functions 75%, branches 70%
 
-**Padrões:**
-- DB mockado com `vi.mock('@/core/lib/db')`
-- Testes ficam em `__tests__/` ao lado do arquivo testado
+**Patterns:**
+- DB mocked with `vi.mock('@/core/lib/db')`
+- Tests live in `__tests__/` next to the file under test
 
 ### E2E (Playwright)
 
 ```bash
 pnpm test:e2e
-pnpm test:e2e:dev      # Com servidor dev automático
+pnpm test:e2e:dev      # With automatic dev server
 ```
 
 ## Path Aliases
@@ -240,25 +240,25 @@ pnpm test:e2e:dev      # Com servidor dev automático
 }
 ```
 
-## Estratégia de Branches
+## Branch Strategy
 
-- `production`: Branch principal, sempre pronta para produção
-- `develop`: Integração de funcionalidades
-- `feat/*`, `fix/*`, `refactor/*`, `chore/*`: Branches de trabalho
+- `production`: Main branch, always production-ready
+- `develop`: Feature integration
+- `feat/*`, `fix/*`, `refactor/*`, `chore/*`: Working branches
 
 ## Release & Deploy
 
-Deploy controlado por tags semânticas:
+Deploy controlled by semantic tags:
 
 ```bash
 git tag v1.0.0
 git push origin v1.0.0
 ```
 
-O CI detecta a tag, executa lint, testes, build e deploy para Cloudflare Workers.
+CI detects the tag, runs lint, tests, build, and deploys to Cloudflare Workers.
 
-| Tipo | Exemplo |
+| Type | Example |
 |------|---------|
-| Nova feature | `v1.1.0` |
+| New feature | `v1.1.0` |
 | Hotfix | `v1.1.1` |
 | Breaking change | `v2.0.0` |

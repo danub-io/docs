@@ -1,18 +1,18 @@
 ---
-title: "Contribuindo para a Editora"
+title: "Contributing to Editora"
 ---
 
 
 
-Obrigado por contribuir! Este guia define os padrões e fluxos de trabalho do projeto.
+Thank you for contributing! This guide defines the project's standards and workflows.
 
-## Configuração do Ambiente
+## Environment Setup
 
-### Pré-requisitos
+### Prerequisites
 
 - Python 3.12+
-- Pandoc ([instalação](https://pandoc.org/installing.html))
-- LaTeX (TeX Live, MacTeX ou [TinyTeX](https://yihui.org/tinytex/))
+- Pandoc ([installation](https://pandoc.org/installing.html))
+- LaTeX (TeX Live, MacTeX, or [TinyTeX](https://yihui.org/tinytex/))
 
 ### Setup
 
@@ -24,33 +24,33 @@ source .venv/bin/activate
 pip install -e ".[dev]"
 ```
 
-## Padrões de Código
+## Code Standards
 
-| Ferramenta | Comando | Descrição |
-|------------|---------|-----------|
+| Tool | Command | Description |
+|------|---------|-------------|
 | Ruff | `ruff check src/` | Linting |
-| Black | `black src/` | Formatação |
+| Black | `black src/` | Formatting |
 | Pyright | `pyright src/` | Type checking |
-| Pytest | `pytest` | Testes unitários |
+| Pytest | `pytest` | Unit tests |
 
-- **Line length**: 100 caracteres
-- **Type hints**: Obrigatórios em todas as funções públicas
-- **Docstrings**: Google-style para módulos e classes públicas
+- **Line length**: 100 characters
+- **Type hints**: Required for all public functions
+- **Docstrings**: Google-style for public modules and classes
 
-## Estratégia de Branches
+## Branch Strategy
 
-- `main`: Branch principal, sempre pronta para produção
-- `feature/*`: Novas funcionalidades
-- `fix/*`: Correções de bugs
-- `docs/*`: Melhorias na documentação
+- `main`: Main branch, always production-ready
+- `feature/*`: New features
+- `fix/*`: Bug fixes
+- `docs/*`: Documentation improvements
 
-## Processo de Pull Request
+## Pull Request Process
 
-1. Crie uma branch a partir da `main`
-2. Faça as alterações seguindo os padrões acima
-3. Execute `ruff check src/ && black --check src/ && pyright src/ && pytest`
-4. Abra o PR para a branch `main`
-5. Descreva as mudanças e referencie issues relacionadas
+1. Create a branch from `main`
+2. Make changes following the standards above
+3. Run `ruff check src/ && black --check src/ && pyright src/ && pytest`
+4. Open the PR against the `main` branch
+5. Describe the changes and reference related issues
 
 ## Conventional Commits
 

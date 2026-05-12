@@ -2,6 +2,6 @@
 title: "Postmortems — Editora"
 ---
 
-Este diretório armazena postmortems do projeto Editora.
+This directory stores postmortems for the Editora project.
 
-Consulte o [template e convenções](/docs/ctech/postmortems) para criar novos postmortems.
+See the [template and conventions](/docs/ctech/postmortems) for creating new postmortems.

@@ -2,18 +2,18 @@
 
 ## [Unreleased]
 
-### Corrigido
+### Fixed
 
-- README reescrito (estava como template starter do Starlight)
-- Artefato de build `editora.html` removido da raiz
-- CHANGELOG.md e CONTRIBUTING.md criados
+- README rewritten (was Starlight starter template)
+- Build artifact `editora.html` removed from root
+- CHANGELOG.md and CONTRIBUTING.md created
 
 ## [0.1.0] - 2026-04-15
 
-### Adicionado
+### Added
 
-- Site Starlight com documentação de CTech, Editora, GospelReads e MBA Lite
-- Script de sincronização automática (`scripts/sync-docs.mjs`)
-- Script de validação de links (`scripts/test-links.mjs`)
-- Sidebar organizada por projeto no `astro.config.mjs`
-- Página inicial com LinkCards para cada projeto
+- Starlight site with CTech, Editora, GospelReads and MBA Lite documentation
+- Auto-sync script (`scripts/sync-docs.mjs`)
+- Link validation script (`scripts/test-links.mjs`)
+- Sidebar organized by project in `astro.config.mjs`
+- Home page with LinkCards for each project

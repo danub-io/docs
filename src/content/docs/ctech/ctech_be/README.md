@@ -1,126 +1,126 @@
 ---
-title: "CTECH Painel (Backend)"
+title: "CTECH Panel (Backend)"
 ---
 
-**Ferramenta local que roda na sua máquina para popular o banco de dados.** Ingestão de produtos, preços, reviews, etc. Não precisa de login, não vai ser deployado, só você usa.
+**Local tool that runs on your machine to populate the database.** Product ingestion, prices, reviews, etc. No login needed, won't be deployed, only you use it.
 
 ---
 
-Este é o "Cérebro" do ecossistema CTECH. Um painel administrativo e motor de automação construído com **Next.js 16+** que gerencia o pipeline de dados desde a entrada bruta até a consolidação final via IA.
+This is the "Brain" of the CTECH ecosystem. An admin panel and automation engine built with **Next.js 16+** that manages the data pipeline from raw input to final AI-powered consolidation.
 
-## Tecnologias
+## Technologies
 
-- **Framework:** Next.js 16 (App Router) com Turbopack
-- **Linguagem:** TypeScript (Strict Mode)
-- **Estilização:** Tailwind CSS v4 + Shadcn/ui (@base-ui/react)
-- **Banco de Dados:** Turso (libsql) com Drizzle ORM
-- **IA:** Vercel AI SDK (multi-provider: Google, Groq, Cerebras, OpenRouter, GitHub Models)
-- **Logs:** Pino (Logging Estruturado)
-- **Testes:** Vitest & Playwright
+- **Framework:** Next.js 16 (App Router) with Turbopack
+- **Language:** TypeScript (Strict Mode)
+- **Styling:** Tailwind CSS v4 + Shadcn/ui (@base-ui/react)
+- **Database:** Turso (libsql) with Drizzle ORM
+- **AI:** Vercel AI SDK (multi-provider: Google, Groq, Cerebras, OpenRouter, GitHub Models)
+- **Logging:** Pino (Structured Logging)
+- **Testing:** Vitest & Playwright
 - **Scraping:** Puppeteer Extra + Stealth Plugin, Mozilla Readability, Cheerio
 
-## Instalação e Execução
+## Installation and Running
 
-### Pré-requisitos
-- `pnpm` instalado globalmente
-- Arquivo `.env.local` configurado (veja `.env.example`)
+### Prerequisites
+- `pnpm` installed globally
+- `.env.local` file configured (see `.env.example`)
 
-### Comandos
+### Commands
 ```bash
-pnpm install              # Instalar dependências
-pnpm dev                  # Iniciar em modo desenvolvimento (porta 3001)
-pnpm build                # Gerar build de produção
-pnpm start                # Iniciar servidor de produção
-pnpm test:run             # Rodar testes unitários
-pnpm test:e2e             # Rodar testes E2E (Playwright)
-pnpm lint                 # Verificar lint
-pnpm db:generate          # Gerar migrações Drizzle
-pnpm db:migrate           # Aplicar migrações
-pnpm db:studio            # Abrir Drizzle Studio
+pnpm install              # Install dependencies
+pnpm dev                  # Start development server (port 3001)
+pnpm build                # Build for production
+pnpm start                # Start production server
+pnpm test:run             # Run unit tests
+pnpm test:e2e             # Run E2E tests (Playwright)
+pnpm lint                 # Run linter
+pnpm db:generate          # Generate Drizzle migrations
+pnpm db:migrate           # Apply migrations
+pnpm db:studio            # Open Drizzle Studio
 ```
 
-## Arquitetura: 9 Módulos (M1-M9)
+## Architecture: 9 Modules (M1-M9)
 
-O projeto é dividido em 9 módulos independentes, cada um isolado para facilitar edição via vibecoding:
+The project is divided into 9 independent modules, each isolated for easy editing via vibecoding:
 
-### M1 — Entrada
-Ingestão e detecção de duplicidade semântica. A IA extrai do texto bruto um JSON com `marca`, `nome_produto`, `specs_cru`, `tier I-V`. Candidatos similares são enviados para veredito semântico da IA.
+### M1 — Entry
+Ingestion and semantic duplicate detection. AI extracts a JSON with `brand`, `product_name`, `raw_specs`, `tier I-V` from raw text. Similar candidates are sent for AI semantic verdict.
 
-### M2 — Descoberta
-Busca de links de reviews técnicas em massa via template de busca. IA tria links descartando fóruns, vídeos e lojas.
+### M2 — Discovery
+Bulk search for technical review links via search templates. AI filters links by discarding forums, videos, and stores.
 
-### M3 — Extração
-Leitura de artigos, pontuação (0-10), extração de `pros`, `contras`, `mini_review` e specs faltantes. Review_type distingue critic de user.
+### M3 — Extraction
+Article reading, scoring (0-10), extraction of `pros`, `cons`, `mini_review`, and missing specs. Review_type distinguishes critic from user.
 
-### M4 — Consolidação
-Atua como Editor-Chefe: agrega até 8 reviews, calcula Nota Bayesiana (média global 7.5, mín. 3 reviews) com Fator de Defasagem (0.2/ano). Sintetiza Veredito Final.
+### M4 — Consolidation
+Acts as Editor-in-Chief: aggregates up to 8 reviews, calculates Bayesian Score (global average 7.5, min. 3 reviews) with Lag Factor (0.2/year). Synthesizes Final Verdict.
 
-### M5 — Preços
-Monitoramento contínuo de preços via Google Shopping. Detecção de falsos positivos (capinha, cabo, modelo errado). Variações > R$5,00 guardadas em `historico_precos` (retenção 90 dias).
+### M5 — Prices
+Continuous price monitoring via Google Shopping. False positive detection (case, cable, wrong model). Variations > R$5.00 stored in `price_history` (90-day retention).
 
-### M6 — Conferência
-Auditoria do link final (Afiliado): scraper navega na URL salva para capturar preço PIX/Boleto e estoque.
+### M6 — Checkout
+Final link (Affiliate) audit: scraper navigates to the saved URL to capture PIX/Boleto price and stock.
 
 ### M7 — CMS
-Gerenciador central do catálogo de produtos (CRUD) com listagem, filtros (marca, categoria, lançamento), edição e exclusão.
+Central product catalog manager (CRUD) with listing, filters (brand, category, launch), editing and deletion.
 
-### M8 — Configurações
-Painel modular de configurações globais: modelos IA (cascata 6-tiers), serviços de scraping, logs do sistema, manutenção do banco, preferências.
+### M8 — Settings
+Modular global settings panel: AI models (6-tier cascade), scraping services, system logs, database maintenance, preferences.
 
-### M9 — Documentação
-Visualizador de documentação Markdown integrado ao painel com sidebar, busca (Ctrl+K) e renderização GFM.
+### M9 — Documentation
+Built-in Markdown documentation viewer with sidebar, search (Ctrl+K), and GFM rendering.
 
-## Sistema de Filas
+## Queue System
 
-- Tabela `fila_processamento` gerencia jobs em background (status: pendente, processando, concluido, erro, falha_critica)
-- **DLQ (Dead Letter Queue):** Após 3 tentativas falhas, job marcado como `falha_critica`
-- Worker faz claim atômico com batch processing (BATCH_SIZE=10)
+- `processing_queue` table manages background jobs (status: pending, processing, completed, error, critical_failure)
+- **DLQ (Dead Letter Queue):** After 3 failed attempts, job is marked as `critical_failure`
+- Worker performs atomic claim with batch processing (BATCH_SIZE=10)
 
-## Cache Inteligente
+## Smart Cache
 
-Cache em memória (Map) com TTL configurável via `CacheLayer`:
+In-memory cache (Map) with configurable TTL via `CacheLayer`:
 
 | Query | TTL |
 |-------|-----|
 | `getAIModels`, `getScrapingServices`, `getDefaultPrompt` | 10 min |
-| `getProdutosParaConsolidar`, `getProdutosParaBuscaReview` | 5 min |
+| `getProductsToConsolidate`, `getProductsForReviewSearch` | 5 min |
 
-Invalidação automática nas mutações. Cache bypass via parâmetro `refresh = true`.
+Automatic invalidation on mutations. Cache bypass via `refresh = true` parameter.
 
-## Estratégia de Performance
+## Performance Strategy
 
-- **SSR Prioritário:** Módulos de consulta pesada usam SSR
-- **I/O Paralelo:** `Promise.all()` obrigatório em páginas com múltiplas fontes
-- **Suspense + Skeletons:** `ModuleSkeleton` para feedback visual imediato
-- **Prefetching:** Todos os links do ActivityBar com `prefetch={true}`
-- **Resizable Panels:** `react-resizable-panels` v4 com `autoSaveId` para persistência
+- **Prioritized SSR:** Heavy query modules use SSR
+- **Parallel I/O:** `Promise.all()` required on pages with multiple data sources
+- **Suspense + Skeletons:** `ModuleSkeleton` for immediate visual feedback
+- **Prefetching:** All ActivityBar links with `prefetch={true}`
+- **Resizable Panels:** `react-resizable-panels` v4 with `autoSaveId` for persistence
 
-## Banco de Dados (Turso SQLite)
+## Database (Turso SQLite)
 
-Principais tabelas: `Produtos`, `Reviews` (com `review_type`), `Afiliados`, `historico_precos`, `fila_processamento`, `config_ai_models`, `config_scraping_services`, `logs_entrada`, `config_preferences`, `Guias`, `Guia_Produtos`.
+Main tables: `Products`, `Reviews` (with `review_type`), `Affiliates`, `price_history`, `processing_queue`, `config_ai_models`, `config_scraping_services`, `entry_logs`, `config_preferences`, `Guides`, `Guide_Products`.
 
-Colunas obsoletas removidas em Abr/2026 (`embedding`, `is_primary`, `is_fallback`, `is_reserve`, `Afiliados.imagem_url`).
+Obsolete columns removed in Apr/2026 (`embedding`, `is_primary`, `is_fallback`, `is_reserve`, `Affiliates.image_url`).
 
-## Segurança
+## Security
 
-- API Keys criptografadas em AES-256-CBC nas tabelas de configuração
-- SQL parametrizado (sem injeção)
-- Tokens JWT com jose
-- Rate limiting em rotas de autenticação
+- API Keys encrypted with AES-256-CBC in configuration tables
+- Parameterized SQL (injection-proof)
+- JWT tokens with jose
+- Rate limiting on authentication routes
 
-## Migrações
+## Migrations
 
-Gerenciadas via Drizzle Kit:
+Managed via Drizzle Kit:
 ```bash
-pnpm db:generate    # Gerar migração
-pnpm db:migrate     # Aplicar migração
+pnpm db:generate    # Generate migration
+pnpm db:migrate     # Apply migration
 ```
 
-Para migrations SQL manuais (ex: rate_limit), execute via Turso CLI:
+For manual SQL migrations (e.g., rate_limit), run via Turso CLI:
 ```bash
-turso db shell <database> < migrations/arquivo.sql
+turso db shell <database> < migrations/file.sql
 ```
 
-## Licença
+## License
 
 MIT — CTECH Backend

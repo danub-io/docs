@@ -1,62 +1,62 @@
 ---
-title: "Arquitetura da Editora"
+title: "Editora Architecture"
 ---
 
 
 
-## Visão Geral
+## Overview
 
-A Editora é uma CLI Python para produção profissional de livros a partir de Markdown. O pipeline transforma capítulos brutos em PDF (print-ready) e EPUB através de um fluxo de edição com IA, revisão gramatical e diagramação.
+Editora is a Python CLI for professional book production from Markdown. The pipeline transforms raw chapters into PDF (print-ready) and EPUB through an AI editing workflow, grammar review, and typesetting.
 
 ```
-chapters/*.md → [IA: Edição/Revisão] → [Pandoc + LaTeX] → output/*.pdf / *.epub
+chapters/*.md → [AI: Edit/Review] → [Pandoc + LaTeX] → output/*.pdf / *.epub
 ```
 
-## Estrutura de Módulos
+## Module Structure
 
 ```
 src/editora/
-├── cli.py               # Interface CLI (Typer)
-├── config.py            # Configurações (Pydantic + YAML)
+├── cli.py               # CLI interface (Typer)
+├── config.py            # Configuration (Pydantic + YAML)
 ├── core/
-│   └── manuscript.py    # Modelos Chapter e Manuscript
+│   └── manuscript.py    # Chapter and Manuscript models
 ├── ai/
-│   ├── llm.py           # Abstração multi-provider (Anthropic, OpenAI, Google, Ollama)
-│   ├── editing.py       # Copyediting em 3 níveis (light/medium/aggressive)
-│   ├── proofreading.py  # Revisão gramatical (IA + LanguageTool)
-│   └── consistency.py   # Verificação de consistência (personagens, timeline, tom)
+│   ├── llm.py           # Multi-provider abstraction (Anthropic, OpenAI, Google, Ollama)
+│   ├── editing.py       # 3-level copyediting (light/medium/aggressive)
+│   ├── proofreading.py  # Grammar review (AI + LanguageTool)
+│   └── consistency.py   # Consistency checking (characters, timeline, tone)
 ├── typesetting/
-│   └── converter.py     # Pandoc → PDF/EPUB com templates LaTeX
+│   └── converter.py     # Pandoc → PDF/EPUB with LaTeX templates
 └── utils/
-    └── helpers.py       # Utilitários diversos
+    └── helpers.py       # Miscellaneous utilities
 ```
 
-## Fluxo de Trabalho
+## Workflow
 
-1. **Escrita** — Capítulos em Markdown com frontmatter YAML
-2. **Edição com IA** — `editora edit` aplica copyediting preservando voz do autor
-3. **Proofreading** — `editora proofread` corrige gramática/ortografia (pt-BR)
-4. **Consistência** — `editora consistency` detecta contradições na narrativa
-5. **Build** — `editora build` gera PDF e/ou EPUB via Pandoc + LaTeX
+1. **Writing** — Chapters in Markdown with YAML frontmatter
+2. **AI Editing** — `editora edit` applies copyediting while preserving the author's voice
+3. **Proofreading** — `editora proofread` corrects grammar/spelling (pt-BR)
+4. **Consistency** — `editora consistency` detects narrative contradictions
+5. **Build** — `editora build` generates PDF and/or EPUB via Pandoc + LaTeX
 
-## Provedores de IA
+## AI Providers
 
-Suporta múltiplos provedores via camada de abstração em `ai/llm.py`:
+Supports multiple providers via the abstraction layer in `ai/llm.py`:
 
-| Provider | Variável de Ambiente | Modelo Padrão |
+| Provider | Environment Variable | Default Model |
 |----------|---------------------|---------------|
 | Anthropic | `ANTHROPIC_API_KEY` | claude-sonnet-4-20250514 |
 | OpenAI | `OPENAI_API_KEY` | gpt-4o |
 | Google | `GOOGLE_API_KEY` | gemini-2.0-flash |
 | Ollama | (local) | llama3 |
 
-## Stack Tecnológico
+## Technology Stack
 
-- **Python 3.12+** — Linguagem principal
-- **Typer** — CLI (baseada em Click)
-- **Pydantic** — Validação de schemas e configurações
-- **Rich** — Output colorido e tabelas no terminal
-- **Pandoc** — Conversão universal de documentos
-- **LaTeX (XeLaTeX)** — Diagramação profissional print-ready
-- **LangChain** — Orquestração de chamadas de IA
-- **LanguageTool** — Corretor gramatical open-source (pt-BR)
+- **Python 3.12+** — Core language
+- **Typer** — CLI (built on Click)
+- **Pydantic** — Schema and configuration validation
+- **Rich** — Colored output and tables in the terminal
+- **Pandoc** — Universal document conversion
+- **LaTeX (XeLaTeX)** — Professional print-ready typesetting
+- **LangChain** — AI call orchestration
+- **LanguageTool** — Open-source grammar checker (pt-BR)

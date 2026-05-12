@@ -4,33 +4,33 @@ title: "Changelog"
 
 
 
-Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
+All notable changes to this project will be documented in this file.
 
-O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-br/1.1.0/),
-e este projeto segue o [Semantic Versioning](https://semver.org/lang/pt-BR/).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [0.1.0] - 2026-04-15
 
-### Adicionado
+### Added
 
-- Comando `init` para criar novos projetos de livro
-- Comando `build` para compilar PDF e EPUB via Pandoc + LaTeX
-- Comando `edit` com 3 níveis de copyediting (light, medium, aggressive)
-- Comando `proofread` com integração LanguageTool + IA
-- Comando `consistency` para verificação de personagens, timeline e tom
-- Comando `info` para estatísticas do projeto
-- Comando `template` para geração de templates LaTeX
-- Suporte a múltiplos provedores de IA (Anthropic, OpenAI, Google, Ollama)
-- Configuração via `editora.yaml` (Pydantic)
-- Tipografia profissional com KDP compliance
-- Detecção de duplicidade e furos na trama
-- Preservação automática da voz do autor durante edição
-- Testes unitários com Pytest
+- `init` command to create new book projects
+- `build` command to compile PDF and EPUB via Pandoc + LaTeX
+- `edit` command with 3 levels of copyediting (light, medium, aggressive)
+- `proofread` command with LanguageTool + AI integration
+- `consistency` command for character, timeline, and tone checking
+- `info` command for project statistics
+- `template` command for generating LaTeX templates
+- Support for multiple AI providers (Anthropic, OpenAI, Google, Ollama)
+- Configuration via `editora.yaml` (Pydantic)
+- Professional typography with KDP compliance
+- Detection of duplicate content and plot holes
+- Automatic preservation of author's voice during editing
+- Unit tests with Pytest
 - CI via GitHub Actions
 
 ### Stack
 
 - Python 3.12+
-- Typer para CLI
-- LangChain para orquestração de IA
-- Pandoc + LaTeX para diagramação
+- Typer for CLI
+- LangChain for AI orchestration
+- Pandoc + LaTeX for typesetting

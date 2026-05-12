@@ -1,76 +1,76 @@
 ---
-title: "CLI da Editora — Referência de Comandos"
+title: "Editora CLI — Command Reference"
 ---
 
 
 
-## Uso Básico
+## Basic Usage
 
 ```bash
-editora [COMANDO] [OPÇÕES]
+editora [COMMAND] [OPTIONS]
 ```
 
-## Comandos
+## Commands
 
 ### `init`
 
-Cria um novo projeto de livro.
+Creates a new book project.
 
 ```bash
-editora init --title "Título" --author "Autor" --output ./meu-livro
+editora init --title "Title" --author "Author" --output ./my-book
 ```
 
-| Opção | Descrição | Padrão |
-|-------|-----------|--------|
-| `--title` | Título do livro | obrigatório |
-| `--author` | Nome do autor | obrigatório |
-| `--output` | Diretório de saída | `./<title>` |
+| Option | Description | Default |
+|--------|-------------|---------|
+| `--title` | Book title | required |
+| `--author` | Author name | required |
+| `--output` | Output directory | `./<title>` |
 
 ### `build`
 
-Compila o livro para PDF e/ou EPUB.
+Compiles the book to PDF and/or EPUB.
 
 ```bash
-editora build                    # Gera PDF + EPUB
-editora build --format pdf       # Apenas PDF
-editora build --output ./dist    # Diretório customizado
+editora build                    # Generates PDF + EPUB
+editora build --format pdf       # PDF only
+editora build --output ./dist    # Custom directory
 ```
 
-| Opção | Descrição | Padrão |
-|-------|-----------|--------|
-| `--format` | Formato: `pdf`, `epub`, `both` | `both` |
-| `--output` | Diretório de saída | `configurado no editora.yaml` |
+| Option | Description | Default |
+|--------|-------------|---------|
+| `--format` | Format: `pdf`, `epub`, `both` | `both` |
+| `--output` | Output directory | `configured in editora.yaml` |
 
 ### `edit`
 
-Edita capítulos com IA.
+Edits chapters with AI.
 
 ```bash
-editora edit --preview           # Preview sem aplicar mudanças
-editora edit --mode medium       # Aplica edição nível médio
+editora edit --preview           # Preview without applying changes
+editora edit --mode medium       # Apply medium-level editing
 ```
 
-| Opção | Descrição | Padrão |
-|-------|-----------|--------|
-| `--preview` | Mostra diff sem aplicar | `false` |
-| `--mode` | Nível: `light`, `medium`, `aggressive` | `light` |
+| Option | Description | Default |
+|--------|-------------|---------|
+| `--preview` | Shows diff without applying | `false` |
+| `--mode` | Level: `light`, `medium`, `aggressive` | `light` |
 
 ### `proofread`
 
-Revisão gramatical e ortográfica.
+Grammar and spelling review.
 
 ```bash
-editora proofread                # Revisa e aplica correções
-editora proofread --report       # Apenas gera relatório
+editora proofread                # Review and apply corrections
+editora proofread --report       # Generate report only
 ```
 
-| Opção | Descrição | Padrão |
-|-------|-----------|--------|
-| `--report` | Gera relatório sem aplicar | `false` |
+| Option | Description | Default |
+|--------|-------------|---------|
+| `--report` | Generates report without applying | `false` |
 
 ### `consistency`
 
-Verifica consistência global do manuscrito.
+Checks overall manuscript consistency.
 
 ```bash
 editora consistency
@@ -78,7 +78,7 @@ editora consistency
 
 ### `info`
 
-Exibe estatísticas do projeto (contagem de capítulos, palavras, etc.).
+Displays project statistics (chapter count, word count, etc.).
 
 ```bash
 editora info
@@ -86,7 +86,7 @@ editora info
 
 ### `template`
 
-Gera template de diagramação LaTeX customizado.
+Generates a custom LaTeX typesetting template.
 
 ```bash
 editora template --style modern
@@ -94,16 +94,16 @@ editora template --style modern
 
 ### `--version`
 
-Exibe a versão instalada.
+Displays the installed version.
 
 ```bash
 editora --version
 ```
 
-## Configuração (`editora.yaml`)
+## Configuration (`editora.yaml`)
 
-Todo o comportamento é controlado pelo arquivo `editora.yaml` na raiz do projeto. Veja o README para a referência completa de opções.
+All behavior is controlled by the `editora.yaml` file in the project root. See the README for the full option reference.
 
-## Interface Web
+## Web Interface
 
-O projeto também possui uma interface web (Next.js) em [web/](./web/). Consulte o [README](./web/README.md) para instruções de uso e desenvolvimento.
+The project also includes a web interface (Next.js) in [web/](./web/). See the [README](./web/README.md) for usage and development instructions.

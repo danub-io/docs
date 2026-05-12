@@ -1,62 +1,62 @@
 ---
 title: Editora
-description: Editora pessoal automatizada com IA para produção de livros
+description: AI-powered personal publishing tool for book production
 ---
 
 import { Badge, Aside, Tabs, TabItem, Steps, FileTree } from '@astrojs/starlight/components';
 
 <Badge text="Alpha" variant="note" /> <Badge text="v0.1.0" variant="caution" /> <Badge text="Python 3.12" variant="tip" />
 
-Bem-vindo à documentação da **Editora**, uma ferramenta de vibe coding para produção profissional de livros. Escreva capítulos em Markdown e a Editora cuida da editoração — revisão com IA, diagramação e exportação para PDF (print-ready) e EPUB.
+Welcome to the **Editora** documentation, a vibe coding tool for professional book production. Write chapters in Markdown and Editora handles the publishing workflow — AI review, typesetting, and export to PDF (print-ready) and EPUB.
 
 ---
 
-## Visão Geral
+## Overview
 
 ```
-chapters/*.md → [IA: Edição/Revisão] → [Pandoc + LaTeX] → output/*.pdf / *.epub
+chapters/*.md → [AI: Edit/Review] → [Pandoc + LaTeX] → output/*.pdf / *.epub
 ```
 
-### Stack Tecnológica
+### Technology Stack
 
-| Ferramenta | Função |
-|------------|--------|
-| **Python 3.12+** | Linguagem principal |
-| **Typer** | Interface CLI |
-| **Pydantic** | Validação e configurações |
-| **Pandoc + LaTeX** | Diagramação profissional |
-| **LangChain** | Orquestração de IA |
-| **LanguageTool** | Gramática pt-BR |
+| Tool | Role |
+|------|------|
+| **Python 3.12+** | Core language |
+| **Typer** | CLI interface |
+| **Pydantic** | Validation and settings |
+| **Pandoc + LaTeX** | Professional typesetting |
+| **LangChain** | AI orchestration |
+| **LanguageTool** | pt-BR grammar checking |
 
-## Funcionalidades
+## Features
 
-| Funcionalidade | Descrição |
-|----------------|-----------|
-| Escrita em Markdown | Capítulos versionáveis com Git e fáceis de converter |
-| Edição com IA | Copyediting em 3 níveis (light/medium/aggressive) |
-| Revisão de Consistência | Detecção de contradições, furos na trama e timeline |
-| Proofreading | Correção gramatical e ortográfica pt-BR |
-| Typesetting | PDF print-ready (KDP compliant) e EPUB |
-| CLI Intuitiva | Comandos simples para todo o fluxo |
+| Feature | Description |
+|---------|-------------|
+| Markdown writing | Git-versionable chapters, easy to convert |
+| AI editing | 3-level copyediting (light/medium/aggressive) |
+| Consistency review | Detects contradictions, plot holes, timeline issues |
+| Proofreading | pt-BR grammar and spelling correction |
+| Typesetting | Print-ready PDF (KDP compliant) and EPUB |
+| Intuitive CLI | Simple commands for the entire workflow |
 
-## Provedores de IA
+## AI Providers
 
-| Provider | Variável | Modelo Padrão |
+| Provider | Variable | Default Model |
 |----------|----------|---------------|
 | Anthropic | `ANTHROPIC_API_KEY` | claude-sonnet-4 |
 | OpenAI | `OPENAI_API_KEY` | gpt-4o |
 | Google | `GOOGLE_API_KEY` | gemini-2.0-flash |
 | Ollama | (local) | llama3 |
 
-## Começando
+## Getting Started
 
-### Pré-requisitos
+### Prerequisites
 
 - Python 3.12+
 - Pandoc
-- LaTeX (TeX Live ou TinyTeX)
+- LaTeX (TeX Live or TinyTeX)
 
-### Instalação
+### Installation
 
 ```bash
 git clone <repo-url>
@@ -66,24 +66,23 @@ source .venv/bin/activate
 pip install -e .
 ```
 
-### Uso Rápido
+### Quick Start
 
 ```bash
-editora init --title "Meu Livro" --author "Seu Nome" --output meu-livro
-cd meu-livro
-# Escreva os capítulos em chapters/*.md
-editora build    # Gera PDF + EPUB
+editora init --title "My Book" --author "Your Name" --output my-book
+cd my-book
+# Write chapters in chapters/*.md
+editora build    # Generates PDF + EPUB
 ```
 
-## Comandos CLI
+## CLI Commands
 
-| Comando | Descrição |
-|---------|-----------|
-| `editora init` | Cria novo projeto de livro |
-| `editora build` | Compila para PDF/EPUB |
-| `editora edit` | Edita capítulos com IA |
-| `editora proofread` | Revisa gramática e ortografia |
-| `editora consistency` | Verifica consistência global |
-| `editora template` | Gera templates LaTeX para formatação |
-| `editora info` | Mostra estatísticas do projeto |
-
+| Command | Description |
+|---------|-------------|
+| `editora init` | Creates a new book project |
+| `editora build` | Compiles to PDF/EPUB |
+| `editora edit` | Edits chapters with AI |
+| `editora proofread` | Reviews grammar and spelling |
+| `editora consistency` | Checks global consistency |
+| `editora template` | Generates LaTeX templates for formatting |
+| `editora info` | Shows project statistics |

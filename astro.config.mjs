@@ -7,29 +7,29 @@ export default defineConfig({
   base: '/docs',
   integrations: [
     starlight({
-      title: 'Documentação',
+      title: 'Documentation',
       customCss: ['./src/styles/theme.css', './src/styles/layout.css'],
       lastUpdated: true,
       sidebar: [
-        { label: '🏠 Início', slug: 'index' },
+        { label: '🏠 Home', slug: 'index' },
         {
           label: '💻 CTech',
           collapsed: false,
           items: [
-            { label: 'Visão Geral', slug: 'ctech/readme' },
-            { label: 'Visão do Ecossistema', slug: 'ctech/visao-geral-ecossistema' },
-            { label: 'Convenções', slug: 'ctech/convencoes' },
+            { label: 'Overview', slug: 'ctech/readme' },
+            { label: 'Ecosystem Overview', slug: 'ctech/ecosystem-overview' },
+            { label: 'Conventions', slug: 'ctech/conventions' },
             { label: 'Postmortems (Template)', slug: 'ctech/postmortems' },
-            { label: 'Schema do Banco', slug: 'ctech/schema-banco-consolidado' },
+            { label: 'Database Schema', slug: 'ctech/database-schema' },
             { label: 'ADRs', slug: 'ctech/adrs' },
             {
               label: 'Frontend (ctech_fe)',
               collapsed: true,
               items: [
                 { label: 'README', slug: 'ctech/ctech_fe/readme' },
-                { label: 'Arquitetura', slug: 'ctech/ctech_fe/architecture' },
-                { label: 'Camada de Dados', slug: 'ctech/ctech_fe/data_layer' },
-                { label: 'Contribuindo', slug: 'ctech/ctech_fe/contributing' },
+                { label: 'Architecture', slug: 'ctech/ctech_fe/architecture' },
+                { label: 'Data Layer', slug: 'ctech/ctech_fe/data_layer' },
+                { label: 'Contributing', slug: 'ctech/ctech_fe/contributing' },
                 { label: 'Changelog', slug: 'ctech/ctech_fe/changelog' },
                 { label: 'Release Process', slug: 'ctech/ctech_fe/docs/deployment/release' },
                 {
@@ -44,9 +44,9 @@ export default defineConfig({
               collapsed: true,
               items: [
                 { label: 'README', slug: 'ctech/ctech_be/readme' },
-                { label: 'Arquitetura', slug: 'ctech/ctech_be/architecture' },
+                { label: 'Architecture', slug: 'ctech/ctech_be/architecture' },
                 { label: 'API', slug: 'ctech/ctech_be/api' },
-                { label: 'Contribuindo', slug: 'ctech/ctech_be/contributing' },
+                { label: 'Contributing', slug: 'ctech/ctech_be/contributing' },
                 { label: 'Changelog', slug: 'ctech/ctech_be/changelog' },
                 {
                   label: 'Postmortems',
@@ -62,9 +62,9 @@ export default defineConfig({
           collapsed: false,
           items: [
             { label: 'README', slug: 'editora/readme' },
-            { label: 'Arquitetura', slug: 'editora/architecture' },
+            { label: 'Architecture', slug: 'editora/architecture' },
             { label: 'API', slug: 'editora/api' },
-            { label: 'Contribuindo', slug: 'editora/contributing' },
+            { label: 'Contributing', slug: 'editora/contributing' },
             { label: 'Changelog', slug: 'editora/changelog' },
             {
               label: 'Postmortems',
@@ -78,8 +78,8 @@ export default defineConfig({
           collapsed: false,
           items: [
             { label: 'README', slug: 'gospelreads/readme' },
-            { label: 'Arquitetura', slug: 'gospelreads/architecture' },
-            { label: 'Contribuindo', slug: 'gospelreads/contributing' },
+            { label: 'Architecture', slug: 'gospelreads/architecture' },
+            { label: 'Contributing', slug: 'gospelreads/contributing' },
             { label: 'Changelog', slug: 'gospelreads/changelog' },
             {
               label: 'Postmortems',
@@ -93,8 +93,8 @@ export default defineConfig({
           collapsed: false,
           items: [
             { label: 'README', slug: 'mbalite/readme' },
-            { label: 'Arquitetura', slug: 'mbalite/architecture' },
-            { label: 'Contribuindo', slug: 'mbalite/contributing' },
+            { label: 'Architecture', slug: 'mbalite/architecture' },
+            { label: 'Contributing', slug: 'mbalite/contributing' },
             { label: 'Changelog', slug: 'mbalite/changelog' },
             {
               label: 'Postmortems',
@@ -108,12 +108,12 @@ export default defineConfig({
           collapsed: false,
           items: [
             { label: 'README', slug: 'turbo-cli' },
-            { label: 'Arquitetura', slug: 'turbo-cli/architecture' },
-            { label: 'Sistema de Agentes', slug: 'turbo-cli/docs/architecture/agent-system' },
-            { label: 'Fluxo TUI', slug: 'turbo-cli/docs/architecture/tui-flow' },
-            { label: 'Setup Local', slug: 'turbo-cli/docs/development/setup-local' },
-            { label: 'Comandos', slug: 'turbo-cli/docs/operations/commands' },
-            { label: 'Contribuindo', slug: 'turbo-cli/contributing' },
+            { label: 'Architecture', slug: 'turbo-cli/architecture' },
+            { label: 'Agent System', slug: 'turbo-cli/docs/architecture/agent-system' },
+            { label: 'TUI Flow', slug: 'turbo-cli/docs/architecture/tui-flow' },
+            { label: 'Local Setup', slug: 'turbo-cli/docs/development/setup-local' },
+            { label: 'Commands', slug: 'turbo-cli/docs/operations/commands' },
+            { label: 'Contributing', slug: 'turbo-cli/contributing' },
             { label: 'Changelog', slug: 'turbo-cli/changelog' },
             {
               label: 'Postmortems',

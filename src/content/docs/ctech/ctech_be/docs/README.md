@@ -1,32 +1,32 @@
 ---
-title: "Documentação — Backend CTECH"
+title: "Documentation — Backend CTECH"
 ---
 
 
 
-Índice da documentação do backend.
+Index of the backend documentation.
 
-## Arquitetura
+## Architecture
 
-- [ARCHITECTURE.md](../ARCHITECTURE.md) — Visão geral da arquitetura e módulos M1-M9
-- [docs/architecture/](./architecture/) — Diagramas, filas, repository pattern, IA, schema do banco
+- [ARCHITECTURE.md](../ARCHITECTURE.md) — Architecture overview and M1-M9 modules
+- [docs/architecture/](./architecture/) — Diagrams, queues, repository pattern, AI, database schema
 
-## Deploy
+## Deployment
 
-- [docs/deployment/](./deployment/) — Vercel, Docker, variáveis de ambiente
+- [docs/deployment/](./deployment/) — Vercel, Docker, environment variables
 
-## Desenvolvimento
+## Development
 
-- [docs/development/setup-local.md](./development/setup-local.md) — Setup do ambiente local
+- [docs/development/setup-local.md](./development/setup-local.md) — Local environment setup
 
-## Operações
+## Operations
 
-- [docs/operations/monitoramento.md](./operations/monitoramento.md) — Logging, health check, workers
+- [docs/operations/monitoring.md](./operations/monitoring.md) — Logging, health check, workers
 
 ## Troubleshooting
 
-- [docs/troubleshooting/](./troubleshooting/) — Banco, scraping, IA, erros comuns, segurança
+- [docs/troubleshooting/](./troubleshooting/) — Database, scraping, AI, common errors, security
 
 ## API
 
-- [API.md](../API.md) — Documentação completa das Server Actions (M1-M9)
+- [API.md](../API.md) — Full Server Actions documentation (M1-M9)

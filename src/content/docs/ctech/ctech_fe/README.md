@@ -2,141 +2,141 @@
 title: "CTECH Frontend (TechReveal)"
 ---
 
-**Site público que lê do banco para exibir produtos, categorias, preços.** E também escreve dados de usuários (cadastro, login, Google OAuth, 2FA, reviews de usuários).
+**Public-facing site that reads from the database to display products, categories, and prices.** It also writes user data (registration, login, Google OAuth, 2FA, user reviews).
 
 ---
 
-Interface pública de alta performance para o ecossistema CTECH. Construída com **Astro 6** e **React 19**, focada em SEO, velocidade e experiência do usuário. Deploy em **Cloudflare Workers**.
+High-performance public interface for the CTECH ecosystem. Built with **Astro 6** and **React 19**, focused on SEO, speed, and user experience. Deployed on **Cloudflare Workers**.
 
-## Tecnologias
+## Technologies
 
-- **Framework:** Astro 6+ (SSR) com Islands Architecture
+- **Framework:** Astro 6+ (SSR) with Islands Architecture
 - **Adapter:** `@astrojs/cloudflare` (Cloudflare Workers)
-- **Biblioteca de UI:** React 19 (componentes interativos)
-- **Estilização:** Tailwind CSS v4 + Design Tokens customizados
-- **Componentes:** ShadCN v4 via `@base-ui/react` (MUI primitives)
-- **Banco de Dados:** Turso (libsql) — SQLite distribuído
-- **Validação:** Zod v4
-- **Imagens:** `<img>` nativo (CDNs parceiras já entregam WebP otimizado)
-- **Testes:** Vitest (unitários) + Playwright (E2E)
-- **CI/CD:** GitHub Actions + Wrangler Deploy via tags semânticas
+- **UI Library:** React 19 (interactive components)
+- **Styling:** Tailwind CSS v4 + Custom Design Tokens
+- **Components:** ShadCN v4 via `@base-ui/react` (MUI primitives)
+- **Database:** Turso (libsql) — Distributed SQLite
+- **Validation:** Zod v4
+- **Images:** Native `<img>` (partner CDNs already deliver optimized WebP)
+- **Testing:** Vitest (unit) + Playwright (E2E)
+- **CI/CD:** GitHub Actions + Wrangler Deploy via semantic tags
 
-## Instalação e Execução
+## Installation & Running
 
-### Pré-requisitos
+### Prerequisites
 
-- `pnpm` instalado
+- `pnpm` installed
 - Node.js >= 22.12.0
-- Conta no [Turso](https://turso.tech) (banco de dados)
+- A [Turso](https://turso.tech) account (database)
 
-### Variáveis de Ambiente
+### Environment Variables
 
-Copie `.env.example` para `.dev.vars` (exigido pelo runtime Cloudflare Workers):
+Copy `.env.example` to `.dev.vars` (required by the Cloudflare Workers runtime):
 
 ```ini
-TURSO_DATABASE_URL=libsql://seu-banco.turso.io
-TURSO_AUTH_TOKEN=seu-token-aqui
-AUTH_SECRET=seu-secret-jwt
+TURSO_DATABASE_URL=libsql://your-database.turso.io
+TURSO_AUTH_TOKEN=your-token-here
+AUTH_SECRET=your-jwt-secret
 ```
 
-### Comandos
+### Commands
 
 ```bash
-pnpm install                    # Instalar dependências
-pnpm dev                        # Servidor local (localhost:4321)
-pnpm build                      # Build de produção
-pnpm preview                    # Preview do build
-pnpm test:run                   # Testes unitários (execução única)
-pnpm test:coverage              # Testes com relatório de cobertura
-pnpm test:e2e                   # Testes end-to-end (Playwright)
-pnpm lint                       # Verifica ESLint
-pnpm format                     # Formata código com Prettier
-pnpm generate-types             # Gera types do worker Cloudflare
-pnpm deploy                     # Deploy manual via wrangler deploy
-pnpm release                    # Build + deploy (para uso com tags)
+pnpm install                    # Install dependencies
+pnpm dev                        # Local server (localhost:4321)
+pnpm build                      # Production build
+pnpm preview                    # Preview build
+pnpm test:run                   # Unit tests (single run)
+pnpm test:coverage              # Tests with coverage report
+pnpm test:e2e                   # End-to-end tests (Playwright)
+pnpm lint                       # Run ESLint
+pnpm format                     # Format code with Prettier
+pnpm generate-types             # Generate Cloudflare Worker types
+pnpm deploy                     # Manual deploy via wrangler deploy
+pnpm release                    # Build + deploy (for use with tags)
 ```
 
-## Rotas
+## Routes
 
-| Rota | Descrição |
-|------|-----------|
-| `/` | Home com produto em destaque e tendências |
-| `/:categoria` | Página de listagem de produtos por categoria |
-| `/:categoria/:slug` | Página detalhada do produto |
-| `/:categoria/:slug/reviews` | Reviews da imprensa sobre o produto |
-| `/:categoria/:slug/user-reviews` | Avaliações de usuários sobre o produto |
-| `/guia` | Índice de guias de recomendação |
-| `/guia/:slug` | Página individual de guia com produtos selecionados |
-| `/painel` | Painel do usuário autenticado |
+| Route | Description |
+|-------|-------------|
+| `/` | Home page with featured product and trends |
+| `/:category` | Product listing page by category |
+| `/:category/:slug` | Detailed product page |
+| `/:category/:slug/reviews` | Press reviews for the product |
+| `/:category/:slug/user-reviews` | User reviews for the product |
+| `/guide` | Index of recommendation guides |
+| `/guide/:slug` | Individual guide page with selected products |
+| `/dashboard` | Authenticated user dashboard |
 
-Rotas legadas (`/produto/:slug`, `/categoria/:categoria`) têm redirect 301 mantido para SEO.
+Legacy routes (`/product/:slug`, `/category/:category`) have 301 redirects maintained for SEO.
 
-## Arquitetura
+## Architecture
 
-O projeto segue metodologia **Modular (Vibecoding)**, otimizada para desenvolvimento assistido por IA:
+The project follows a **Modular (Vibecoding)** methodology, optimized for AI-assisted development:
 
 ```
 src/
-├── core/           # Infraestrutura global (UI, layouts, lib, services, styles, types)
-│   └── ui/         # Componentes ShadCN (button, card, badge, etc.)
-├── modules/        # Domínios isolados (inicio, produto, categoria, guia, auth, etc.)
-│   ├── auth/       # Autenticação (serviços, componentes, schemas)
+├── core/           # Global infrastructure (UI, layouts, lib, services, styles, types)
+│   └── ui/         # ShadCN components (button, card, badge, etc.)
+├── modules/        # Isolated domains (home, product, category, guide, auth, etc.)
+│   ├── auth/       # Authentication (services, components, schemas)
 │   └── .../
-│       ├── components/   # Componentes Astro/React do módulo
-│       └── services/     # Serviços de acesso a dados
-└── pages/          # Rotas Astro (camada fina, orquestra componentes)
-    └── api/auth/   # Endpoints de autenticação (REST JSON)
+│       ├── components/   # Module Astro/React components
+│       └── services/     # Data access services
+└── pages/          # Astro routes (thin layer, orchestrates components)
+    └── api/auth/   # Authentication endpoints (REST JSON)
 ```
 
-## Fluxo de Dados
+## Data Flow
 
 ```
-Turso DB (libsql) ← ctech_be (escrita)
-    ↓ SSR queries (parametrizadas)
-Services (try/catch → validação Zod)
+Turso DB (libsql) ← ctech_be (writes)
+    ↓ SSR queries (parameterized)
+Services (try/catch → Zod validation)
     ↓
-Páginas Astro (frontmatter SSR)
+Astro Pages (SSR frontmatter)
     ↓
-Componentes Astro/React (props → render)
+Astro/React Components (props → render)
 ```
 
-- **Server-Side Rendering:** Todo dado é buscado no frontmatter de páginas Astro
-- **Nunca em cliente:** O banco não é acessado no navegador
-- **Componentes com `server:defer`** podem buscar dados próprios
+- **Server-Side Rendering:** All data is fetched in Astro page frontmatter
+- **Never on the client:** The database is not accessed in the browser
+- **Components with `server:defer`** can fetch their own data
 
 ## Cache
 
-Cache em memória (Map) com proteção contra stampede (`pendingFetch` compartilhado):
+In-memory cache (Map) with stampede protection (shared `pendingFetch`):
 
-| Serviço | Métodos cacheados | TTL |
-|---------|-------------------|-----|
-| `servicoCatalogo` | `obterCategorias()` | 5 min |
-| `servicoMenu` | `obterMenu()` | 5 min |
-| `servicoProduto` | `obterTodosSlugs()` | 1h |
-| `servicoGuia` | `obterCategoriasComGuias()` | 30 min |
-| `servicoInicio` | `obterProdutoDestaque()`, `obterProdutosRecentes()` | 2 min |
+| Service | Cached Methods | TTL |
+|---------|---------------|-----|
+| `catalogService` | `getCategories()` | 5 min |
+| `menuService` | `getMenu()` | 5 min |
+| `productService` | `getAllSlugs()` | 1h |
+| `guideService` | `getCategoriesWithGuides()` | 30 min |
+| `homeService` | `getFeaturedProduct()`, `getRecentProducts()` | 2 min |
 
-Cache é invalidado apenas no restart do servidor (in-memory only).
+Cache is invalidated only on server restart (in-memory only).
 
 ## Deploy
 
-O deploy em produção é controlado por **tags semânticas**, não por push direto na branch `production`:
+Production deployment is controlled by **semantic tags**, not by direct pushes to the `production` branch:
 
 ```bash
 git tag v1.0.0
 git push origin v1.0.0
 ```
 
-O CI detecta a tag, executa lint, testes, build e faz deploy automaticamente para Cloudflare Workers.
+CI detects the tag, runs lint, tests, build, and automatically deploys to Cloudflare Workers.
 
-Para deploy manual de teste:
+For manual test deployment:
 ```bash
 pnpm deploy
 ```
 
-### Secrets do Worker
+### Worker Secrets
 
-Antes do primeiro deploy, configure os secrets:
+Before the first deploy, configure the secrets:
 ```bash
 pnpm wrangler secret put TURSO_DATABASE_URL
 pnpm wrangler secret put TURSO_AUTH_TOKEN
@@ -145,24 +145,24 @@ pnpm wrangler secret put GOOGLE_CLIENT_ID
 pnpm wrangler secret put GOOGLE_CLIENT_SECRET
 ```
 
-## Segurança
+## Security
 
-- Content Security Policy (CSP) configurada via middleware
+- Content Security Policy (CSP) configured via middleware
 - HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy
-- Rate limiting em rotas de autenticação (D1 database)
-- Consultas parametrizadas ao banco (sem SQL injection)
-- Cliente Turso usado apenas em SSR (nunca exposto ao cliente)
-- Autenticação JWT com 2FA via otplib
+- Rate limiting on auth routes (D1 database)
+- Parameterized database queries (no SQL injection)
+- Turso client used only in SSR (never exposed to the client)
+- JWT authentication with 2FA via otplib
 
-## Estratégia de Imagens
+## Image Strategy
 
-Usamos `<img>` nativo em vez de `<Image />` de `astro:assets` por dois motivos:
+We use native `<img>` instead of `<Image />` from `astro:assets` for two reasons:
 
-1. O serviço `noop` não otimiza nada — `<Image />` com `noop` só gera URLs proxiadas que passam pelo Worker sem transformar a imagem
-2. CDNs parceiras (Amazon, Kabum, etc.) já entregam WebP e dimensões adequadas
+1. The `noop` service doesn't optimize anything — `<Image />` with `noop` only generates proxied URLs that pass through the Worker without transforming the image
+2. Partner CDNs (Amazon, Kabum, etc.) already deliver WebP and appropriate dimensions
 
-Se no futuro houver um binding `images` do Cloudflare, vale reavaliar.
+If Cloudflare adds an `images` binding in the future, it's worth revisiting.
 
-## Licença
+## License
 
 MIT — CTECH Frontend

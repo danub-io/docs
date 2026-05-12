@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 
 /**
- * A documentação foi centralizada no projeto docs/ (Starlight).
+ * Documentation has been centralized in the docs/ project (Starlight).
  *
- * Os arquivos de documentação agora residem apenas em:
- *   src/content/docs/<projeto>/
+ * Documentation files now live exclusively in:
+ *   src/content/docs/<project>/
  *
- * Não há mais sincronização automática dos projetos fonte.
- * Edite diretamente os arquivos em src/content/docs/.
+ * There is no longer automatic sync from source projects.
+ * Edit the Starlight files directly in src/content/docs/.
  */
 
-console.log('[info] Documentação centralizada em src/content/docs/');
-console.log('[info] Edite diretamente os arquivos do Starlight.');
-console.log('[info] Sync automático desativado.');
+console.log('[info] Documentation centralized in src/content/docs/');
+console.log('[info] Edit Starlight files directly.');
+console.log('[info] Auto-sync disabled.');

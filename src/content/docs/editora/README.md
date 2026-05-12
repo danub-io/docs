@@ -1,59 +1,59 @@
 ---
-title: "Editora - Editora Pessoal Automatizada com IA"
+title: "Editora — AI-Powered Personal Publishing Tool"
 ---
 
 
 
-Uma ferramenta de **vibe coding** para produção profissional de livros. Escreva seus capítulos em Markdown e deixe a Editora cuidar de toda a editoração — revisão, consistência, diagramação e exportação para PDF (print-ready) e EPUB.
+A **vibe coding** tool for professional book production. Write your chapters in Markdown and let Editora handle the entire publishing workflow — editing, consistency checking, typesetting, and export to PDF (print-ready) and EPUB.
 
-## ✨ Funcionalidades
+## Features
 
-- **📝 Escrita em Markdown** — Fácil de escrever, versionar com Git e converter
-- **🤖 Edição com IA** — Copyediting em 3 níveis (light/medium/aggressive) preservando sua voz
-- **🔍 Revisão de Consistência** — Detecção de contradições, furos na trama, inconsistências de personagens e timeline
-- **✅ Proofreading** — Correção gramatical e ortográfica (pt-BR) com LanguageTool + LLM
-- **📐 Typesetting Profissional** — PDF print-ready (KDP compliant) e EPUB via Pandoc + LaTeX
-- **🎛️ CLI Intuitiva** — Comandos simples para todo o fluxo de produção
-- **⚙️  Configurável** — Templates, estilos, prompts customizáveis
+- **Markdown Writing** — Easy to write, version with Git, and convert
+- **AI Editing** — 3-level copyediting (light/medium/aggressive) that preserves your voice
+- **Consistency Review** — Detection of contradictions, plot holes, character inconsistencies, and timeline issues
+- **Proofreading** — Grammar and spelling correction (pt-BR) with LanguageTool + LLM
+- **Professional Typesetting** — Print-ready PDF (KDP compliant) and EPUB via Pandoc + LaTeX
+- **Intuitive CLI** — Simple commands for the entire production workflow
+- **Customizable** — Templates, styles, and prompts are configurable
 
-## 🚀 Instalação
+## Installation
 
-### Pré-requisitos
+### Prerequisites
 
 - **Python 3.12+**
-- **Pandoc** — [instalação](https://pandoc.org/installing.html)
-- **LaTeX** (para PDF) — TeX Live, MacTeX ou MiKTeX. Alternativa leve: [TinyTeX](https://yihui.org/tinytex/)
+- **Pandoc** — [installation](https://pandoc.org/installing.html)
+- **LaTeX** (for PDF) — TeX Live, MacTeX, or MiKTeX. Lightweight alternative: [TinyTeX](https://yihui.org/tinytex/)
 
-### Instalar a Editora
+### Install Editora
 
 ```bash
-# Clone ou baixe o projeto
+# Clone or download the project
 cd editora
 
-# Crie um ambiente virtual (recomendado)
+# Create a virtual environment (recommended)
 python -m venv .venv
 source .venv/bin/activate  # Linux/macOS
-# ou .venv\Scripts\activate  # Windows
+# or .venv\Scripts\activate  # Windows
 
-# Instale com uv (recomendado) ou pip
+# Install with uv (recommended) or pip
 pip install -e .
 
-# Ou com dependências de desenvolvimento
+# Or with dev dependencies
 pip install -e ".[dev]"
 
-# Para IA local (Ollama)
+# For local AI (Ollama)
 pip install -e ".[local-ai]"
 
-# Para interface web
+# For web UI
 pip install -e ".[ui]"
 ```
 
-### Configurar API de IA
+### Configure AI API
 
-A Editora suporta múltiplos providers. Defina a variável de ambiente correspondente:
+Editora supports multiple providers. Set the corresponding environment variable:
 
 ```bash
-# Anthropic Claude (recomendado)
+# Anthropic Claude (recommended)
 export ANTHROPIC_API_KEY="sk-ant-..."
 
 # OpenAI GPT
@@ -63,107 +63,107 @@ export OPENAI_API_KEY="sk-..."
 export GOOGLE_API_KEY="..."
 ```
 
-Ou edite o arquivo `editora.yaml` do seu projeto.
+Or edit the `editora.yaml` file in your project.
 
-## 📖 Uso Rápido
+## Quick Start
 
-### 1. Iniciar um novo projeto
+### 1. Start a new project
 
 ```bash
-editora init --title "Meu Livro" --author "Seu Nome" --output meu-livro
-cd meu-livro
+editora init --title "My Book" --author "Your Name" --output my-book
+cd my-book
 ```
 
-Isso cria a estrutura:
+This creates the structure:
 ```
-meu-livro/
-├── chapters/           # Capítulos em Markdown
-│   └── 01-primeiro-capitulo.md
-├── assets/             # Imagens e recursos
-├── output/             # PDF/EPUB gerados
-├── editora.yaml        # Configuração
+my-book/
+├── chapters/           # Chapters in Markdown
+│   └── 01-first-chapter.md
+├── assets/             # Images and resources
+├── output/             # Generated PDF/EPUB
+├── editora.yaml        # Configuration
 └── README.md
 ```
 
-### 2. Escrever capítulos
+### 2. Write chapters
 
-Cada capítulo é um arquivo `.md` com frontmatter YAML:
+Each chapter is a `.md` file with YAML frontmatter:
 
 ```markdown
 ---
-title: O Começo de Tudo
+title: The Beginning of Everything
 number: 1
 tags:
-  - introdução
-  - personagens
+  - introduction
+  - characters
 ---
 
-# O Começo de Tudo
+# The Beginning of Everything
 
-Era uma vez...
+Once upon a time...
 ```
 
-### 3. Compilar o livro
+### 3. Build the book
 
 ```bash
-# Gera PDF + EPUB
+# Generate PDF + EPUB
 editora build
 
-# Apenas PDF
+# PDF only
 editora build --format pdf
 
-# Diretório de saída customizado
+# Custom output directory
 editora build --output ./dist
 ```
 
-### 4. Revisar com IA
+### 4. Review with AI
 
 ```bash
-# Editar capítulos (preview primeiro)
+# Edit chapters (preview first)
 editora edit --preview --mode light
 
-# Aplicar edições
+# Apply edits
 editora edit --mode medium
 
-# Revisão gramatical
+# Grammar review
 editora proofread --report
 
-# Verificar consistência (personagens, timeline, fatos, tom)
+# Check consistency (characters, timeline, facts, tone)
 editora consistency
 ```
 
-### 5. Ver informações do projeto
+### 5. View project info
 
 ```bash
 editora info
 ```
 
-## 📚 Comandos Disponíveis
+## Available Commands
 
-| Comando | Descrição |
-|---------|-----------|
-| `editora init` | Cria novo projeto de livro |
-| `editora build` | Compila para PDF/EPUB |
-| `editora info` | Mostra estatísticas do projeto |
-| `editora edit` | Edita capítulos com IA |
-| `editora proofread` | Revisa gramática e ortografia |
-| `editora consistency` | Verifica consistência global |
-| `editora template` | Gera template de diagramação |
-| `editora --version` | Mostra versão |
+| Command | Description |
+|---------|-------------|
+| `editora init` | Creates a new book project |
+| `editora build` | Compiles to PDF/EPUB |
+| `editora info` | Shows project statistics |
+| `editora edit` | Edits chapters with AI |
+| `editora proofread` | Reviews grammar and spelling |
+| `editora consistency` | Checks global consistency |
+| `editora template` | Generates a typesetting template |
+| `editora --version` | Shows version |
 
-## ⚙️  Configuração
+## Configuration
 
-O arquivo `editora.yaml` controla todo o comportamento:
+The `editora.yaml` file controls all behavior:
 
 ```yaml
-# Metadados do livro
+# Book metadata
 book:
-  title: "Meu Livro"
-  author: "Autor"
+  title: "My Book"
+  author: "Author"
   language: "pt-BR"
-  isbn: "978-0-00-000000-0"  # opcional
+  isbn: "978-0-00-000000-0"  # optional
 
-# Diagramação
+# Typesetting
 typesetting:
   format: both              # pdf, epub, both
   page_size: 6x9           # A5, 6x9, 5x8, 5.5x8.5
@@ -176,14 +176,14 @@ typesetting:
     inner: 2.5cm
     outer: 2cm
 
-# IA / LLM
+# AI / LLM
 llm:
   provider: anthropic      # openai, anthropic, google, ollama
   model: claude-sonnet-4-20250514
   temperature: 0.3
   max_tokens: 4096
 
-# Edição de texto
+# Text editing
 editing:
   mode: light              # light, medium, aggressive
   preserve_voice: true
@@ -195,7 +195,7 @@ proofreading:
   language: pt-BR
   use_llm: true
 
-# Consistência
+# Consistency
 consistency:
   enabled: true
   check_characters: true
@@ -203,38 +203,38 @@ consistency:
   check_facts: true
   check_tone: true
 
-# Saída
+# Output
 output:
   output_dir: output
   kdp_compliant: true
 ```
 
-## 🏗️  Arquitetura
+## Architecture
 
 ```
 src/editora/
-├── cli.py              # Interface de linha de comando (Typer)
-├── config.py           # Configurações (Pydantic)
+├── cli.py              # Command-line interface (Typer)
+├── config.py           # Configuration (Pydantic)
 ├── core/
-│   └── manuscript.py   # Modelos Chapter e Manuscript
+│   └── manuscript.py   # Chapter and Manuscript models
 ├── ai/
-│   ├── llm.py          # Camada de abstração LLM (multi-provider)
-│   ├── editing.py      # Copyediting com IA
-│   ├── proofreading.py # Proofreading (IA + LanguageTool)
-│   └── consistency.py  # Revisão de consistência global
+│   ├── llm.py          # LLM abstraction layer (multi-provider)
+│   ├── editing.py      # AI copyediting
+│   ├── proofreading.py # Proofreading (AI + LanguageTool)
+│   └── consistency.py  # Global consistency review
 ├── typesetting/
 │   └── converter.py    # Pandoc → PDF/EPUB
 └── utils/
-    └── helpers.py      # Utilitários
+    └── helpers.py      # Utilities
 ```
 
-## 🧪 Desenvolvimento
+## Development
 
 ```bash
-# Instalar dependências de dev
+# Install dev dependencies
 pip install -e ".[dev]"
 
-# Rodar testes
+# Run tests
 pytest
 
 # Lint
@@ -247,42 +247,42 @@ black src/
 pyright src/
 ```
 
-## 📝 Fluxo de Trabalho Sugerido
+## Suggested Workflow
 
-1. **Escreva** — Crie capítulos em Markdown, um por arquivo
-2. **Organize** — Use numeração nos nomes (`01-`, `02-`, etc.)
-3. **Revise consistência** — Rode `editora consistency` periodicamente
-4. **Edite com IA** — Use `editora edit --preview` para revisar sugestões
-5. **Proofread** — Rode `editora proofread` antes da versão final
-6. **Compile** — `editora build` para gerar PDF/EPUB
-7. **Valide KDP** — A validação é automática no build
-8. **Versione** — Use Git para controle de versões do manuscrito
+1. **Write** — Create chapters in Markdown, one per file
+2. **Organize** — Use numbering in filenames (`01-`, `02-`, etc.)
+3. **Review consistency** — Run `editora consistency` periodically
+4. **Edit with AI** — Use `editora edit --preview` to review suggestions
+5. **Proofread** — Run `editora proofread` before the final version
+6. **Compile** — `editora build` to generate PDF/EPUB
+7. **KDP validation** — Validation is automatic during build
+8. **Version** — Use Git for manuscript version control
 
-## 🌐 Interface Web
+## Web Interface
 
-O projeto inclui uma interface web construída com **Next.js 16**, React 19 e shadcn/ui. Consulte [web/README.md](./web/README.md) para instruções de setup e desenvolvimento.
+The project includes a web interface built with **Next.js 16**, React 19 and shadcn/ui. See [web/README.md](./web/README.md) for setup and development instructions.
 
-## 🛠️  Stack Tecnológico
+## Technology Stack
 
-- **Python 3.12+** — Linguagem principal
+- **Python 3.12+** — Core language
 - **Typer** — CLI
-- **Pydantic** — Validação e configurações
-- **Rich** — Output formatado no terminal
-- **Pandoc** — Conversão Markdown → PDF/EPUB
-- **LaTeX** — Diagramação profissional
-- **LangChain** — Orquestração de IA
-- **LanguageTool** — Gramática pt-BR
+- **Pydantic** — Validation and settings
+- **Rich** — Formatted terminal output
+- **Pandoc** — Markdown → PDF/EPUB conversion
+- **LaTeX** — Professional typesetting
+- **LangChain** — AI orchestration
+- **LanguageTool** — pt-BR grammar checking
 
-## 📄 Licença
+## License
 
-MIT — Use livremente para seus projetos pessoais e comerciais.
+MIT — Free to use for personal and commercial projects.
 
-## 🙏 Agradecimentos
+## Acknowledgments
 
-- [Pandoc](https://pandoc.org/) — O canivete suíço da conversão de documentos
-- [LangChain](https://python.langchain.com/) — Framework de IA
-- [LanguageTool](https://languagetool.org/) — Verificador gramatical open-source
+- [Pandoc](https://pandoc.org/) — The Swiss Army knife of document conversion
+- [LangChain](https://python.langchain.com/) — AI framework
+- [LanguageTool](https://languagetool.org/) — Open-source grammar checker
 
 ---
 
-*Editora — Porque escrever é só o começo.*
+*Editora — Because writing is only the beginning.*
