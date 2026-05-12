@@ -1,70 +1,70 @@
 ---
-title: "Testes — Estratégia"
+title: "Testing Strategy"
 ---
 
 
 
-## Visão Geral
+## Overview
 
-O projeto utiliza duas camadas de teste:
+The project uses two testing layers:
 
-| Camada | Ferramenta | O que testa | Localização |
+| Layer | Tool | What it tests | Location |
 |--------|-----------|-------------|-------------|
-| Unitários | Vitest | Serviços, componentes React, utilitários | `__tests__/` junto ao arquivo |
-| E2E | Playwright | Fluxos completos do usuário, páginas Astro | `tests/e2e/` |
-| Comunidade | Vitest + Playwright | Testes do módulo comunidade (auth, reviews, feed) | `src/modules/comunidade/__tests__/` e `tests/e2e/community-disabled.spec.ts` |
+| Unit | Vitest | Services, React components, utilities | `__tests__/` alongside the file |
+| E2E | Playwright | Complete user flows, Astro pages | `tests/e2e/` |
+| Community | Vitest + Playwright | Community module tests (auth, reviews, feed) | `src/modules/comunidade/__tests__/` and `tests/e2e/community-disabled.spec.ts` |
 
-## Comandos
+## Commands
 
 ```bash
-# Unitários
-pnpm test              # Watch mode (desenvolvimento)
-pnpm test:run          # Execução única (CI)
-pnpm test:coverage     # Com relatório de cobertura
+# Unit
+pnpm test              # Watch mode (development)
+pnpm test:run          # Single run (CI)
+pnpm test:coverage     # With coverage report
 
 # E2E
-pnpm test:e2e          # Executa testes Playwright
+pnpm test:e2e          # Run Playwright tests
 ```
 
-## Cobertura
+## Coverage
 
-Thresholds configurados no `vitest.config.ts`:
+Thresholds configured in `vitest.config.ts`:
 
-| Métrica | Threshold |
+| Metric | Threshold |
 |---------|-----------|
 | Lines | 80% |
 | Functions | 75% |
 | Branches | 70% |
 | Statements | 80% |
 
-A cobertura cobre arquivos importados pelos testes. Componentes Astro puros são cobertos pelos testes E2E.
+Coverage covers files imported by the tests. Pure Astro components are covered by E2E tests.
 
-## Padrões de Teste
+## Test Patterns
 
-### Serviços (DB mockado)
+### Services (mocked DB)
 
 ```typescript
 vi.mock('@/core/lib/db', () => ({
   db: { execute: vi.fn() },
 }));
 
-// Mock de sucesso
+// Success mock
 (db.execute as any).mockResolvedValueOnce({ rows: [...] });
-// Mock de erro DB
+// DB error mock
 (db.execute as any).mockRejectedValueOnce(new Error('DB error'));
-// Mock de parse error (retorno malformado)
+// Parse error mock (malformed return)
 (db.execute as any).mockResolvedValueOnce({ rows: [{ coluna_invalida: 'valor' }] });
 ```
 
-**Cenários obrigatórios para todo serviço:**
-- **Parse error:** Dados malformados retornados do banco → serviço retorna `[]`
-- **DB error:** Falha na conexão/query → serviço retorna `[]`
-- **Empty results:** Query bem-sucedida sem dados → serviço retorna `[]`
-- **Feature flag:** Testes de API auth usam `vi.stubEnv('COMMUNITY_ENABLED', 'true')` antes de `vi.mock` para simular o módulo habilitado.
+**Required scenarios for every service:**
+- **Parse error:** Malformed data returned from DB → service returns `[]`
+- **DB error:** Connection/query failure → service returns `[]`
+- **Empty results:** Successful query with no data → service returns `[]`
+- **Feature flag:** Auth API tests use `vi.stubEnv('COMMUNITY_ENABLED', 'true')` before `vi.mock` to simulate the enabled module.
 
-O módulo comunidade tem testes unitários em `src/modules/comunidade/__tests__/` (auth, reviews, feed) e testes E2E em `tests/e2e/community-disabled.spec.ts` que verificam o comportamento quando desabilitado.
+The community module has unit tests in `src/modules/comunidade/__tests__/` (auth, reviews, feed) and E2E tests in `tests/e2e/community-disabled.spec.ts` that verify behavior when disabled.
 
-### Componentes React
+### React Components
 
 ```typescript
 import { render, screen } from '@testing-library/react';
@@ -81,10 +81,10 @@ logger.info('test');
 expect(spy).toHaveBeenCalledWith(expect.stringContaining('test'));
 ```
 
-## Boas Práticas
+## Best Practices
 
-1. **Testes perto do código:** `__tests__/` no mesmo diretório do arquivo testado
-2. **Mock de DB:** Nunca faça chamadas reais ao banco em testes
-3. **Cobertura de erro:** Teste tanto sucesso quanto falha/erro
-4. **Componentes React:** Teste renderização com diferentes props/variants
-5. **E2E:** Teste fluxos críticos (navegação, busca, review)
+1. **Tests close to code:** `__tests__/` in the same directory as the tested file
+2. **DB mocking:** Never make real DB calls in tests
+3. **Error coverage:** Test both success and failure/error cases
+4. **React components:** Test rendering with different props/variants
+5. **E2E:** Test critical flows (navigation, search, review)

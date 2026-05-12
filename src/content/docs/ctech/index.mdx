@@ -1,79 +1,79 @@
 ---
 title: CTech
-description: Ecossistema de Curadoria Técnica de Hardware
+description: Technical Hardware Curation Ecosystem
 ---
 
 import { Badge, Aside, Tabs, TabItem, Steps, FileTree, Card } from '@astrojs/starlight/components';
 
-<Badge text="Produção" variant="success" /> <Badge text="v2026.4" variant="note" /> <Badge text="Next.js + Astro" variant="tip" />
+<Badge text="Production" variant="success" /> <Badge text="v2026.4" variant="note" /> <Badge text="Next.js + Astro" variant="tip" />
 
-Bem-vindo à documentação do **CTECH (TechReveal)**, um ecossistema automatizado para análise, comparação e curadoria de hardware com IA.
+Welcome to the **CTECH (TechReveal)** documentation, an automated ecosystem for hardware analysis, comparison, and curation powered by AI.
 
-Este ecossistema é dividido em **dois projetos** que compartilham o mesmo banco de dados:
+This ecosystem is divided into **two projects** that share the same database:
 
 <Card title="ctech_be (Next.js)">
-Ferramenta local que roda na sua máquina para popular o banco de dados. Ingestão de produtos, preços, reviews, etc. Não precisa de login, não vai ser deployado, só você usa.
+Local tool that runs on your machine to populate the database. Product ingestion, prices, reviews, etc. No login needed, won't be deployed, only you use it.
 </Card>
 
 <Card title="ctech_fe (Astro + Cloudflare)">
-Site público que lê desse banco para exibir produtos, categorias, preços. E também escreve dados de usuários (cadastro, login, Google OAuth, 2FA, reviews de usuários).
+Public site that reads from this database to display products, categories, and prices. It also writes user data (registration, login, Google OAuth, 2FA, user reviews).
 </Card>
 
 ---
 
-## Visão Geral
+## Overview
 
-O CTECH é dividido em dois repositórios que compartilham o mesmo banco **Turso (SQLite)**:
+CTECH is divided into two repositories that share the same **Turso (SQLite)** database:
 
-| Repositório | Stack | Papel |
+| Repository | Stack | Role |
 |-------------|-------|-------|
-| **ctech_be** | Next.js 16, Turso, Pino, AI SDK, Tailwind v4 | Backend/Painel: Automação, Scrapers, Processamento IA |
-| **ctech_fe** | Astro 6, React 19, Tailwind v4, Turso, Zod v4 | Frontend/Público: Interface de alta performance otimizada para SEO |
+| **ctech_be** | Next.js 16, Turso, Pino, AI SDK, Tailwind v4 | Backend/Panel: Automation, Scrapers, AI Processing |
+| **ctech_fe** | Astro 6, React 19, Tailwind v4, Turso, Zod v4 | Frontend/Public: High-performance interface optimized for SEO |
 
 ```
 ctech_be (Server Actions) → Turso DB (SQLite) ← ctech_fe (Astro SSR)
 ```
 
-## Arquitetura — Módulos de Automação
+## Architecture — Automation Modules
 
 ### Backend (ctech_be)
 
-O backend é dividido em 9 módulos independentes (M1-M9):
+The backend is divided into 9 independent modules (M1-M9):
 
-| Módulo | Nome | Função |
-|--------|------|--------|
-| M1 | Entrada | Ingestão e detecção de duplicidade semântica via IA |
-| M2 | Descoberta | Busca de links de reviews técnicas |
-| M3 | Extração | Processamento de reviews e extração de specs via IA |
-| M4 | Consolidação | Unificação de reviews com nota bayesiana |
-| M5 | Preços | Monitoramento de preços em lojas |
-| M6 | Conferência | Auditoria de links afiliados e estoque |
-| M7 | CMS | Gerenciador central do catálogo de produtos |
-| M8 | Configurações | Painel de configurações globais (IA, Scrapers, Logs) |
-| M9 | Documentação | Visualizador de documentação Markdown integrado |
+| Module | Name | Function |
+|--------|------|---------|
+| M1 | Entry | Ingestion and semantic duplicate detection via AI |
+| M2 | Discovery | Technical review link search |
+| M3 | Extraction | Review processing and spec extraction via AI |
+| M4 | Consolidation | Review unification with Bayesian scoring |
+| M5 | Prices | Price monitoring across stores |
+| M6 | Auditing | Affiliate link and stock auditing |
+| M7 | CMS | Central product catalog manager |
+| M8 | Settings | Global settings panel (AI, Scrapers, Logs) |
+| M9 | Documentation | Integrated Markdown documentation viewer |
 
 ### Frontend (ctech_fe)
 
-| Rota | Descrição |
-|------|-----------|
-| `/` | Home com produto em destaque e tendências |
-| `/categoria/[categoria]` | Hub de guias de recomendação por categoria |
-| `/guia/[slug]` | Página individual de guia com produtos selecionados |
-| `/produto/[slug]` | Página detalhada do produto com specs, reviews e preços |
-| `/produto/[slug]/reviews` | Todas as reviews de imprensa de um produto |
-| `/produto/[slug]/user-reviews` | Todas as avaliações de usuários de um produto |
-| `/comparar` | Comparação lado a lado de produtos |
-| `/comunidade` | Feed com reviews da comunidade |
+| Route | Description |
+|-------|-------------|
+| `/` | Home with featured product and trends |
+| `/category/[category]` | Recommendation guide hub by category |
+| `/guide/[slug]` | Individual guide page with selected products |
+| `/product/[slug]` | Detailed product page with specs, reviews, and prices |
+| `/product/[slug]/reviews` | All press reviews for a product |
+| `/product/[slug]/user-reviews` | All user reviews for a product |
+| `/compare` | Side-by-side product comparison |
+| `/community` | Community review feed |
 
-## Começando
+## Getting Started
 
-### Pré-requisitos
+### Prerequisites
 
 - Node.js 22+
 - pnpm
-- Conta no [Turso](https://turso.tech)
+- A [Turso](https://turso.tech) account
 
-### Instalação
+### Installation
 
 <Tabs>
   <TabItem label="Backend (ctech_be)">
@@ -82,7 +82,7 @@ O backend é dividido em 9 módulos independentes (M1-M9):
     cd ctech/ctech_be
     pnpm install
     cp .env.example .env.local
-    # Configure TURSO_DATABASE_URL e TURSO_AUTH_TOKEN
+    # Configure TURSO_DATABASE_URL and TURSO_AUTH_TOKEN
     pnpm dev
     ```
 
@@ -93,17 +93,16 @@ O backend é dividido em 9 módulos independentes (M1-M9):
     cd ctech/ctech_fe
     pnpm install
     cp .env.example .env
-    # Configure TURSO_DATABASE_URL e TURSO_AUTH_TOKEN
+    # Configure TURSO_DATABASE_URL and TURSO_AUTH_TOKEN
     pnpm dev
     ```
 
   </TabItem>
 </Tabs>
 
-## Segurança
+## Security
 
-- CSP configurada via middleware (ctech_fe)
-- Consultas parametrizadas ao banco (sem SQL injection)
-- Cliente Turso usado apenas em SSR (nunca exposto ao cliente)
+- CSP configured via middleware (ctech_fe)
+- Parameterized database queries (no SQL injection)
+- Turso client used only in SSR (never exposed to the client)
 - HSTS, X-Frame-Options, X-Content-Type-Options
-
