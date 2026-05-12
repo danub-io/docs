@@ -1,52 +1,52 @@
 ---
 title: "Release Process"
-description: "Como releases são feitos e o changelog é atualizado automaticamente"
+description: "How releases are made and the changelog is automatically updated"
 ---
 
-O deploy para produção é feito via GitHub Actions, disparado por tags semânticas.
+Production deployment is done via GitHub Actions, triggered by semantic tags.
 
-## Fluxo
+## Flow
 
-1. Faça commits seguindo [Conventional Commits](https://www.conventionalcommits.org/)
-2. Quando estiver pronto para publicar, crie uma tag semântica e faça push:
+1. Commit following [Conventional Commits](https://www.conventionalcommits.org/)
+2. When ready to publish, create a semantic tag and push:
    ```bash
    git tag v1.0.7
    git push --tags
    ```
-3. O GitHub Actions executa automaticamente:
-   - **CI:** lint, typecheck, build, testes unitários e E2E
+3. GitHub Actions automatically runs:
+   - **CI:** lint, typecheck, build, unit and E2E tests
    - **Deploy:** build + `wrangler deploy` → Cloudflare Workers
-   - **Changelog:** o script `scripts/update-changelog.sh` (no repositório ctech_fe) gera a entry a partir do git log e commit direto no repositório `danub-io/docs`
+   - **Changelog:** the `scripts/update-changelog.sh` script (in the ctech_fe repo) generates the entry from git log and commits directly to the `danub-io/docs` repository
 
-## Mapeamento Commit → Changelog
+## Commit to Changelog Mapping
 
-| Prefixo do commit | Seção no changelog |
+| Commit prefix | Changelog section |
 |---|---|
-| `feat:` | `### Adicionado` |
-| `fix:` | `### Corrigido` |
-| `refactor:` / `style:` | `### Alterado` |
-| `perf:` | `### Otimizado` |
-| `docs:` | `### Documentação` |
-| `chore:` | Ignorado (não entra) |
-| `merge` | Ignorado (`git log --no-merges`) |
+| `feat:` | `### Added` |
+| `fix:` | `### Fixed` |
+| `refactor:` / `style:` | `### Changed` |
+| `perf:` | `### Optimized` |
+| `docs:` | `### Documentation` |
+| `chore:` | Ignored (not included) |
+| `merge` | Ignored (`git log --no-merges`) |
 
-## Script responsável
+## Responsible Script
 
-**Localização:** `scripts/update-changelog.sh` no repositório `danub-io/ctech_fe`
+**Location:** `scripts/update-changelog.sh` in the `danub-io/ctech_fe` repository
 
-**O que faz:**
+**What it does:**
 
-1. Lê a versão da git tag que disparou o workflow (`GITHUB_REF_NAME`)
-2. Descobre a tag anterior com `git describe --tags --abbrev=0 HEAD~1`
-3. Lê o log de commits entre as duas tags (`git log --no-merges`)
-4. Agrupa commits por prefixo e gera o bloco markdown no formato Keep a Changelog
-5. Clona o repositório `danub-io/docs`
-6. Substitui o bloco `[Unreleased]` pela nova versão no `CHANGELOG.md`
-7. Cria um `[Unreleased]` vazio para as próximas mudanças
-8. Commit e push direto na branch `main` do repositório docs
+1. Reads the version from the git tag that triggered the workflow (`GITHUB_REF_NAME`)
+2. Finds the previous tag with `git describe --tags --abbrev=0 HEAD~1`
+3. Reads the commit log between the two tags (`git log --no-merges`)
+4. Groups commits by prefix and generates the markdown block in Keep a Changelog format
+5. Clones the `danub-io/docs` repository
+6. Replaces the `[Unreleased]` block with the new version in `CHANGELOG.md`
+7. Creates an empty `[Unreleased]` for upcoming changes
+8. Commits and pushes directly to the `main` branch of the docs repo
 
-**Roda exclusivamente no CI, após o deploy bem-sucedido.** Nenhuma ação manual é necessária.
+**Runs exclusively in CI, after a successful deploy.** No manual action is required.
 
 ## Changelog
 
-O changelog vive em `src/content/docs/ctech/ctech_fe/CHANGELOG.md` no repositório `danub-io/docs`.
+The changelog lives in `src/content/docs/ctech/ctech_fe/CHANGELOG.md` in the `danub-io/docs` repository.
