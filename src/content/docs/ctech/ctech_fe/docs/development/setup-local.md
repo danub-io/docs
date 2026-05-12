@@ -1,28 +1,26 @@
 ---
-title: "Setup Local — Frontend CTECH"
+title: "Local Setup — CTECH Frontend"
 ---
 
+Step-by-step guide for setting up the frontend development environment.
 
-
-Guia passo a passo para configurar o ambiente de desenvolvimento do frontend.
-
-## Pré-requisitos
+## Prerequisites
 
 - **Node.js** >= 22.12.0
-- **pnpm** (gerenciador de pacotes)
-- **Turso CLI** (para banco de dados)
+- **pnpm** (package manager)
+- **Turso CLI** (for database)
 
 ```bash
-# Instalar pnpm (se não tiver)
+# Install pnpm (if not installed)
 npm install -g pnpm
 
-# Instalar Turso CLI
+# Install Turso CLI
 curl -sSfL https://get.turso.tech | bash
 ```
 
-## Passos
+## Steps
 
-### 1. Clonar e instalar dependências
+### 1. Clone and install dependencies
 
 ```bash
 git clone <repo-url>
@@ -30,38 +28,38 @@ cd ctech_fe
 pnpm install
 ```
 
-### 2. Configurar variáveis de ambiente
+### 2. Configure environment variables
 
 ```bash
 cp .env.example .env
 ```
 
-Edite `.env` com suas credenciais Turso:
+Edit `.env` with your Turso credentials:
 
 ```ini
-TURSO_DATABASE_URL=libsql://seu-banco-usuario.turso.io
-TURSO_AUTH_TOKEN=seu-token-aqui
+TURSO_DATABASE_URL=libsql://your-database-username.turso.io
+TURSO_AUTH_TOKEN=your-token-here
 ```
 
-### 3. Obter credenciais Turso
+### 3. Get Turso credentials
 
 ```bash
-# Login no Turso
+# Login to Turso
 turso auth login
 
-# Listar bancos disponíveis
+# List available databases
 turso db list
 
-# Obter URL do banco
-turso db show <nome-do-banco>
+# Get database URL
+turso db show <database-name>
 
-# Gerar token de autenticação
-turso db tokens create <nome-do-banco>
+# Generate authentication token
+turso db tokens create <database-name>
 ```
 
-### Opção A: Banco remoto (Turso)
+### Option A: Remote database (Turso)
 
-Recomendado para desenvolvimento. Use o banco compartilhado da equipe ou crie seu próprio:
+Recommended for development. Use the team's shared database or create your own:
 
 ```bash
 turso db create ctech-dev
@@ -69,47 +67,47 @@ turso db show ctech-dev        # URL
 turso db tokens create ctech-dev  # Token
 ```
 
-### Opção B: Banco local (SQLite)
+### Option B: Local database (SQLite)
 
-Para desenvolvimento offline, use SQLite local:
+For offline development, use local SQLite:
 
-1. Crie um arquivo `local.db` no projeto
-2. Aponte `.env` para ele:
+1. Create a `local.db` file in the project
+2. Point `.env` to it:
    ```ini
    TURSO_DATABASE_URL=file:./local.db
    TURSO_AUTH_TOKEN=
    ```
-3. Popule com seed data (se disponível):
+3. Populate with seed data (if available):
    ```bash
    node scripts/seed_guias.mjs
    ```
 
-### 4. Iniciar servidor de desenvolvimento
+### 4. Start development server
 
 ```bash
 pnpm dev
 ```
 
-Acesse http://localhost:4321
+Access http://localhost:4321
 
-## Comandos Úteis
+## Useful Commands
 
-| Comando | Descrição |
-|---------|-----------|
-| `pnpm dev` | Servidor dev com hot-reload |
-| `pnpm build` | Build de produção |
-| `pnpm preview` | Preview do build |
-| `pnpm lint` | Verificar lint |
-| `pnpm format` | Formatar código |
-| `pnpm test:run` | Testes unitários |
-| `pnpm test:coverage` | Testes com cobertura |
-| `pnpm test:e2e` | Testes E2E (Playwright) |
+| Command | Description |
+|---------|-------------|
+| `pnpm dev` | Dev server with hot-reload |
+| `pnpm build` | Production build |
+| `pnpm preview` | Build preview |
+| `pnpm lint` | Check lint |
+| `pnpm format` | Format code |
+| `pnpm test:run` | Unit tests |
+| `pnpm test:coverage` | Tests with coverage |
+| `pnpm test:e2e` | E2E tests (Playwright) |
 
 ## Troubleshooting
 
 ### "TURSO_DATABASE_URL is missing!"
 
-O `.env` não foi criado ou está incompleto. Copie de `.env.example`.
+`.env` was not created or is incomplete. Copy from `.env.example`.
 
 ### "Sharp is not available"
 
@@ -118,10 +116,10 @@ pnpm add sharp
 pnpm rebuild sharp
 ```
 
-### Banco retorna vazio
+### Database returns empty
 
-Verifique se o backend (ctech_be) já populou o banco com produtos com `status = 'AprovadoM4'`.
+Check whether the backend (ctech_be) has already populated the database with products having `status = 'AprovadoM4'`.
 
 ```bash
-turso db shell <nome-do-banco> "SELECT COUNT(*) FROM Produtos WHERE status = 'AprovadoM4'"
+turso db shell <database-name> "SELECT COUNT(*) FROM Produtos WHERE status = 'AprovadoM4'"
 ```
