@@ -1,186 +1,186 @@
 ---
-title: "Schema do Banco de Dados (Consolidado)"
-description: "Tabelas, indices e relacionamentos do banco Turso compartilhado entre ctech_be e ctech_fe"
+title: "Database Schema (Consolidated)"
+description: "Tables, indexes, and relationships of the shared Turso database between ctech_be and ctech_fe"
 ---
 
-O ecossistema CTECH utiliza um banco **Turso (SQLite distribuido)** unico, compartilhado entre backend (escrita) e frontend (leitura SSR).
+The CTECH ecosystem uses a single shared **Turso (distributed SQLite)** database, shared between the backend (write) and frontend (SSR read).
 
-> Documentacao original: [ctech_be/docs/architecture/schema-banco.md](../ctech_be/docs/architecture/schema-banco.md)
+> Original documentation: [ctech_be/docs/architecture/database-schema.md](ctech_be/docs/architecture/database-schema.md)
 
 ---
 
-## Tabela: Produtos
+## Table: Produtos
 
-Tabela central do catalogo.
+Central catalog table.
 
-| Coluna | Tipo | Descricao |
-|--------|------|-----------|
+| Column | Type | Description |
+|--------|------|-------------|
 | `id` | INTEGER PK | Auto increment |
-| `nome_produto` | TEXT NOT NULL | Nome do produto |
-| `marca` | TEXT NOT NULL | Fabricante |
-| `slug` | TEXT | Slug unico para URL (ex: `sony-wh-1000xm5`) |
-| `specs_json` | TEXT NOT NULL | Especificacoes tecnicas em JSON |
-| `tier` | TEXT NOT NULL | Nivel: `Premium`, `Intermediario`, `CustoBeneficio` |
-| `categoria` | TEXT | Categoria (ex: `Notebook`, `Fone`) |
-| `lancamento` | TEXT | Ano de lancamento |
-| `nota_final` | REAL | Nota final compilada (0-10) |
-| `imagem_url` | TEXT | URL da imagem do produto |
+| `nome_produto` | TEXT NOT NULL | Product name |
+| `marca` | TEXT NOT NULL | Manufacturer |
+| `slug` | TEXT | Unique slug for URL (e.g., `sony-wh-1000xm5`) |
+| `specs_json` | TEXT NOT NULL | Technical specifications in JSON |
+| `tier` | TEXT NOT NULL | Tier: `Premium`, `Intermediario`, `CustoBeneficio` |
+| `categoria` | TEXT | Category (e.g., `Notebook`, `Fone`) |
+| `lancamento` | TEXT | Release year |
+| `nota_final` | REAL | Compiled final score (0-10) |
+| `imagem_url` | TEXT | Product image URL |
 | `status` | TEXT DEFAULT `rascunho` | `rascunho` -> `AprovadoM3` -> `AprovadoM4` |
-| `review_ia` | TEXT | Review gerada por IA |
-| `pros_gerais` / `contras_gerais` | TEXT | Pros e contras consolidados |
-| `congelar_precos` | INTEGER DEFAULT 0 | Se `1`, precos nao sao atualizados automaticamente |
+| `review_ia` | TEXT | AI-generated review |
+| `pros_gerais` / `contras_gerais` | TEXT | Consolidated pros and cons |
+| `congelar_precos` | INTEGER DEFAULT 0 | If `1`, prices are not updated automatically |
 
-**Indices:** `status`, `categoria`, `tier`, `slug`, `nota_final`, `LOWER(nome_produto)`
+**Indexes:** `status`, `categoria`, `tier`, `slug`, `nota_final`, `LOWER(nome_produto)`
 
-**Importante para o frontend:** Apenas produtos com `status = 'AprovadoM4'` sao exibidos publicamente.
+**Important for the frontend:** Only products with `status = 'AprovadoM4'` are displayed publicly.
 
 ---
 
-## Tabela: Reviews
+## Table: Reviews
 
-Avaliacoes de imprensa (`critic`) e de usuarios (`user`).
+Press (`critic`) and user (`user`) reviews.
 
-| Coluna | Tipo | Descricao |
-|--------|------|-----------|
+| Column | Type | Description |
+|--------|------|-------------|
 | `id` | INTEGER PK | Auto increment |
-| `produto_id` | INTEGER FK -> Produtos.id | Produto relacionado |
-| `review_type` | TEXT DEFAULT `critic` | `critic` (imprensa) ou `user` (usuario) |
-| `site` | TEXT | Nome do site/fonte |
-| `link` | TEXT | URL da review original |
-| `snippet` | TEXT | Trecho da review |
-| `nota_review` | REAL | Nota atribuida |
-| `pros` / `contras` | TEXT | Pros e contras mencionados |
-| `is_approved` | INTEGER DEFAULT 0 | Se `1`, aprovada para exibicao |
+| `produto_id` | INTEGER FK -> Produtos.id | Related product |
+| `review_type` | TEXT DEFAULT `critic` | `critic` (press) or `user` |
+| `site` | TEXT | Site/source name |
+| `link` | TEXT | Original review URL |
+| `snippet` | TEXT | Review snippet |
+| `nota_review` | REAL | Assigned score |
+| `pros` / `contras` | TEXT | Mentioned pros and cons |
+| `is_approved` | INTEGER DEFAULT 0 | If `1`, approved for display |
 
-**Indices:** `produto_id`, `(produto_id, review_type)`
+**Indexes:** `produto_id`, `(produto_id, review_type)`
 
 ---
 
-## Tabela: Afiliados
+## Table: Afiliados
 
-Links de afiliados (lojas/parceiros) para cada produto.
+Affiliate links (stores/partners) for each product.
 
-| Coluna | Tipo | Descricao |
-|--------|------|-----------|
+| Column | Type | Description |
+|--------|------|-------------|
 | `id` | INTEGER PK | Auto increment |
-| `produto_id` | INTEGER FK -> Produtos.id | Produto relacionado |
-| `loja` | TEXT | Nome da loja (ex: `Amazon`, `Kabum`) |
-| `url_afiliado` | TEXT | Link de afiliado |
-| `preco_atual` | REAL | Preco atual |
-| `ultima_atualizacao` | DATETIME | Timestamp da ultima atualizacao |
-| `nota_preco` | REAL | Avaliacao do preco |
-| `status_erro` / `precisa_revisao` | BOOLEAN | Flags de erro/revisao |
-| `is_afiliado` | INTEGER | Se `1`, e link de afiliado (nao direto) |
-| `snippet` | TEXT | Observacao sobre a oferta |
-| `link_original` | TEXT | URL original antes de limpeza |
+| `produto_id` | INTEGER FK -> Produtos.id | Related product |
+| `loja` | TEXT | Store name (e.g., `Amazon`, `Kabum`) |
+| `url_afiliado` | TEXT | Affiliate link |
+| `preco_atual` | REAL | Current price |
+| `ultima_atualizacao` | DATETIME | Last update timestamp |
+| `nota_preco` | REAL | Price rating |
+| `status_erro` / `precisa_revisao` | BOOLEAN | Error/review flags |
+| `is_afiliado` | INTEGER | If `1`, it's an affiliate link (not direct) |
+| `snippet` | TEXT | Offer note |
+| `link_original` | TEXT | Original URL before cleanup |
 
-**Indices:** `produto_id`, `loja`
+**Indexes:** `produto_id`, `loja`
 
 ---
 
-## Tabela: Guias
+## Table: Guias
 
-Guias de recomendacao editoriais (modelo RTINGS).
+Editorial recommendation guides (RTINGS-style).
 
-| Coluna | Tipo | Descricao |
-|--------|------|-----------|
+| Column | Type | Description |
+|--------|------|-------------|
 | `id` | INTEGER PK | Auto increment |
-| `slug` | TEXT UNIQUE NOT NULL | Slug para URL (`/guia/{slug}`) |
-| `titulo` | TEXT NOT NULL | Titulo do guia |
-| `descricao` | TEXT | Descricao curta (card) |
-| `descricao_longa` | TEXT | Descricao editorial completa |
-| `imagem_url` | TEXT | URL da imagem de capa |
-| `categoria_pai` | TEXT NOT NULL | Categoria de produto relacionada |
-| `grupo` | TEXT DEFAULT '' | Agrupamento tematico (ex: `Por Uso`, `Por Preco`) |
-| `ordem` | INTEGER DEFAULT 0 | Ordem de exibicao |
-| `ativo` | INTEGER DEFAULT 1 | Se `0`, oculto do frontend |
+| `slug` | TEXT UNIQUE NOT NULL | Slug for URL (`/guia/{slug}`) |
+| `titulo` | TEXT NOT NULL | Guide title |
+| `descricao` | TEXT | Short description (card) |
+| `descricao_longa` | TEXT | Full editorial description |
+| `imagem_url` | TEXT | Cover image URL |
+| `categoria_pai` | TEXT NOT NULL | Related product category |
+| `grupo` | TEXT DEFAULT '' | Thematic grouping (e.g., `Por Uso`, `Por Preco`) |
+| `ordem` | INTEGER DEFAULT 0 | Display order |
+| `ativo` | INTEGER DEFAULT 1 | If `0`, hidden from the frontend |
 
-**Indices:** `slug` (unico), `(categoria_pai, ativo)`
+**Indexes:** `slug` (unique), `(categoria_pai, ativo)`
 
 ---
 
-## Tabela: Guia_Produtos
+## Table: Guia_Produtos
 
-Relacao many-to-many entre guias e produtos.
+Many-to-many relationship between guides and products.
 
-| Coluna | Tipo | Descricao |
-|--------|------|-----------|
-| `guia_id` | INTEGER FK -> Guias.id | Guia relacionado |
-| `produto_id` | INTEGER FK -> Produtos.id | Produto relacionado |
-| `ordem` | INTEGER DEFAULT 0 | Ordem dentro do guia |
+| Column | Type | Description |
+|--------|------|-------------|
+| `guia_id` | INTEGER FK -> Guias.id | Related guide |
+| `produto_id` | INTEGER FK -> Produtos.id | Related product |
+| `ordem` | INTEGER DEFAULT 0 | Order within the guide |
 
 **PK:** `(guia_id, produto_id)`
-**Indice:** `guia_id`
+**Index:** `guia_id`
 
 ---
 
-## Tabela: fila_processamento
+## Table: fila_processamento
 
-Jobs assincronos do backend.
+Backend async jobs.
 
-| Coluna | Tipo | Descricao |
-|--------|------|-----------|
+| Column | Type | Description |
+|--------|------|-------------|
 | `id` | INTEGER PK | Auto increment |
 | `modulo` | TEXT NOT NULL | `link-review`, `busca-texto`, `busca-precos` |
-| `referencia_id` | INTEGER NOT NULL | ID do produto/review alvo |
+| `referencia_id` | INTEGER NOT NULL | Target product/review ID |
 | `status` | TEXT DEFAULT `pendente` | `pendente`, `processando`, `concluido`, `erro`, `falha_critica` |
-| `tentativas` | INTEGER DEFAULT 0 | Numero de tentativas (max 3 -> DLQ) |
-| `erro` | TEXT | Mensagem de erro da ultima tentativa |
-| `prioridade` | INTEGER DEFAULT 0 | Prioridade do job |
+| `tentativas` | INTEGER DEFAULT 0 | Number of attempts (max 3 -> DLQ) |
+| `erro` | TEXT | Error message from the last attempt |
+| `prioridade` | INTEGER DEFAULT 0 | Job priority |
 
-**Indices:** `status`, `referencia_id`
+**Indexes:** `status`, `referencia_id`
 
 ---
 
-## Tabela: historico_precos
+## Table: historico_precos
 
-Historico de precos dos afiliados ao longo do tempo.
+Historical prices from affiliates over time.
 
-| Coluna | Tipo | Descricao |
-|--------|------|-----------|
+| Column | Type | Description |
+|--------|------|-------------|
 | `id` | INTEGER PK | Auto increment |
-| `produto_id` | INTEGER FK -> Produtos.id | Produto relacionado |
-| `loja` | TEXT | Nome da loja |
-| `preco` | REAL | Preco capturado |
-| `data_captura` | DATETIME | Timestamp da captura |
+| `produto_id` | INTEGER FK -> Produtos.id | Related product |
+| `loja` | TEXT | Store name |
+| `preco` | REAL | Captured price |
+| `data_captura` | DATETIME | Capture timestamp |
 
-**Indice:** `(produto_id, data_captura)`
+**Index:** `(produto_id, data_captura)`
 
 ---
 
-## Tabelas de Configuracao (backend)
+## Configuration Tables (backend)
 
 ### config_ai_models
 
-Modelos de IA com chaves criptografadas (AES-256-CBC). Colunas: `id`, `provider`, `model_id`, `api_key`, `tier`, `is_active`, `system_prompt`, `target_module`, `input_price_1m`, `output_price_1m`.
+AI models with encrypted keys (AES-256-CBC). Columns: `id`, `provider`, `model_id`, `api_key`, `tier`, `is_active`, `system_prompt`, `target_module`, `input_price_1m`, `output_price_1m`.
 
 ### config_scraping_services
 
-Servicos de scraping. Colunas: `id`, `name`, `engine`, `api_key`, `tier`, `is_active`.
+Scraping services. Columns: `id`, `name`, `engine`, `api_key`, `tier`, `is_active`.
 
 ### config_preferences
 
-Preferencias do painel (singleton). Colunas: `theme`, `show_scanlines`, `animations_enabled`, `compact_mode`.
+Panel preferences (singleton). Columns: `theme`, `show_scanlines`, `animations_enabled`, `compact_mode`.
 
 ### worker_control
 
-Heartbeat dos workers. Colunas: `id`, `is_active`, `last_heartbeat`.
+Worker heartbeat. Columns: `id`, `is_active`, `last_heartbeat`.
 
 ---
 
-## Tabela: logs_entrada
+## Table: logs_entrada
 
-Auditoria do sistema. Colunas: `id`, `timestamp`, `level`, `message`, `details`, `tokens_prompt`, `tokens_completion`, `model_id`, `custo_est`, `module_name`, `input_payload`.
-
----
-
-## Tabela: conflitos_entrada
-
-Conflitos de duplicidade detectados na ingestao. Colunas: `id`, `nome_produto`, `marca`, `dados_json`, `motivo`, `match_candidato_id`, `status`.
+System audit log. Columns: `id`, `timestamp`, `level`, `message`, `details`, `tokens_prompt`, `tokens_completion`, `model_id`, `custo_est`, `module_name`, `input_payload`.
 
 ---
 
-## Relacionamentos (ER)
+## Table: conflitos_entrada
+
+Duplicate conflicts detected during ingestion. Columns: `id`, `nome_produto`, `marca`, `dados_json`, `motivo`, `match_candidato_id`, `status`.
+
+---
+
+## Relationships (ER)
 
 ```
 Produtos --1:N--> Reviews        (via produto_id)

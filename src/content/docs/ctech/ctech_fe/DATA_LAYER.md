@@ -1,24 +1,22 @@
 ---
-title: "Camada de Dados — CTECH Frontend"
+title: "Data Layer — CTECH Frontend"
 ---
 
+This document describes how the frontend consumes, transforms, and displays data, including the Turso database connection, available services, and shared types.
 
+## Overview
 
-Este documento descreve como o frontend consome, transforma e exibe dados, incluindo a conexão com o banco Turso, os serviços disponíveis e os tipos compartilhados.
-
-## Visão Geral
-
-O ctech_fe consulta o banco Turso **diretamente** em Server-Side Rendering (SSR) via o cliente `@libsql/client`. Não há uma camada REST API intermediária — o backend (ctech_be) escreve os dados, e o frontend os lê.
+ctech_fe queries the Turso database **directly** in Server-Side Rendering (SSR) via the `@libsql/client` driver. There is no intermediate REST API layer — the backend (ctech_be) writes data, and the frontend reads it.
 
 ```
 ctech_be (Server Actions) → Turso DB (SQLite) ← ctech_fe (Astro SSR)
 ```
 
-> **Nota de Segurança:** O cliente Turso só é usado em SSR (nunca exposto ao navegador). As consultas são parametrizadas para prevenir SQL injection.
+> **Security Note:** The Turso client is only used in SSR (never exposed to the browser). All queries are parameterized to prevent SQL injection.
 
-## Conexão com o Banco
+## Database Connection
 
-**Arquivo:** `src/core/lib/db.ts`
+**File:** `src/core/lib/db.ts`
 
 ```typescript
 import { createClient } from '@libsql/client';
@@ -29,40 +27,40 @@ export const db = createClient({
 });
 ```
 
-**Variáveis de ambiente necessárias:**
-- `TURSO_DATABASE_URL` — URL do banco Turso (obrigatório em produção e dev)
-- `TURSO_AUTH_TOKEN` — Token de autenticação (obrigatório em produção)
+**Required environment variables:**
+- `TURSO_DATABASE_URL` — Turso database URL (required in production and dev)
+- `TURSO_AUTH_TOKEN` — Authentication token (required in production)
 
-## Serviços
+## Services
 
-Cada domínio possui um serviço que encapsula consultas SQL e transformações.
+Each domain has a service that encapsulates SQL queries and transformations.
 
 ### Core Services
 
-| Serviço | Arquivo | Funções | Cache | Descrição |
-|---------|---------|---------|-------|-----------|
-| `servicoCatalogo` | `src/core/services/servicoCatalogo.ts` | `obterCategorias()` | 5 min | Lista categorias únicas |
-| `servicoMenu` | `src/core/services/servicoMenu.ts` | `obterMenu()` | 5 min | Menu de navegação com subcategorias |
-| `servicoProduto` | `src/modules/produto/services/servicoProduto.ts` | `obterTodosSlugs()` | 1h | Slugs de produtos para pré-renderização |
-| `servicoGuia` | `src/modules/guia/services/servicoGuia.ts` | `obterCategoriasComGuias()` | 30 min | Categorias com pelo menos 1 guia ativo |
+| Service | File | Functions | Cache | Description |
+|---------|------|-----------|-------|-------------|
+| `catalogService` | `src/core/services/catalogService.ts` | `getCategories()` | 5 min | Lists unique categories |
+| `menuService` | `src/core/services/menuService.ts` | `getMenu()` | 5 min | Navigation menu with subcategories |
+| `productService` | `src/modules/product/services/productService.ts` | `getAllSlugs()` | 1h | Product slugs for pre-rendering |
+| `guideService` | `src/modules/guide/services/guideService.ts` | `getCategoriesWithGuides()` | 30 min | Categories with at least 1 active guide |
 
 ### Module Services
 
-| Módulo | Serviço | Funções | Cache | Descrição |
-|--------|---------|---------|-------|-----------|
-| **Início** | `servicoInicio` | `obterProdutoDestaque()`, `obterProdutosRecentes()` | 2 min | Produto em destaque e recentes |
-| **Comparar** | `servicoComparacao` | `obterProdutosComparacao(ids)`, `obterTopProdutos(limit)`, `obterSugestoesBusca(query)` | — | Comparação e busca |
-| **Categoria** | `servicoCategoria` | `obterProdutosPorCategoria(categoria, filtros?)`, `obterProdutosAgrupadosPorNivel(categoria, filtros?)`, `obterRotuloNivel(tier)` | — | Páginas de categoria |
-| **Busca** | `servicoBusca` | `buscar(filtros)` | — | Busca full-text com paginação e facetas |
-| **Produto** | `servicoProduto` | `obterProdutoPorSlug(slug)`, `obterTodosSlugs()`, `obterAvaliacoesCriticas(produtoId)`, `obterAvaliacoesUsuarios(produtoId)`, `obterAfiliados(produtoId)`, `obterProdutoCompleto(slug)` | — (1h slugs) | Páginas de produto, reviews, afiliados e função agregada |
-| **Guia** | `servicoGuia` | `obterGuiasPorCategoria(categoria)`, `obterGuiaPorSlug(slug)`, `obterProdutosDoGuia(guiaId)`, `obterTodosGuiasAtivos()`, `obterCategoriasComGuias()` | — (30min cats) | Guias de recomendação |
-| **Comunidade** | `servicoComunidade` | `obterAvaliacoesRecentes(limit)` | — | Feed da comunidade |
+| Module | Service | Functions | Cache | Description |
+|--------|---------|-----------|-------|-------------|
+| **Home** | `homeService` | `getFeaturedProduct()`, `getRecentProducts()` | 2 min | Featured and recent products |
+| **Compare** | `comparisonService` | `getComparisonProducts(ids)`, `getTopProducts(limit)`, `getSearchSuggestions(query)` | — | Comparison and search |
+| **Category** | `categoryService` | `getProductsByCategory(category, filters?)`, `getProductsGroupedByTier(category, filters?)`, `getTierLabel(tier)` | — | Category pages |
+| **Search** | `searchService` | `search(filters)` | — | Full-text search with pagination and facets |
+| **Product** | `productService` | `getProductBySlug(slug)`, `getAllSlugs()`, `getPressReviews(productId)`, `getUserReviews(productId)`, `getAffiliates(productId)`, `getFullProduct(slug)` | — (1h slugs) | Product pages, reviews, affiliates, and aggregate function |
+| **Guide** | `guideService` | `getGuidesByCategory(category)`, `getGuideBySlug(slug)`, `getGuideProducts(guideId)`, `getAllActiveGuides()`, `getCategoriesWithGuides()` | — (30min cats) | Recommendation guides |
+| **Community** | `communityService` | `getRecentReviews(limit)` | — | Community feed |
 
-## Tipos e Validação
+## Types and Validation
 
 ### ProductSchema (`src/core/types/product.ts`)
 
-Schema Zod que valida e transforma dados da tabela `Produtos`:
+Zod schema that validates and transforms data from the `Produtos` table:
 
 ```typescript
 export const ProductSchema = z.object({
@@ -70,7 +68,7 @@ export const ProductSchema = z.object({
   nome_produto: z.string(),
   marca: z.string().nullable().optional(),
   specs_json: z.string().nullable().optional().default('{}'),
-  // ... outros campos
+  // ... other fields
 }).transform((data) => ({
   ...data,
   specs: JSON.parse(data.specs_json || '{}') as Record<string, unknown>,
@@ -79,37 +77,37 @@ export const ProductSchema = z.object({
 export type Product = z.infer<typeof ProductSchema>;
 ```
 
-### Outros Schemas Zod
+### Other Zod Schemas
 
-| Schema | Arquivo | Uso |
-|--------|---------|-----|
-| `AvaliacaoSchema` | `src/core/types/avaliacao.ts` | Reviews de imprensa e usuários |
-| `AvaliacaoComunidadeSchema` | `src/core/types/avaliacao.ts` | Review com nome do produto (JOIN) |
-| `GuiaSchema` | `src/core/types/guia.ts` | Guia de recomendação |
-| `GuiaProdutoSchema` | `src/core/types/guia.ts` | Relação guia ↔ produto |
-| `CategoriaSchema` | `src/core/services/servicoCatalogo.ts` | Categoria de produto |
-| `AfiliadoSchema` | `src/modules/produto/services/servicoProduto.ts` | Afiliado (loja, preço, link) |
+| Schema | File | Usage |
+|--------|------|-------|
+| `ReviewSchema` | `src/core/types/review.ts` | Press and user reviews |
+| `CommunityReviewSchema` | `src/core/types/review.ts` | Review with product name (JOIN) |
+| `GuideSchema` | `src/core/types/guide.ts` | Recommendation guide |
+| `GuideProductSchema` | `src/core/types/guide.ts` | Guide-to-product relationship |
+| `CategorySchema` | `src/core/services/catalogService.ts` | Product category |
+| `AffiliateSchema` | `src/modules/product/services/productService.ts` | Affiliate (store, price, link) |
 
-### Tipos de Retorno
+### Return Types
 
-Todos os serviços seguem o padrão:
-- **Sucesso:** `Promise<Product[]>` ou `Promise<Product | null>`
-- **Erro:** `Promise<[]>` ou `Promise<null>` (nunca lançam exceções)
+All services follow the pattern:
+- **Success:** `Promise<Product[]>` or `Promise<Product | null>`
+- **Error:** `Promise<[]>` or `Promise<null>` (never throw exceptions)
 
-## Estratégia de Cache
+## Cache Strategy
 
-### Cache em Memória com Proteção contra Stampede
+### In-Memory Cache with Stampede Protection
 
-O projeto utiliza cache em memória com TTL em serviços específicos. Para evitar **cache stampede** (múltiplas requisições batendo no banco simultaneamente quando o cache expira), cada cache compartilha uma `pendingFetch` entre requisições concorrentes:
+The project uses an in-memory cache with TTL on specific services. To prevent **cache stampede** (multiple requests hitting the database simultaneously when the cache expires), each cache shares a `pendingFetch` across concurrent requests:
 
 ```typescript
-// Padrão de implementação (ex: servicoCatalogo)
-let cached: Categoria[] | null = null;
+// Implementation pattern (e.g., catalogService)
+let cached: Category[] | null = null;
 let lastFetch = 0;
-let pendingFetch: Promise<Categoria[]> | null = null;
+let pendingFetch: Promise<Category[]> | null = null;
 const TTL = 5 * 60 * 1000;
 
-async obterDados() {
+async getData() {
   if (cached && Date.now() - lastFetch < TTL) return cached;
   if (!pendingFetch) {
     pendingFetch = (async () => {
@@ -125,32 +123,32 @@ async obterDados() {
       }
     })();
   }
-  return pendingFetch; // Reusa promise em andamento
+  return pendingFetch; // Reuses in-flight promise
 }
 ```
 
-| Serviço | Métodos cacheados | TTL |
-|---------|-------------------|-----|
-| `servicoCatalogo` | `obterCategorias()` | 5 min |
-| `servicoMenu` | `obterMenu()` | 5 min |
-| `servicoProduto` | `obterTodosSlugs()` | 1h |
-| `servicoGuia` | `obterCategoriasComGuias()` | 30 min |
-| `servicoInicio` | `obterProdutoDestaque()`, `obterProdutosRecentes()` | 2 min |
+| Service | Cached methods | TTL |
+|---------|----------------|-----|
+| `catalogService` | `getCategories()` | 5 min |
+| `menuService` | `getMenu()` | 5 min |
+| `productService` | `getAllSlugs()` | 1h |
+| `guideService` | `getCategoriesWithGuides()` | 30 min |
+| `homeService` | `getFeaturedProduct()`, `getRecentProducts()` | 2 min |
 
-Cache é invalidado apenas no restart do servidor. Dados dinâmicos (produto, reviews, afiliados) não usam cache — consultam o banco a cada requisição SSR.
+Cache is invalidated only on server restart. Dynamic data (product, reviews, affiliates) does not use caching — it queries the database on every SSR request.
 
-### SSR sem Cache
+### SSR without Cache
 
-Os demais serviços consultam o banco a cada requisição SSR. Para melhorar performance em escala, considere:
-- Adicionar cache HTTP (CDN) para páginas estáticas
-- Implementar cache de query com TTL para listings
-- Usar ISR (Incremental Static Regeneration) do Astro
+The remaining services query the database on every SSR request. To improve performance at scale, consider:
+- Adding HTTP cache (CDN) for static pages
+- Implementing query caching with TTL for listings
+- Using Astro ISR (Incremental Static Regeneration)
 
-## Boas Práticas
+## Best Practices
 
-1. **Consultas parametrizadas:** Sempre use `?` placeholders e `args` — nunca concatene valores em SQL
-2. **Tratamento de erros:** Todo serviço tem try/catch com fallback (array vazio ou null)
-3. **Validação:** Use `Schema.safeParse()` para dados que podem vir mal formatados
-4. **Logging:** Erros são logados via `logger.error()` para debug em desenvolvimento
-5. **Performance:** Use `Promise.all()` para consultas paralelas independentes
-6. **Cache stampede:** Sempre use `pendingFetch` compartilhado quando implementar cache em memória
+1. **Parameterized queries:** Always use `?` placeholders and `args` — never concatenate values in SQL
+2. **Error handling:** Every service has try/catch with fallback (empty array or null)
+3. **Validation:** Use `Schema.safeParse()` for data that may be malformed
+4. **Logging:** Errors are logged via `logger.error()` for debugging in development
+5. **Performance:** Use `Promise.all()` for independent parallel queries
+6. **Cache stampede:** Always use shared `pendingFetch` when implementing in-memory cache

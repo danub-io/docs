@@ -1,40 +1,38 @@
 ---
-title: "API Documentation - CTECH Painel (Backend)"
+title: "API Documentation - CTECH Panel (Backend)"
 ---
 
+This document describes the **Server Actions** (Next.js App Router) and **API Routes** available in the project.
 
+> **Cache Strategy:** List queries (`getAIModels`, `getScrapingServices`, `getProdutosParaConsolidar`, etc.) use an in-memory cache with a 5 to 10-minute TTL. The cache is automatically invalidated on mutations. To bypass, use `{ refresh: true }`.
 
-Este documento descreve as **Server Actions** (Next.js App Router) e **API Routes** disponíveis no projeto.
-
-> **Estratégia de Cache:** Queries de listagem (`getAIModels`, `getScrapingServices`, `getProdutosParaConsolidar`, etc.) utilizam cache em memória com TTL de 5 a 10 minutos. O cache é invalidado automaticamente nas mutações. Para bypass, use `{ refresh: true }`.
-
-## Índice
-1. [M1 - Entrada (Ingestão)](#m1---entrada-ingestão)
-2. [M2 - Descoberta (Reviews)](#m2---descoberta-reviews)
-3. [M3 - Extração (Análise)](#m3---extração-análise)
-4. [M4 - Consolidação](#m4---consolidação)
-5. [M5 - Preços](#m5---preços)
-6. [M6 - Conferência](#m6---conferência)
+## Table of Contents
+1. [M1 - Entry (Ingestion)](#m1---entry-ingestion)
+2. [M2 - Discovery (Reviews)](#m2---discovery-reviews)
+3. [M3 - Extraction (Analysis)](#m3---extraction-analysis)
+4. [M4 - Consolidation](#m4---consolidation)
+5. [M5 - Prices](#m5---prices)
+6. [M6 - Checkout](#m6---checkout)
 7. [M7 - CMS](#m7---cms)
-8. [M8 - Configurações](#m8---configurações)
-9. [M8.5 - Manutenção (Purge)](#m85---manutenção-purge)
-10. [M9 - Documentação](#m9---documentação)
+8. [M8 - Settings](#m8---settings)
+9. [M8.5 - Maintenance (Purge)](#m85---maintenance-purge)
+10. [M9 - Documentation](#m9---documentation)
 11. [Worker & Queue](#worker--queue)
-12. [Utilitários](#utilitários)
+12. [Utilities](#utilities)
 13. [API Routes](#api-routes)
 
 ---
 
-## M1 - Entrada (Ingestão)
+## M1 - Entry (Ingestion)
 
 ### `processarIngestao(textobruto, categoriaForcada?)`
-Processa texto bruto usando IA para extrair produtos e verificar duplicidade.
+Processes raw text using AI to extract products and check for duplicates.
 
-**Parâmetros:**
-- `textobruto` (string): Texto contendo dados dos produtos (mínimo 10 caracteres)
-- `categoriaForcada` (string, opcional): Categoria forçada para os produtos
+**Parameters:**
+- `textobruto` (string): Text containing product data (minimum 10 characters)
+- `categoriaForcada` (string, optional): Forced category for the products
 
-**Retorno:** `ResultadoIngestao`
+**Returns:** `ResultadoIngestao`
 ```typescript
 {
   sucesso: boolean;
@@ -48,32 +46,32 @@ Processa texto bruto usando IA para extrair produtos e verificar duplicidade.
 ```
 
 ### `salvarProdutoUnico(nb, conflitoId?)`
-Salva manualmente um produto identificado como único.
+Manually saves a product identified as unique.
 
-**Parâmetros:**
-- `nb` (object): Dados do produto (marca, nome_produto, specs_cru, tier)
-- `conflitoId` (number, opcional): ID do conflito a ser resolvido
+**Parameters:**
+- `nb` (object): Product data (brand, product_name, raw_specs, tier)
+- `conflitoId` (number, optional): ID of the conflict to resolve
 
 ### `getConflitos()`
-Retorna lista de conflitos de entrada pendentes.
+Returns a list of pending entry conflicts.
 
 ### `descartarConflito(id)`
-Descarta um conflito de entrada.
+Discards an entry conflict.
 
-**Parâmetros:**
-- `id` (number): ID do conflito
+**Parameters:**
+- `id` (number): Conflict ID
 
 ---
 
-## M2 - Descoberta (Reviews)
+## M2 - Discovery (Reviews)
 
 ### `processarScrapingReviews(produtoIds)`
-Executa busca de reviews na web para produtos sem review.
+Searches the web for reviews on products that don't have any yet.
 
-**Parâmetros:**
-- `produtoIds` (number[]): IDs dos produtos para buscar reviews
+**Parameters:**
+- `produtoIds` (number[]): IDs of the products to search reviews for
 
-**Retorno:** `ScrapingStats`
+**Returns:** `ScrapingStats`
 ```typescript
 {
   sucesso: boolean;
@@ -94,57 +92,57 @@ Executa busca de reviews na web para produtos sem review.
 ```
 
 ### `getProdutosSemReview()`
-Retorna produtos que ainda não possuem reviews.
+Returns products that don't have reviews yet.
 
-**Retorno:** `ProdutoSemReview[]`
+**Returns:** `ProdutoSemReview[]`
 
 ### `getReviewsPendentes()`
-Retorna reviews pendentes de aprovação.
+Returns reviews pending approval.
 
-**Retorno:** `ScrapingStats | null`
+**Returns:** `ScrapingStats | null`
 
 ### `aprovarReview(id)`
-Aprova uma review para processamento.
+Approves a review for processing.
 
-**Parâmetros:**
-- `id` (number): ID da review
-- `produtoId` (number): ID do produto
+**Parameters:**
+- `id` (number): Review ID
+- `produtoId` (number): Product ID
 
 ### `reprovarReview(reviewId, produtoId)`
-Marca uma review como reprovada.
+Marks a review as rejected.
 
-**Parâmetros:**
-- `reviewId` (number): ID da review
-- `produtoId` (number): ID do produto
+**Parameters:**
+- `reviewId` (number): Review ID
+- `produtoId` (number): Product ID
 
 ### `deletarReview(reviewId, produtoId)`
-Remove uma review do banco.
+Deletes a review from the database.
 
-**Parâmetros:**
-- `reviewId` (number): ID da review
-- `produtoId` (number): ID do produto
+**Parameters:**
+- `reviewId` (number): Review ID
+- `produtoId` (number): Product ID
 
 ### `aprovarTodasReviewsDoProduto(produtoId)`
-Aprova todas as reviews de um produto específico.
+Approves all reviews for a specific product.
 
-**Parâmetros:**
-- `produtoId` (number): ID do produto
+**Parameters:**
+- `produtoId` (number): Product ID
 
 ### `aprovarAbsolutamenteTodasReviews()`
-Aprova todas as reviews pendentes no sistema.
+Approves all pending reviews in the system.
 
 ---
 
-## M3 - Extração (Análise)
+## M3 - Extraction (Analysis)
 
 ### `processarTextoReview(reviewId, forcedModelId?)`
-Extrai conteúdo da review e analisa com IA.
+Extracts review content and analyzes it with AI.
 
-**Parâmetros:**
-- `reviewId` (number): ID da review
-- `forcedModelId` (number, opcional): ID do modelo de IA específico
+**Parameters:**
+- `reviewId` (number): Review ID
+- `forcedModelId` (number, optional): Specific AI model ID
 
-**Retorno:**
+**Returns:**
 ```typescript
 {
   sucesso: boolean;
@@ -161,85 +159,85 @@ Extrai conteúdo da review e analisa com IA.
 ```
 
 ### `getProdutosParaBuscaReview()`
-Lista produtos com reviews aprovadas mas não curadas.
+Lists products with approved but uncurated reviews.
 
-**Retorno:** `ProdutoReviewStatus[]`
+**Returns:** `ProdutoReviewStatus[]`
 
 ### `getDetalhesProdutoReview(id)`
-Obtém detalhes completos de um produto e suas reviews.
+Gets full details of a product and its reviews.
 
-**Parâmetros:**
-- `id` (number): ID do produto
+**Parameters:**
+- `id` (number): Product ID
 
-**Retorno:** `ProdutoDetalhado | null`
+**Returns:** `ProdutoDetalhado | null`
 
 ### `aprovarProdutoM3(produtoId)`
-Marca produto como aprovado no M3.
+Marks a product as approved in M3.
 
-**Parâmetros:**
-- `produtoId` (number): ID do produto
+**Parameters:**
+- `produtoId` (number): Product ID
 
 ### `aprovarProdutosEmLoteM3(produtoIds)`
-Aprova múltiplos produtos no M3 em lote.
+Approves multiple products in M3 in batch.
 
-**Parâmetros:**
-- `produtoIds` (number[]): Array de IDs
+**Parameters:**
+- `produtoIds` (number[]): Array of IDs
 
 ### `enqueueAllBuscaTextoReviews()`
-Enfileira todas as reviews pendentes de extração.
+Enqueues all reviews pending extraction.
 
 ### `salvarAvaliacaoManual(reviewId, produtoId, nota, pros, contras)`
-Salva avaliação manual de uma review.
+Saves a manual review evaluation.
 
-**Parâmetros:**
-- `reviewId` (number): ID da review
-- `produtoId` (number): ID do produto
-- `nota` (number): Nota de 0 a 10
-- `pros` (string): Pontos positivos
-- `contras` (string): Pontos negativos
+**Parameters:**
+- `reviewId` (number): Review ID
+- `produtoId` (number): Product ID
+- `nota` (number): Score from 0 to 10
+- `pros` (string): Positive points
+- `contras` (string): Negative points
 
 ### `atualizarMetadadosProduto(produtoId, lancamento, specs_json)`
-Atualiza metadados do produto.
+Updates product metadata.
 
-**Parâmetros:**
-- `produtoId` (number): ID do produto
-- `lancamento` (string | null): Data de lançamento
-- `specs_json` (string): Especificações em JSON
+**Parameters:**
+- `produtoId` (number): Product ID
+- `lancamento` (string | null): Release date
+- `specs_json` (string): Specifications in JSON
 
 ### `adicionarAfiliado(produtoId, loja, url_afiliado, preco_atual)`
-Adiciona link de afiliado manual.
+Manually adds an affiliate link.
 
-**Parâmetros:**
-- `produtoId` (number): ID do produto
-- `loja` (string): Nome da loja
-- `url_afiliado` (string): URL do afiliado
-- `preco_atual` (number): Preço atual
+**Parameters:**
+- `produtoId` (number): Product ID
+- `loja` (string): Store name
+- `url_afiliado` (string): Affiliate URL
+- `preco_atual` (number): Current price
 
 ### `deletarAfiliado(afiliadoId, produtoId)`
-Remove um afiliado.
+Deletes an affiliate link.
 
-**Parâmetros:**
-- `afiliadoId` (number): ID do afiliado
-- `produtoId` (number): ID do produto
+**Parameters:**
+- `afiliadoId` (number): Affiliate ID
+- `produtoId` (number): Product ID
 
 ### `deletarProduto(id)`
-Deleta produto e dados relacionados (transaction).
+Deletes a product and related data (transaction).
 
-**Parâmetros:**
-- `id` (number): ID do produto
+**Parameters:**
+- `id` (number): Product ID
 
 ---
 
-## M4 - Consolidação
+## M4 - Consolidation
 
 ### `processarConsolidacao(produtoId, modelId?)`
-Consolida reviews de um produto usando IA.
+Consolidates reviews for a product using AI.
 
-**Parâmetros:**
-- `produtoId` (number): ID do produto
-- `modelId` (number, opcional): ID do modelo de IA
+**Parameters:**
+- `produtoId` (number): Product ID
+- `modelId` (number, optional): AI model ID
 
-**Retorno:**
+**Returns:**
 ```typescript
 {
   sucesso: boolean;
@@ -249,42 +247,42 @@ Consolida reviews de um produto usando IA.
 ```
 
 ### `processarConsolidacaoLote(produtoIds)`
-Processa consolidação em lote.
+Processes batch consolidation.
 
-**Parâmetros:**
-- `produtoIds` (number[]): Array de IDs
+**Parameters:**
+- `produtoIds` (number[]): Array of IDs
 
 ### `getProdutosParaConsolidar()`
-Lista produtos com reviews válidas para consolidação.
+Lists products with valid reviews ready for consolidation.
 
-**Retorno:** `ProdutoParaConsolidar[]`
+**Returns:** `ProdutoParaConsolidar[]`
 
 ### `aprovarProdutosM4(ids)`
-Aprova produtos no M4.
+Approves products in M4.
 
-**Parâmetros:**
-- `ids` (number[]): Array de IDs
+**Parameters:**
+- `ids` (number[]): Array of IDs
 
 ### `atualizarVereditoManual(produtoId, review, pros, contras)`
-Atualiza veredito manualmente.
+Manually updates a verdict.
 
-**Parâmetros:**
-- `produtoId` (number): ID do produto
-- `review` (string): Texto do veredito
-- `pros` (string): Pontos positivos
-- `contras` (string): Pontos negativos
+**Parameters:**
+- `produtoId` (number): Product ID
+- `review` (string): Verdict text
+- `pros` (string): Positive points
+- `contras` (string): Negative points
 
 ---
 
-## M5 - Preços
+## M5 - Prices
 
 ### `buscarPrecosEmLote(produtoId?)`
-Busca preços para produtos aprovados no M4.
+Fetches prices for products approved in M4.
 
-**Parâmetros:**
-- `produtoId` (number, opcional): ID específico (se omitido, busca até 10 produtos)
+**Parameters:**
+- `produtoId` (number, optional): Specific product ID (if omitted, fetches up to 10 products)
 
-**Retorno:**
+**Returns:**
 ```typescript
 {
   sucesso: boolean;
@@ -295,45 +293,45 @@ Busca preços para produtos aprovados no M4.
 ```
 
 ### `getAfiliadosExistentes(limit?, offset?)`
-Lista links de afiliados salvos (paginação).
+Lists saved affiliate links (paginated).
 
-**Parâmetros:**
-- `limit` (number, padrão 20): Limite de resultados
-- `offset` (number, padrão 0): Offset para paginação
+**Parameters:**
+- `limit` (number, default 20): Result limit
+- `offset` (number, default 0): Pagination offset
 
-**Retorno:** `LinkAfiliadoSalvo[]`
+**Returns:** `LinkAfiliadoSalvo[]`
 
 ### `getProdutosPendentesPreco()`
-Lista produtos aguardando busca de preço.
+Lists products awaiting price lookup.
 
 ### `toggleCongelamentoPreco(produtoId, congelar)`
-Congela/descongela atualização de preços de um produto.
+Freezes/unfreezes price updates for a product.
 
-**Parâmetros:**
-- `produtoId` (number): ID do produto
-- `congelar` (boolean): True para congelar
+**Parameters:**
+- `produtoId` (number): Product ID
+- `congelar` (boolean): True to freeze
 
 ### `salvarLinkManual(produtoId, url)`
-Salva link de afiliado manualmente.
+Manually saves an affiliate link.
 
-**Parâmetros:**
-- `produtoId` (number): ID do produto
-- `url` (string): URL do afiliado
+**Parameters:**
+- `produtoId` (number): Product ID
+- `url` (string): Affiliate URL
 
 ### `deletarAfiliado(id)`
-Remove afiliado da lixeira.
+Removes an affiliate link.
 
-**Parâmetros:**
-- `id` (number): ID do afiliado
+**Parameters:**
+- `id` (number): Affiliate ID
 
 ---
 
-## M6 - Conferência
+## M6 - Checkout
 
 ### `getDadosConferenciaPorLoja()`
-Retorna dados de conferência agrupados por loja.
+Returns checkout data grouped by store.
 
-**Retorno:** `LojaConferencia[]`
+**Returns:** `LojaConferencia[]`
 ```typescript
 {
   nome: string;
@@ -344,49 +342,49 @@ Retorna dados de conferência agrupados por loja.
 ```
 
 ### `getAfiliadosConferencia()`
-Lista todos os afiliados para conferência.
+Lists all affiliates for checkout audit.
 
 ### `atualizarLinkAfiliado(id, url)`
-Atualiza URL de um afiliado.
+Updates an affiliate URL.
 
-**Parâmetros:**
-- `id` (number): ID do afiliado
-- `url` (string): Nova URL
+**Parameters:**
+- `id` (number): Affiliate ID
+- `url` (string): New URL
 
 ### `atualizarPrecoIndividual(afiliadoId)`
-Atualiza preço de um afiliado via scraping + IA.
+Updates the price of a single affiliate via scraping + AI.
 
-**Parâmetros:**
-- `afiliadoId` (number): ID do afiliado
+**Parameters:**
+- `afiliadoId` (number): Affiliate ID
 
 ### `limparUrlServidor(url)`
-Limpa parâmetros de tracking de uma URL.
+Cleans tracking parameters from a URL.
 
-**Parâmetros:**
-- `url` (string): URL original
+**Parameters:**
+- `url` (string): Original URL
 
 ### `limparTodosLinksNaoLimpos()`
-Limpa todas as URLs que ainda não foram processadas.
+Cleans all URLs that haven't been processed yet.
 
 ### `conferirTodosAfiliados()`
-Inicia conferência de todos os afiliados.
+Starts a full affiliate checkout audit.
 
 ### `getUrlCleanerConfigs()`
-Lista configurações do limpador de URLs.
+Lists URL cleaner configurations.
 
 ### `upsertUrlCleanerConfig(pattern, tipo, descricao)`
-Adiciona/atualiza configuração de limpeza de URL.
+Adds or updates a URL cleaner configuration.
 
-**Parâmetros:**
-- `pattern` (string): Padrão da loja
-- `tipo` (string): Tipo de limpeza
-- `descricao` (string): Descrição
+**Parameters:**
+- `pattern` (string): Store pattern
+- `tipo` (string): Cleaning type
+- `descricao` (string): Description
 
 ### `toggleUrlCleanerConfig(id, ativo)`
-Ativa/desativa configuração de limpeza.
+Enables or disables a URL cleaner configuration.
 
-**Parâmetros:**
-- `id` (number): ID da configuração
+**Parameters:**
+- `id` (number): Configuration ID
 - `ativo` (boolean): Status
 
 ---
@@ -394,49 +392,49 @@ Ativa/desativa configuração de limpeza.
 ## M7 - CMS
 
 ### `getProdutosAction(filters)`
-Busca produtos com filtros.
+Queries products with filters.
 
-**Parâmetros:**
+**Parameters:**
 - `filters` (object): `{ categoria?, marca?, lancamento? }`
 
 ### `getFiltrosAction()`
-Retorna opções de filtros disponíveis (categorias, marcas).
+Returns available filter options (categories, brands).
 
 ### `updateProdutoAction(id, data)`
-Atualiza dados de um produto.
+Updates a product's data.
 
-**Parâmetros:**
-- `id` (number): ID do produto
-- `data` (Partial<Produto>): Campos a atualizar
+**Parameters:**
+- `id` (number): Product ID
+- `data` (Partial<Produto>): Fields to update
 
 ### `deleteProdutoAction(id)`
-Remove um produto pelo CMS.
+Removes a product via CMS.
 
-**Parâmetros:**
-- `id` (number): ID do produto
+**Parameters:**
+- `id` (number): Product ID
 
 ---
 
-## M8 - Configurações
+## M8 - Settings
 
 ### AI Models (`ai-models.ts`)
 
 #### `getAIModels(module?, onlyActive?, limit?, offset?)`
-Lista modelos de IA configurados.
+Lists configured AI models.
 
-**Parâmetros:**
-- `module` (AIModule, opcional): Filtrar por módulo (`"entrada" | "descoberta" | "extracao" | "consolidacao" | "precos" | "conferencia"`)
-- `onlyActive` (boolean, padrão true): Retornar apenas ativos
-- `limit` (number, opcional): Limite de resultados
-- `offset` (number, opcional): Offset para paginação
+**Parameters:**
+- `module` (AIModule, optional): Filter by module (`"entrada" | "descoberta" | "extracao" | "consolidacao" | "precos" | "conferencia"`)
+- `onlyActive` (boolean, default true): Return only active models
+- `limit` (number, optional): Result limit
+- `offset` (number, optional): Pagination offset
 
-**Retorno:** `AIModel[]`
+**Returns:** `AIModel[]`
 ```typescript
 {
   id?: number;
   provider: string;
   model_id: string;
-  api_key: string; // descriptografada
+  api_key: string; // decrypted
   system_prompt: string;
   target_module: AIModule;
   tier: number;
@@ -445,65 +443,65 @@ Lista modelos de IA configurados.
 ```
 
 #### `upsertAIModel(data)`
-Cria ou atualiza um modelo de IA (UPSERT). Chaves API são criptografadas com AES-256-CBC.
+Creates or updates an AI model (UPSERT). API keys are encrypted with AES-256-CBC.
 
-**Parâmetros:**
+**Parameters:**
 - `data` (Partial<AIModel>): `{ id? (number), provider (string), model_id (string), api_key (string), system_prompt? (string), target_module (AIModule), tier (1-5), is_active? (boolean) }`
 
-**Retorno:** `{ sucesso: boolean; success: boolean }`
+**Returns:** `{ sucesso: boolean; success: boolean }`
 
 #### `deleteAIModel(id)`
-Remove um modelo de IA.
+Deletes an AI model.
 
-**Parâmetros:**
-- `id` (number): ID do modelo
+**Parameters:**
+- `id` (number): Model ID
 
-**Retorno:** `{ sucesso: boolean; success: boolean }`
+**Returns:** `{ sucesso: boolean; success: boolean }`
 
 #### `toggleAIModel(id, active)`
-Ativa/desativa um modelo específico.
+Enables or disables a specific model.
 
-**Parâmetros:**
-- `id` (number): ID do modelo
-- `active` (boolean): Novo status
+**Parameters:**
+- `id` (number): Model ID
+- `active` (boolean): New status
 
-**Retorno:** `{ sucesso: boolean; success: boolean }`
+**Returns:** `{ sucesso: boolean; success: boolean }`
 
 #### `toggleAllAIModels(module, active)`
-Ativa/desativa todos os modelos de um módulo.
+Enables or disables all models in a module.
 
-**Parâmetros:**
-- `module` (string): Nome do módulo
-- `active` (boolean): Novo status
+**Parameters:**
+- `module` (string): Module name
+- `active` (boolean): New status
 
-**Retorno:** `{ sucesso: boolean; success: boolean }`
+**Returns:** `{ sucesso: boolean; success: boolean }`
 
 #### `getDefaultPrompt(module)`
-Retorna o prompt padrão para um módulo.
+Returns the default prompt for a module.
 
-**Parâmetros:**
-- `module` (AIModule): Módulo alvo
+**Parameters:**
+- `module` (AIModule): Target module
 
-**Retorno:** `string` (prompt padrão ou personalizado salvo no banco)
+**Returns:** `string` (default prompt or custom one saved in the database)
 
 ---
 
 ### Scraping Services (`scraping-services.ts`)
 
 #### `getScrapingServices(module?, onlyActive?)`
-Lista serviços de scraping configurados.
+Lists configured scraping services.
 
-**Parâmetros:**
-- `module` (string, opcional): Filtrar por módulo (`"descoberta" | "extracao" | "precos" | "conferencia"`)
-- `onlyActive` (boolean, padrão true): Retornar apenas ativos
+**Parameters:**
+- `module` (string, optional): Filter by module (`"descoberta" | "extracao" | "precos" | "conferencia"`)
+- `onlyActive` (boolean, default true): Return only active services
 
-**Retorno:** `ScrapingService[]`
+**Returns:** `ScrapingService[]`
 ```typescript
 {
   id?: number;
   name: string;
   engine: string;
-  api_key: string; // descriptografada
+  api_key: string; // decrypted
   scraping_code?: string;
   target_module: string;
   tier: number;
@@ -512,50 +510,50 @@ Lista serviços de scraping configurados.
 ```
 
 #### `upsertScrapingService(data)`
-Cria ou atualiza um serviço de scraping (UPSERT).
+Creates or updates a scraping service (UPSERT).
 
-**Parâmetros:**
+**Parameters:**
 - `data` (Partial<ScrapingService>): `{ id? (number), name (string), engine (string), api_key (string), scraping_code? (string), target_module (string), tier (1-5), is_active? (boolean) }`
 
-**Retorno:** `{ sucesso: boolean; success: boolean }`
+**Returns:** `{ sucesso: boolean; success: boolean }`
 
 #### `deleteScrapingService(id)`
-Remove um serviço de scraping.
+Deletes a scraping service.
 
-**Parâmetros:**
-- `id` (number): ID do serviço
+**Parameters:**
+- `id` (number): Service ID
 
-**Retorno:** `{ sucesso: boolean; success: boolean }`
+**Returns:** `{ sucesso: boolean; success: boolean }`
 
 #### `toggleScrapingService(id, active)`
-Ativa/desativa um serviço específico.
+Enables or disables a specific service.
 
-**Parâmetros:**
-- `id` (number): ID do serviço
-- `active` (boolean): Novo status
+**Parameters:**
+- `id` (number): Service ID
+- `active` (boolean): New status
 
-**Retorno:** `{ sucesso: boolean; success: boolean }`
+**Returns:** `{ sucesso: boolean; success: boolean }`
 
 #### `toggleAllScrapingServices(module, active)`
-Ativa/desativa todos os serviços de um módulo.
+Enables or disables all services in a module.
 
-**Parâmetros:**
-- `module` (string): Nome do módulo
-- `active` (boolean): Novo status
+**Parameters:**
+- `module` (string): Module name
+- `active` (boolean): New status
 
-**Retorno:** `{ sucesso: boolean; success: boolean }`
+**Returns:** `{ sucesso: boolean; success: boolean }`
 
 ---
 
 ### Logs (`logs.ts`)
 
 #### `getIngestionLogs(limit?)`
-Lista logs de ingestão (padrão 50 registros, ordenados por timestamp DESC).
+Lists ingestion logs (default 50 records, ordered by timestamp DESC).
 
-**Parâmetros:**
-- `limit` (number, padrão 50): Quantidade de registros
+**Parameters:**
+- `limit` (number, default 50): Number of records
 
-**Retorno:** `LogEntry[]`
+**Returns:** `LogEntry[]`
 ```typescript
 {
   id: number;
@@ -573,37 +571,37 @@ Lista logs de ingestão (padrão 50 registros, ordenados por timestamp DESC).
 ```
 
 #### `getLatestLogForModule(module)`
-Retorna os 10 logs mais recentes de um módulo.
+Returns the 10 most recent logs for a module.
 
-**Parâmetros:**
-- `module` (string): Nome do módulo
+**Parameters:**
+- `module` (string): Module name
 
-**Retorno:** `LogEntry[]`
+**Returns:** `LogEntry[]`
 
 #### `addIngestionLog(level, title, message, prompt_tokens?, completion_tokens?, model_used?, target_module?, payload?)`
-Adiciona um log manual.
+Manually adds a log entry.
 
-**Parâmetros:**
+**Parameters:**
 - `level` (`"info" | "warning" | "error"`)
-- `title` (string): Título do log
-- `message` (string): Mensagem detalhada
-- `prompt_tokens` (number, padrão 0)
-- `completion_tokens` (number, padrão 0)
-- `model_used` (string, opcional)
-- `target_module` (string, opcional)
-- `payload` (string, opcional)
+- `title` (string): Log title
+- `message` (string): Detailed message
+- `prompt_tokens` (number, default 0)
+- `completion_tokens` (number, default 0)
+- `model_used` (string, optional)
+- `target_module` (string, optional)
+- `payload` (string, optional)
 
-**Retorno:** `{ sucesso: boolean; success: boolean }`
+**Returns:** `{ sucesso: boolean; success: boolean }`
 
 #### `clearLogs()`
-Limpa todos os logs de ingestão.
+Clears all ingestion logs.
 
-**Retorno:** `{ sucesso: boolean; success: boolean }`
+**Returns:** `{ sucesso: boolean; success: boolean }`
 
 #### `getTelemetriaStats()`
-Retorna estatísticas de uso (top 5 modelos e scrapers).
+Returns usage statistics (top 5 models and scrapers).
 
-**Retorno:** `TelemetriaStats`
+**Returns:** `TelemetriaStats`
 ```typescript
 {
   topModels: { model_id: string; provider: string; calls: number; total_tokens: number }[];
@@ -616,12 +614,12 @@ Retorna estatísticas de uso (top 5 modelos e scrapers).
 ### Preferences (`preferences.ts`)
 
 #### `getUserPreferences()`
-Obtém preferências do usuário (armazenadas em cookies).
+Gets user preferences (stored in cookies).
 
-**Retorno:** `UserPreferences`
+**Returns:** `UserPreferences`
 ```typescript
 {
-  theme: string; // padrão: "dark"
+  theme: string; // default: "dark"
   show_scanlines: boolean;
   animations_enabled: boolean;
   compact_mode: boolean;
@@ -630,55 +628,55 @@ Obtém preferências do usuário (armazenadas em cookies).
 ```
 
 #### `updateUserPreferences(prefs)`
-Atualiza preferências do usuário (merge com valores atuais).
+Updates user preferences (merges with current values).
 
-**Parâmetros:**
-- `prefs` (Partial<UserPreferences>): Campos a atualizar
+**Parameters:**
+- `prefs` (Partial<UserPreferences>): Fields to update
 
-**Retorno:** `UserPreferences` (preferências atualizadas)
+**Returns:** `UserPreferences` (updated preferences)
 
 ---
 
-## M8.5 - Manutenção (Purge)
+## M8.5 - Maintenance (Purge)
 
-Funções para limpeza e manutenção do banco de dados, disponíveis na rota `/8-configuracoes/manutencao`.
+Cleanup and maintenance functions for the database, available at `/8-configuracoes/manutencao`.
 
 ### `limparLogsSistema(meses)`
-Remove logs de sistema mais antigos que o período especificado.
+Removes system logs older than the specified period.
 
-**Parâmetros:**
-- `meses` (number, padrão 1): Manter últimos N meses
+**Parameters:**
+- `meses` (number, default 1): Keep the last N months
 
-**Retorno:** `{ sucesso: boolean; registros: number }`
+**Returns:** `{ sucesso: boolean; registros: number }`
 
 ### `limparFilaProcessamento(dias)`
-Remove jobs da fila concluídos ou com erro após o período especificado.
+Removes completed or errored queue jobs older than the specified period.
 
-**Parâmetros:**
-- `dias` (number, padrão 7): Manter últimos N dias
+**Parameters:**
+- `dias` (number, default 7): Keep the last N days
 
-**Retorno:** `{ sucesso: boolean; registros: number }`
+**Returns:** `{ sucesso: boolean; registros: number }`
 
 ### `limparHistoricoPrecos(dias)`
-Remove registros de histórico de preços mais antigos que o período.
+Removes price history records older than the specified period.
 
-**Parâmetros:**
-- `dias` (number, padrão 90): Manter últimos N dias
+**Parameters:**
+- `dias` (number, default 90): Keep the last N days
 
-**Retorno:** `{ sucesso: boolean; registros: number }`
+**Returns:** `{ sucesso: boolean; registros: number }`
 
 ### `limparConflitosEntrada(dias)`
-Remove conflitos de entrada resolvidos mais antigos que o período.
+Removes resolved entry conflicts older than the specified period.
 
-**Parâmetros:**
-- `dias` (number, padrão 30): Manter últimos N dias
+**Parameters:**
+- `dias` (number, default 30): Keep the last N days
 
-**Retorno:** `{ sucesso: boolean; registros: number }`
+**Returns:** `{ sucesso: boolean; registros: number }`
 
 ### `executarPurgeCompleta()`
-Executa todas as funções de purge acima em sequência e revalida o cache.
+Runs all purge functions above in sequence and revalidates the cache.
 
-**Retorno:**
+**Returns:**
 ```typescript
 {
   sucesso: boolean;
@@ -693,85 +691,85 @@ Executa todas as funções de purge acima em sequência e revalida o cache.
 
 ---
 
-## M9 - Documentação
+## M9 - Documentation
 
-Módulo para visualização de documentação Markdown integrada ao painel.
+Module for viewing Markdown documentation embedded in the panel.
 
-### Funcionalidades
-- Renderização de arquivos `.md` via `react-markdown` + `remark-gfm`
-- Busca textual integrada na documentação
-- Navegação por seções (Sidebar)
+### Features
+- Renders `.md` files via `react-markdown` + `remark-gfm`
+- Full-text search across documentation
+- Section navigation (Sidebar)
 
 ### Server Actions
-M9 é um módulo de leitura (UI-only). Não possui Server Actions próprias além da renderização de arquivos estáticos.
+M9 is a read-only module (UI-only). It has no Server Actions of its own beyond static file rendering.
 
 ---
 
 ## Worker & Queue
 
 ### `processNextJob()`
-Processa o próximo job na fila (`fila_processamento`). Faz claim atômico e executa a tarefa conforme o módulo:
+Processes the next job in the queue (`fila_processamento`). Atomically claims it and executes the task according to the module:
 - `descoberta`: `processarScrapingReviews()`
 - `extracao`: `processarTextoReview()`
 - `consolidacao`: `processarConsolidacao()`
 - `precos`: `atualizarPrecoIndividual()`
 
-Timeout: `WORKER_JOB_TIMEOUT_MS` (definido em `@/lib/constants`).
+Timeout: `WORKER_JOB_TIMEOUT_MS` (defined in `@/lib/constants`).
 
-**Retorno:**
+**Returns:**
 ```typescript
 { job: string | null; status?: "sucesso" | "erro"; erro?: string }
 ```
 
 ### `runWorkerBatch(limit?)`
-Processa um lote de jobs sequencialmente.
+Processes a batch of jobs sequentially.
 
-**Parâmetros:**
-- `limit` (number, padrão 5): Máximo de jobs a processar
+**Parameters:**
+- `limit` (number, default 5): Maximum jobs to process
 
-**Retorno:**
+**Returns:**
 ```typescript
 { processados: number; results: Array<{ job: string; status: string; erro?: string }> }
 ```
 
 ---
 
-## Utilitários
+## Utilities
 
 ### `getSetting(key)`
-Obtém uma configuração global do banco (`userSettings`).
+Gets a global setting from the database (`userSettings`).
 
-**Parâmetros:**
-- `key` (string): Chave da configuração
+**Parameters:**
+- `key` (string): Setting key
 
-**Retorno:** `any` (valor parseado como JSON, ou string, ou `null` se não existir)
+**Returns:** `any` (parsed as JSON, or as string, or `null` if it doesn't exist)
 
 ### `setSetting(key, value)`
-Salva/atualiza uma configuração global (UPSERT).
+Saves or updates a global setting (UPSERT).
 
-**Parâmetros:**
-- `key` (string): Chave da configuração
-- `value` (any): Valor (serializado como JSON)
+**Parameters:**
+- `key` (string): Setting key
+- `value` (any): Value (serialized as JSON)
 
 ### `atualizarPrecosComIA()`
-Atualiza preços de todos os afiliados usando IA como fallback.
+Updates prices for all affiliates using AI as a fallback.
 
-**Lógica:**
-1. Tenta extração via seletores CSS gratuitos (Mercado Livre, Amazon, Magazine Luiza, Kabum)
-2. Se falhar, usa IA (modelo configurado no M8) para extrair o preço do HTML
-3. Atualiza `preco_atual` e registra no `historico_precos`
-4. Limpeza automática: remove registros com mais de 90 dias
+**Logic:**
+1. Attempts extraction via free CSS selectors (Mercado Livre, Amazon, Magazine Luiza, Kabum)
+2. If that fails, uses AI (model configured in M8) to extract the price from the HTML
+3. Updates `preco_atual` and records it in `historico_precos`
+4. Automatic cleanup: removes records older than 90 days
 
-**Retorno:** `{ sucesso: boolean; mensagem?: string; erro?: string }`
+**Returns:** `{ sucesso: boolean; mensagem?: string; erro?: string }`
 
 ---
 
 ## API Routes
 
 ### `GET /api/health`
-Verifica saúde da aplicação e conexões.
+Checks application health and connections.
 
-**Resposta de Sucesso (200):**
+**Success Response (200):**
 ```json
 {
   "status": "ok",
@@ -783,30 +781,30 @@ Verifica saúde da aplicação e conexões.
 }
 ```
 
-**Resposta de Erro (500):**
+**Error Response (500):**
 ```json
 {
   "status": "error",
   "db": "disconnected",
-  "message": "Erro interno no servidor"
+  "message": "Internal server error"
 }
 ```
 
 ---
 
-## Padrões de Uso
+## Usage Patterns
 
-### Validação
-Todas as Server Actions usam `validateAction()` para verificar autenticação/autorização.
+### Validation
+All Server Actions use `validateAction()` to check authentication/authorization.
 
-### Tratamento de Erro
-Padrão de retorno:
+### Error Handling
+Standard return pattern:
 ```typescript
 { sucesso: boolean; erro?: string; ... }
 ```
 
-### Revalidação de Cache
-Após mutações, usa-se `revalidatePath()` para atualizar a UI.
+### Cache Revalidation
+After mutations, `revalidatePath()` is used to update the UI.
 
-### Tipagem
-Todos os tipos estão definidos nos arquivos de actions ou em `src/types/db.ts`.
+### Typing
+All types are defined in the action files or in `src/types/db.ts`.

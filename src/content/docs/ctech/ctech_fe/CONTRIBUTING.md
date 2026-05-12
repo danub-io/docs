@@ -1,121 +1,121 @@
 ---
-title: "Contribuindo — CTECH Frontend"
+title: "Contributing — CTECH Frontend"
 ---
 
-Obrigado por contribuir! Este guia define os padrões e fluxos de trabalho para manter a qualidade e consistência do código.
+Thank you for contributing! This guide defines the standards and workflows to maintain code quality and consistency.
 
-## Configuração do Ambiente
+## Environment Setup
 
-Pré-requisitos:
+Prerequisites:
 - Node.js >= 22.12.0
-- pnpm (gerenciador de pacotes)
-- Conta no Turso (banco de dados)
+- pnpm (package manager)
+- Turso account (database)
 
-Passos:
+Steps:
 ```bash
 git clone <repo-url>
 cd ctech_fe
 pnpm install
 cp .env.example .dev.vars
-# Configure as variáveis no .dev.vars (TURSO_DATABASE_URL, TURSO_AUTH_TOKEN, AUTH_SECRET)
+# Configure the variables in .dev.vars (TURSO_DATABASE_URL, TURSO_AUTH_TOKEN, AUTH_SECRET)
 pnpm dev
 ```
 
-## Estratégia de Branches
+## Branch Strategy
 
-- `production`: Branch principal, sempre pronta para produção
-- `develop`: Integração de funcionalidades antes do merge em `production`
-- `feat/<nome>`: Novas funcionalidades (ex: `feat/laptop-filter`)
-- `fix/<nome>`: Correções (ex: `fix/navbar-mobile`)
-- `refactor/<nome>`: Refatorações (ex: `refactor/db-service`)
-- `chore/<nome>`: Manutenção (ex: `chore/update-deps`)
+- `production`: Main branch, always production-ready
+- `develop`: Feature integration before merging into `production`
+- `feat/<name>`: New features (e.g., `feat/laptop-filter`)
+- `fix/<name>`: Bug fixes (e.g., `fix/navbar-mobile`)
+- `refactor/<name>`: Refactoring (e.g., `refactor/db-service`)
+- `chore/<name>`: Maintenance (e.g., `chore/update-deps`)
 
-## Padrão de Commits (Conventional Commits)
+## Commit Pattern (Conventional Commits)
 
-| Tipo | Descrição |
-|------|-----------|
-| `feat` | Nova funcionalidade |
-| `fix` | Correção de bug |
-| `docs` | Alterações na documentação |
-| `style` | Formatação de código (sem mudança lógica) |
-| `refactor` | Refatoração (sem novas features ou correções) |
-| `test` | Adição/atualização de testes |
-| `chore` | Manutenção (deps, scripts, etc.) |
+| Type | Description |
+|------|-------------|
+| `feat` | New feature |
+| `fix` | Bug fix |
+| `docs` | Documentation changes |
+| `style` | Code formatting (no logic change) |
+| `refactor` | Refactoring (no new features or fixes) |
+| `test` | Adding/updating tests |
+| `chore` | Maintenance (deps, scripts, etc.) |
 
-Exemplo:
+Example:
 ```bash
-git commit -m "feat(categoria): add label-based section grouping"
+git commit -m "feat(category): add label-based section grouping"
 ```
 
-## Padrões de Código
+## Code Standards
 
-- **TypeScript**: Strict mode ativado, evite `any`
-- **Linting**: ESLint configurado (executar `pnpm lint` antes do commit)
-- **Formatação**: Prettier (executar `pnpm format`)
-- **UTF-8 SEM BOM**: Obrigatório para todos os arquivos
-- **Mobile First**: Todo design começa pelo mobile
-- **Componentes Astro**: Prefira componentes Astro estáticos para conteúdo, use React Islands apenas para interatividade
-- **Imports**: Use path aliases (`@core/*`, `@modules/*`) em vez de caminhos relativos profundos
-- **Imagens**: Use `<img>` nativo com `loading="lazy"` e `decoding="async"`
+- **TypeScript**: Strict mode enabled, avoid `any`
+- **Linting**: ESLint configured (run `pnpm lint` before committing)
+- **Formatting**: Prettier (run `pnpm format`)
+- **UTF-8 without BOM**: Required for all files
+- **Mobile First**: Every design starts with mobile
+- **Astro Components**: Prefer static Astro components for content, use React Islands only for interactivity
+- **Imports**: Use path aliases (`@core/*`, `@modules/*`) instead of deep relative paths
+- **Images**: Use native `<img>` with `loading="lazy"` and `decoding="async"`
 
-### Arquitetura
+### Architecture
 
-- `src/core/`: Infraestrutura global (UI, layouts, lib, types)
-- `src/modules/`: Domínios de negócio isolados (inicio, produto, categoria, guia, auth)
-- `src/pages/`: Camada de roteamento Astro (fina, apenas conecta dados a componentes)
-- Serviços em `services/` acessam o banco Turso diretamente
-- Componentes em `components/` recebem dados via props
+- `src/core/`: Global infrastructure (UI, layouts, lib, types)
+- `src/modules/`: Isolated business domains (home, product, category, guide, auth)
+- `src/pages/`: Astro routing layer (thin, only connects data to components)
+- Services in `services/` access the Turso database directly
+- Components in `components/` receive data via props
 
-## Execução de Testes
+## Running Tests
 
-### Testes Unitários (Vitest)
+### Unit Tests (Vitest)
 ```bash
-pnpm test:run          # Execução única
-pnpm test:coverage     # Com relatório de cobertura
+pnpm test:run          # Single run
+pnpm test:coverage     # With coverage report
 ```
 
-Cobertura mínima:
-- Linhas: 80%
-- Funções: 75%
+Minimum coverage:
+- Lines: 80%
+- Functions: 75%
 - Branches: 70%
 
-### Testes E2E (Playwright)
+### E2E Tests (Playwright)
 ```bash
 pnpm test:e2e
-pnpm test:e2e:dev      # Com servidor dev automático
+pnpm test:e2e:dev      # With automatic dev server
 ```
 
-## Processo de Pull Request
+## Pull Request Process
 
-1. Crie uma branch a partir da `develop`
-2. Faça suas alterações seguindo os padrões acima
-3. Execute testes e lint localmente:
+1. Create a branch from `develop`
+2. Make your changes following the standards above
+3. Run tests and lint locally:
    ```bash
    pnpm lint && pnpm exec tsc --noEmit && pnpm test:run
    ```
-4. Abra o PR para a branch `develop`
-5. Preencha o template de PR com descrição das mudanças e tipo de alteração
-6. Aguarde revisão de código (mínimo 1 aprovação)
-7. O merge só será realizado após aprovação e passagem do CI
+4. Open the PR targeting the `develop` branch
+5. Fill out the PR template with a description of changes and change type
+6. Wait for code review (minimum 1 approval)
+7. Merge only after approval and CI passes
 
-## Validação Obrigatória
+## Required Validation
 
-Ao finalizar alterações, execute:
-1. `pnpm lint` — verificar ESLint
+When finishing changes, run:
+1. `pnpm lint` — check ESLint
 2. `pnpm exec tsc --noEmit` — type check
-3. `pnpm test:run --coverage` — testes unitários com cobertura
+3. `pnpm test:run --coverage` — unit tests with coverage
 
-## Checklist de Code Review
+## Code Review Checklist
 
-- [ ] Segue padrão de commits Conventional Commits
-- [ ] Testes unitários adicionados ou atualizados
-- [ ] Sem erros de lint (`pnpm lint`)
-- [ ] Tipos TypeScript corretos (sem `any` desnecessário)
-- [ ] Funcionalidade testada manualmente (se não coberta por testes)
-- [ ] Mobile First respeitado (design responsivo)
+- [ ] Follows Conventional Commits pattern
+- [ ] Unit tests added or updated
+- [ ] No lint errors (`pnpm lint`)
+- [ ] TypeScript types correct (no unnecessary `any`)
+- [ ] Functionality manually tested (if not covered by tests)
+- [ ] Mobile First respected (responsive design)
 
-## Referências
+## References
 
-- [README](./README.md) — Visão geral do projeto
-- [ARCHITECTURE](./ARCHITECTURE.md) — Arquitetura e decisões técnicas
-- [DATA_LAYER](./DATA_LAYER.md) — Fluxo de dados e serviços
+- [README](./README.md) — Project overview
+- [ARCHITECTURE](./ARCHITECTURE.md) — Architecture and technical decisions
+- [DATA_LAYER](./DATA_LAYER.md) — Data flow and services

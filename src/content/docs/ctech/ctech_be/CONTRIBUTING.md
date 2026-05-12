@@ -1,96 +1,96 @@
 ---
-title: "Contribuindo — CTECH Backend"
+title: "Contributing — CTECH Backend"
 ---
 
-Obrigado por contribuir com o projeto! Este guia define os padrões e fluxos de trabalho para manter a qualidade e consistência do código.
+Thank you for contributing to the project! This guide defines the standards and workflows for maintaining code quality and consistency.
 
-## Configuração do Ambiente de Desenvolvimento
+## Setting Up the Development Environment
 
-Pré-requisitos:
+Prerequisites:
 - Node.js >= 22.12.0
-- pnpm (gerenciador de pacotes)
-- Conta no Turso (banco de dados)
-- Chaves de API para serviços de IA (opcional, para desenvolvimento local)
+- pnpm (package manager)
+- Turso account (database)
+- API keys for AI services (optional, for local development)
 
-Passos:
+Steps:
 ```bash
 git clone <repo-url>
 cd ctech_be
 pnpm install
 cp .env.example .env.local
-# Configure as variáveis no .env.local
+# Configure the variables in .env.local
 pnpm dev
 ```
 
-## Estratégia de Branches
+## Branch Strategy
 
-- `production`: Branch principal, sempre pronta para produção
-- `develop`: Integração de funcionalidades
-- `feature/*`: Novas funcionalidades
-- `fix/*`: Correções
-- `refactor/*`: Refatorações
-- `chore/*`: Manutenção
+- `production`: Main branch, always production-ready
+- `develop`: Feature integration
+- `feature/*`: New features
+- `fix/*`: Bug fixes
+- `refactor/*`: Code refactoring
+- `chore/*`: Maintenance tasks
 
-## Padrão de Commits (Conventional Commits)
+## Commit Convention (Conventional Commits)
 
-| Tipo | Descrição |
-|------|-----------|
-| `feat` | Nova funcionalidade |
-| `fix` | Correção de bug |
-| `docs` | Alterações na documentação |
-| `style` | Formatação de código (sem mudança lógica) |
-| `refactor` | Refatoração (sem novas features ou correções) |
-| `test` | Adição/atualização de testes |
-| `chore` | Manutenção (deps, scripts, etc.) |
+| Type | Description |
+|------|-------------|
+| `feat` | New feature |
+| `fix` | Bug fix |
+| `docs` | Documentation changes |
+| `style` | Code formatting (no logic change) |
+| `refactor` | Refactoring (no new features or fixes) |
+| `test` | Adding or updating tests |
+| `chore` | Maintenance (deps, scripts, etc.) |
 
-## Padrões de Código
+## Code Standards
 
-- **TypeScript**: Strict mode ativado, evite `any`
-- **Linting**: ESLint configurado (executar `pnpm lint` antes do commit)
-- **Formatação**: 2 espaços de indentação, UTF-8 sem BOM
-- **Arquitetura**:
-  - Server Actions em `src/app/actions/` para lógica de negócio
-  - Repository Pattern em `src/lib/repositories/` para acesso a dados
-  - Componentes UI em `src/components/ui/` (padrão Shadcn)
-- **Logger**: Use `@/lib/logger` em vez de `console.log`
+- **TypeScript**: Strict mode enabled, avoid `any`
+- **Linting**: ESLint configured (run `pnpm lint` before committing)
+- **Formatting**: 2-space indentation, UTF-8 without BOM
+- **Architecture**:
+  - Server Actions in `src/app/actions/` for business logic
+  - Repository Pattern in `src/lib/repositories/` for data access
+  - UI components in `src/components/ui/` (Shadcn pattern)
+- **Logger**: Use `@/lib/logger` instead of `console.log`
 
-## Execução de Testes
+## Running Tests
 
-### Testes Unitários (Vitest)
+### Unit Tests (Vitest)
 ```bash
-pnpm test:run          # Execução única
-pnpm test:ui           # Interface visual
+pnpm test:run          # Single run
+pnpm test:ui           # Visual interface
 ```
 
-Cobertura mínima: lines 60%, functions 60%, branches 50%
+Minimum coverage: lines 60%, functions 60%, branches 50%
 
-### Testes E2E (Playwright)
+### E2E Tests (Playwright)
 ```bash
 pnpm exec playwright test
 ```
 
-## Processo de Pull Request
+## Pull Request Process
 
-1. Crie uma branch a partir da `develop`
-2. Faça suas alterações seguindo os padrões acima
-3. Execute testes e lint localmente:
+1. Create a branch from `develop`
+2. Make your changes following the above standards
+3. Run tests and lint locally:
    ```bash
    pnpm lint && pnpm test:run
    ```
-4. Abra o PR para a branch `develop`
-5. Aguarde revisão de código (mínimo 1 aprovação)
-6. O merge só será realizado após aprovação e passagem do CI
+4. Open the PR to the `develop` branch
+5. Wait for code review (minimum 1 approval)
+6. Merge only after approval and CI passes
 
-## Checklist de Code Review
+## Code Review Checklist
 
-- [ ] Segue padrão de commits Conventional Commits
-- [ ] Testes adicionados ou atualizados
-- [ ] Sem erros de lint (`pnpm lint`)
-- [ ] Tipos TypeScript corretos (sem `any` desnecessário)
-- [ ] Funcionalidade testada manualmente (se não coberta por testes)
+- [ ] Follows Conventional Commits style
+- [ ] Tests added or updated
+- [ ] No lint errors (`pnpm lint`)
+- [ ] Correct TypeScript types (no unnecessary `any`)
+- [ ] Feature manually tested (if not covered by tests)
 
-## Referências
+## References
 
-- [README](./README.md) — Visão geral do projeto
-- [ARCHITECTURE](./ARCHITECTURE.md) — Arquitetura e decisões técnicas
-- [API](./API.md) — Referência de API
+- [README](./README.md) — Project overview
+- [ARCHITECTURE](./ARCHITECTURE.md) — Architecture and technical decisions
+- [API](./API.md) — API reference
