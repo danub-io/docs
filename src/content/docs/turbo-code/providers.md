@@ -14,35 +14,46 @@ title: "Providers & Models"
 
 > The base URL can be overridden via `TURBO_BASE_URL` in `.env`.
 
-## Per-Model Settings
+## Model Discovery
 
-### Provider Defaults
+Model lists are **never hardcoded**. The settings UI fetches available models dynamically from each provider's API:
 
-| Parameter | deepseek | opencode | openai | anthropic | gemini |
-|-----------|----------|----------|--------|-----------|--------|
-| `parallelToolCalls` | `false` | `false` | `true` | `true` | `true` |
-| `maxToolRounds` | 30 | 25 | 30 | 25 | 20 |
-| `stripThinkTokens` | `true` | `true` | `false` | `false` | `false` |
-| `maxOutputTokens` | 65,536 | 16,384 | 16,384 | 8,192 | 8,192 |
-| `systemPromptStyle` | `full` | `full` | `full` | `full` | `full` |
-| `toolRoundDelay` | 100ms | 150ms | 0ms | 0ms | 0ms |
+- **OpenAI-compatible** (deepseek, openai, opencode, etc.): `GET {baseUrl}/models` with `Authorization: Bearer {apiKey}`
+- **Anthropic**: uses Anthropic native API only when `baseUrl` contains `anthropic.com`; otherwise falls back to OpenAI-compatible
+- **Gemini**: uses `x-goog-api-key` header instead of query param; falls back to OpenAI-compatible for custom base URLs
 
-### Context Windows
+This is handled by the `GET /api/models` backend endpoint, which returns the raw model list from the provider. If the request fails (e.g., invalid API key, network error), the UI shows an error state — no fallback lists are used.
 
-| Model | Context Window |
-|-------|---------------|
-| `deepseek-v4-flash` | 1,048,576 |
-| `deepseek-chat` | 65,536 |
-| `deepseek-reasoner` | 65,536 |
-| `gpt-4o` | 128,000 |
-| `gpt-4o-mini` | 128,000 |
-| `gpt-4-turbo` | 128,000 |
-| `claude-sonnet-4` / `claude-sonnet-4-20250514` | 200,000 |
-| `claude-3-5-sonnet-latest` | 200,000 |
-| `claude-3-opus-latest` | 200,000 |
-| `claude-3-haiku-latest` | 200,000 |
-| `gemini-2.0-flash` | 1,048,576 |
-| `gemini-2.0-pro` | 1,048,576 |
+## Model Tuning
+
+Tuning parameters are determined by the **model name**, not by the provider. This is critical because platforms like OpenCode host dozens of models from different providers — each model gets its own optimal tuning regardless of which provider serves it.
+
+The `modelDefaults()` function in `src/config/index.ts` detects the model family by name prefix:
+
+| Model prefix | parallelToolCalls | stripThinkTokens | toolRoundDelay | maxOutputTokens | maxToolRounds |
+|-------------|:-:|:-:|:-:|:-:|:-:|
+| `deepseek-*` | `false` | `true` | 100ms | 65,536 | 15 |
+| `claude-*` | `true` | `false` | 0ms | 8,192 | 25 |
+| `gemini-*` | `true` | `false` | 0ms | 8,192 | 20 |
+| `gpt-*`, `o1-*`, `o3-*` | `true` | `false` | 0ms | 16,384 | 30 |
+| Unknown models | `true` | `false` | 300ms | 16,384 | 30 |
+
+All model families default to `systemPromptStyle: "full"`, `thinkingMode: "enabled"`, `reasoningEffort: "high"`, and `autoDream: true`.
+
+When the user selects a model in the Settings UI, the frontend calls `GET /api/config/defaults?model=X` and auto-fills all advanced settings with these optimized values.
+
+## Model Patterns
+
+The pattern detection table lives in `src/config/index.ts` as `MODEL_PATTERNS` and is imported by the LLM client — the engine never duplicates this data:
+
+```typescript
+export const MODEL_PATTERNS: Record<string, { prefix: string[]; label: string }> = {
+  deepseek: { prefix: ["deepseek"], label: "DeepSeek" },
+  openai:   { prefix: ["gpt-", "o1-", "o3-"], label: "OpenAI" },
+  openrouter: { prefix: [], label: "OpenRouter" },
+  opencode: { prefix: [], label: "OpenCode" },
+};
+```
 
 ## Environment Variables
 
@@ -62,11 +73,3 @@ title: "Providers & Models"
 | `OPENAI_BASE_URL` | OpenAI-compatible base URL | `https://api.openai.com/v1` |
 | `TURBO_CHEAP_MODEL` | Cheap model for /dream and auto-dream background consolidation | `deepseek-v4-flash` |
 | `PORT` | HTTP server port (default: 3001) | `3001` |
-
-## DeepSeek V4 Flash (main model)
-
-- **Context:** 1,048,576 tokens (1M)
-- **Max output:** 393,216 tokens (384K)
-- **Price:** $0.14/M input · $0.28/M output · $0.0028/M (cache hit)
-- **Tool calls:** ✅ | **JSON output:** ✅ | **Thinking mode:** ✅
-- **Canonical model ID:** `deepseek-v4-flash`
