@@ -6,8 +6,8 @@ The system has **4 modes** (agents), each with a dedicated system prompt and too
 
 | Mode | Icon | Tools | Purpose |
 |------|-------|-------------|------------|
-| Normal | ⚙️ | read, bash, edit, write, grep, find, ls, add_to_context, skill_shadcn | General assistant with bash |
-| Plan | 📋 | read, grep, write, edit, project_inspector, add_to_context, skill_shadcn | Creates execution plans |
+| Normal | ⚙️ | read, bash, edit, write, grep, find, ls, add_to_context, skill_shadcn, ask_user | General assistant with bash |
+| Plan | 📋 | read, grep, write, edit, project_inspector, add_to_context, skill_shadcn, ask_user | Creates execution plans |
 | Code | ⚡ | read, bash, edit, write, grep, find, ls, ask_user, update_task_progress, add_to_context, skill_shadcn | Executes plans autonomously |
 | Ask | 💬 | read, bash, grep, find, ls, fetch, add_to_context, skill_shadcn | General conversation + web fetch |
 

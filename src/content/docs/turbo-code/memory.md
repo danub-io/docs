@@ -35,4 +35,4 @@ The `/memory search <q>` command uses TF-IDF weighted search to find relevant me
 
 ## RAG Injection
 
-Relevant memories are injected into the system prompt in a `<memories>` tag at the end (optimized for Prefix Caching). The system prompts in Normal and Code modes contain instructions telling the LLM to use these memories to inform decisions.
+Relevant memories are injected into the context in a `### Memories` markdown section as a user message (optimized for Prefix Caching). The system prompts in Normal and Code modes contain instructions telling the LLM to use these memories to inform decisions.

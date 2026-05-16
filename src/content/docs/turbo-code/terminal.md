@@ -2,7 +2,7 @@
 title: "Terminal Integration"
 ---
 
-Turbo Code includes an embedded terminal system powered by **xterm.js** (frontend) and **node-pty** (backend), allowing long-running commands to execute in a real terminal visible to the user.
+Turbo Code includes a background terminal engine powered by **node-pty** (backend) for executing long-running commands. The terminal runs as a backend-only process — there is no visible terminal UI in the frontend.
 
 ## Architecture
 
@@ -10,8 +10,6 @@ Turbo Code includes an embedded terminal system powered by **xterm.js** (fronten
 turbo-code/
 └── src/modules/terminal/
     └── TerminalManager.ts  # Singleton — manages node-pty instance
-web/src/features/terminal/
-    └── TerminalPanel.tsx   # Frontend xterm.js component
 ```
 
 ## TerminalManager (Backend)
@@ -48,17 +46,13 @@ This tool is ideal for:
 - Running file watchers (`tail -f`, `nodemon`)
 - Any command that would normally be blocked by the bash tool
 
-## TerminalPanel (Frontend)
+## Terminal Output Streaming
 
-The frontend `TerminalPanel` component uses xterm.js with the `xterm-theme` dark theme:
-
-- Renders terminal output in real time via the `terminal_output` WebSocket event
-- Supports user input via `TerminalManager.writeLine()`
-- Toggle visibility via the terminal button in the chat header
+Terminal output is streamed to the frontend via the `terminal_output` WebSocket event, but there is no visible terminal UI. The terminal engine exists solely as a backend process manager for long-running commands via the `run_background` tool.
 
 ## Streaming Events
 
-Background terminal output is streamed to the frontend via:
+Background terminal output is streamed via:
 
 ```ts
 interface StreamTerminalOutput {

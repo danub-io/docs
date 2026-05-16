@@ -32,13 +32,13 @@ The `modelDefaults()` function in `src/config/index.ts` detects the model family
 
 | Model prefix | parallelToolCalls | stripThinkTokens | toolRoundDelay | maxOutputTokens | maxToolRounds |
 |-------------|:-:|:-:|:-:|:-:|:-:|
-| `deepseek-*` | `false` | `true` | 100ms | 65,536 | 15 |
+| `deepseek-*` | `false` | `true` | 100ms | 65,536 | 50 |
 | `claude-*` | `true` | `false` | 0ms | 8,192 | 25 |
 | `gemini-*` | `true` | `false` | 0ms | 8,192 | 20 |
 | `gpt-*`, `o1-*`, `o3-*` | `true` | `false` | 0ms | 16,384 | 30 |
 | Unknown models | `true` | `false` | 300ms | 16,384 | 30 |
 
-All model families default to `systemPromptStyle: "full"`, `thinkingMode: "enabled"`, `reasoningEffort: "high"`, and `autoDream: true`.
+All model families default to `systemPromptStyle: "concise"`, `thinkingMode: "enabled"`, `reasoningEffort: "high"`, and `autoDream: true`.
 
 When the user selects a model in the Settings UI, the frontend calls `GET /api/config/defaults?model=X` and auto-fills all advanced settings with these optimized values.
 

@@ -40,9 +40,27 @@ The frontend uses the `useWebSocket` hook (in `web/src/hooks/useWebSocket.ts`) w
 - Manages event queue
 - Renders streaming in real time via `useStreamHandler`
 
-## Context Pruning
+## Context Management
 
-Every 8 tool rounds, the orchestrator compacts the history:
-- Removes old tool_calls, keeps the last 4 full rounds
-- Preserves user context (recent user/assistant messages)
-- Dynamic blocks (`<memories>`, active files) are placed at the end of the system prompt for Prefix Caching optimization
+The orchestrator manages context when estimated tokens exceed 40% of the model's context window, with a minimum of 2 tool rounds between interventions.
+
+### Legacy Pruning (default)
+
+Mechanical truncation of old tool rounds:
+- **Trigger**: `estimateTokens() > contextWindow * 0.4`
+- **Estimator**: counts chars + structural overhead (20 chars/message + 50 chars/tool_call) divided by 4
+- **Retention**: keeps the last 3 full tool rounds (configurable via `KEEP_TOOL_ROUNDS`)
+- **Deduplication**: stale `_pruned_history` summaries are removed before each prune — only the latest is kept
+- **Safety**: `removeOrphanedTools()` runs after prune and before every LLM call to maintain message consistency
+- **Prefix Caching**: dynamic blocks (`<memories>`, `_active_files`, `_plan`) are inserted after the system message for cache efficiency
+
+### Async Compression (opt-in)
+
+When `contextCompression: true`, replaces pruning with LLM-based semantic summarization:
+- **Trigger**: same 40% threshold + 2 round minimum
+- **Process**: old messages before the last 3 tool rounds are sent to the LLM (via `compressConversation()`) with a compression prompt, running asynchronously (fire-and-forget)
+- **Result**: old messages are replaced by a single `_compressed` user message containing the LLM-generated summary
+- **Model**: uses `compressionModel` if set, otherwise falls back to `cheapModel`, then the main model
+- **Safety**: if compression fails (timeout, empty result), `compressionFailed` flag auto-resets after a 30s cooldown
+- **Cooldown**: 30s between compression runs to avoid over-compressing
+- **Events**: emits `info` events with "Compressing context..." (at dispatch) and "Context compressed: ~N → ~M tokens" (on completion)

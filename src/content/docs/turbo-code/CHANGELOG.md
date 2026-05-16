@@ -2,6 +2,22 @@
 title: "Changelog"
 ---
 
+## 0.4.0 (2026-05)
+
+- **Async context compression**: replaces mechanical pruning with LLM-based semantic summarization (opt-in via `contextCompression: true`). Compresses old tool rounds and conversation history into a single `_compressed` summary using the LLM in background, zero latency added to the main loop.
+- **New module** `src/modules/compression/` — `compressConversation()` function, following the same streaming pattern as the dreamer
+- **New config options**: `contextCompression` (boolean, default: false), `compressionModel` (string | null, default: null — falls back to cheap model or main model)
+- **Backward compatible**: legacy mechanical pruning remains the default; enabling compression replaces it entirely
+- **10 new tests** for compression cutoff, shouldCompress guards, applyCompression edge cases
+
+## 0.3.0 (2026-05)
+
+- **Context pruning overhaul**: trigger now at 40% of context window (was "every 8 rounds"), estimator includes structural overhead (20 chars/message + 50 chars/tool_call), deduplicates stale `_pruned_history` summaries
+- **Dead constants cleanup**: `KEEP_TOOL_ROUNDS` and `KEEP_LAST_MESSAGES` are now the single source of truth (imported from `constants.ts`), removing hardcoded defaults and dead exports
+- **Info event accuracy**: pruning event now shows both pre- and post-pruning token counts
+- **18 test files** (247 tests): added 13 new tests covering pruning trigger path, estimate tokens accuracy, edge cases (min messages, summary insertion, rounds reset, stale dedup, orchestrator trigger conditions)
+- **`src/utils/symbolScanner.ts`** — new utility for symbol-level code search
+
 ## 0.2.0 (2026-05)
 
 - **MCP Client** — Model Context Protocol support, auto-loads tools from external MCP servers

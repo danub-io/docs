@@ -21,10 +21,10 @@ Return optimized tuning parameters for a given model. Tuning is determined by mo
 ```json
 {
   "parallelToolCalls": false,
-  "maxToolRounds": 15,
+  "maxToolRounds": 50,
   "stripThinkTokens": true,
   "maxOutputTokens": 65536,
-  "systemPromptStyle": "full",
+  "systemPromptStyle": "concise",
   "toolRoundDelay": 100,
   "thinkingMode": "enabled",
   "reasoningEffort": "high",
@@ -36,11 +36,13 @@ Return optimized tuning parameters for a given model. Tuning is determined by mo
 
 | Family | parallel | stripThink | delay | maxTokens | rounds |
 |--------|----------|------------|-------|-----------|--------|
-| `deepseek-*` | false | true | 100ms | 65K | 15 |
+| `deepseek-*` | false | true | 100ms | 65K | 50 |
 | `claude-*` | true | false | 0ms | 8K | 25 |
 | `gemini-*` | true | false | 0ms | 8K | 20 |
 | `gpt-*`, `o1-*`, `o3-*` | true | false | 0ms | 16K | 30 |
 | others (unknown) | true | false | 300ms | 16K | 30 |
+
+All model families default to `contextCompression: false` and `compressionModel: null`.
 
 ### `GET /api/config/provider-defaults`
 
@@ -112,7 +114,7 @@ Update configuration at runtime.
   "maxToolRounds": 30,
   "stripThinkTokens": true,
   "maxOutputTokens": 65536,
-  "systemPromptStyle": "full",
+  "systemPromptStyle": "concise",
   "toolRoundDelay": 100,
   "autoDream": true
 }
@@ -143,7 +145,7 @@ Before saving, the server validates credentials by making a test `chatCompletion
   "maxToolRounds": 30,
   "stripThinkTokens": true,
   "maxOutputTokens": 65536,
-  "systemPromptStyle": "full",
+  "systemPromptStyle": "concise",
   "toolRoundDelay": 100,
   "autoDream": true
 }
@@ -152,6 +154,8 @@ Before saving, the server validates credentials by making a test `chatCompletion
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `autoDream` | `boolean` | `true` | Automatically consolidate memories after conversations in Normal/Code modes |
+| `contextCompression` | `boolean` | `false` | Enable async LLM-based context compression (replaces mechanical pruning with semantic summarization) |
+| `compressionModel` | `string \| null` | `null` | Model to use for compression (uses `cheapModel` or main model if null) |
 
 ## SettingsDialog (Frontend)
 

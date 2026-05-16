@@ -2,24 +2,24 @@
 title: "TURBO CODE — Multi-Agent Terminal AI Assistant"
 ---
 
-Multi-agent terminal AI assistant with a web interface. Four specialized modes (Normal, Plan, Code, Ask) for interacting with LLMs via OpenAI-compatible API.
+Multi-agent terminal AI assistant with a web interface. Four specialized modes (Debug, Plan, Code, Ask) for interacting with LLMs via OpenAI-compatible API.
 
 **Stack:** Node.js + Express + WebSocket (backend) · React + Vite + shadcn/ui (frontend)
 
 ## Features
 
-- **Multi-Agent Architecture**: Four modes (Normal, Plan, Code, Ask) for different types of interaction
+- **Multi-Agent Architecture**: Four modes (Debug, Plan, Code, Ask) for different types of interaction
 - **Autonomous Execution**: CodeAgent executes plans, bash, edits files with circuit breaker
 - **Security**: Process group isolation, 38 blocked command patterns, 12 destructive patterns requiring confirmation, 3-strike circuit breaker
 - **Persistent Memory**: `/memory`, `/forget`, `/dream` — auto-dream consolidates memories in background, TF-IDF search, RAG injection
 - **RAG Injection**: Relevant memories injected into the system prompt (Prefix Caching-aware)
-- **Streaming**: Token-by-token responses via WebSocket with 13 event types
+- **Streaming**: Token-by-token responses via WebSocket with 19 event types
 - **15 Tools**: bash, read, write, edit, grep, find, ls, fetch, ask_user, add_to_context, project_inspector, update_task_progress, run_background + skills (skill_shadcn)
 - **MCP Support**: Model Context Protocol for external tool servers
 - **Skills System**: Reusable, domain-specific capabilities (shadcn/ui reference, PR review)
 - **Fuzzy Edit**: Edit tool with fuzzy block matching and inline diff output
-- **Shadcn/ui**: Dark theme, modals, plan progress, embedded terminal
-- **Terminal**: Embedded interactive terminal via xterm.js + node-pty
+- **Shadcn/ui**: Dark theme, modals, session sidebar, settings dialog
+- **Terminal**: Background process engine via node-pty (no frontend UI)
 - **Settings Dialog**: Runtime model/provider/API key configuration
 
 ## Quick Start
