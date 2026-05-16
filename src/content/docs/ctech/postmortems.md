@@ -50,12 +50,12 @@ title: "Postmortem NNN: Short problem title"
 
 # Postmortem NNN: Short problem title
 
-## Sumário
+## Summary
 
-- **Data:** YYYY-MM-DD
-- **Componente:** `caminho/do/componente` or module description
-- **Sintoma:** What was going wrong
-- **Severidade:** Low / Medium / High — user impact
+- **Date:** YYYY-MM-DD
+- **Component:** `path/to/component` or module description
+- **Symptom:** What was going wrong
+- **Severity:** Low / Medium / High — user impact
 - **Root cause:** Root cause in 1-2 sentences
 
 ## Timeline
@@ -69,21 +69,21 @@ title: "Postmortem NNN: Short problem title"
 
 Detailed technical explanation of the root cause. Include relevant code, links, or references.
 
-## Solução
+## Solution
 
 What was done to fix it. Include before/after code blocks.
 
-## Arquivos alterados
+## Files changed
 
 - `path/to/file` — description of the change
 
-## Lições aprendidas
+## Lessons learned
 
 1. What we learned from this problem
 2. What could have been done differently
 3. Tips for faster debugging
 
-## Ações preventivas
+## Preventive actions
 
 - What to do to prevent the problem from recurring
 - Suggested checklists, tests, or process changes

@@ -2,17 +2,17 @@
 title: "Architecture Decision Records (ADRs)"
 ---
 
-Os ADRs documentam decisões arquiteturais importantes do ecossistema CTECH, seguindo o formato [ADR](https://adr.github.io/).
+ADRs document important architectural decisions in the CTECH ecosystem, following the [ADR](https://adr.github.io/) format.
 
-## Lista de ADRs
+## ADR List
 
-- [ADR-001: Turso Database](./ADRs/ADR-001-turso-database/) — Escolha do Turso (SQLite distribuído) como banco de dados
-- [ADR-002: Astro Islands](./ADRs/ADR-002-astro-islands/) — Adoção de Astro Islands Architecture para o frontend
-- [ADR-003: Vibecoding Modular](./ADRs/ADR-003-vibecoding-modular/) — Estrutura modular para desenvolvimento assistido por IA
-- [ADR-004: Cache Stampede](./ADRs/ADR-004-cache-stampede/) — Cache em memória com proteção contra stampede
+- [ADR-001: Turso Database](./ADRs/ADR-001-turso-database/) — Choosing Turso (distributed SQLite) as the database
+- [ADR-002: Astro Islands](./ADRs/ADR-002-astro-islands/) — Adopting Astro Islands Architecture for the frontend
+- [ADR-003: Modular Vibe Coding](./ADRs/ADR-003-vibecoding-modular/) — Modular structure for AI-assisted development
+- [ADR-004: Cache Stampede](./ADRs/ADR-004-cache-stampede/) — In-memory cache with stampede protection
 
-> Os arquivos estão em `ADRs/` (maíusculo) dentro de `src/content/docs/ctech/`.
+> The files are in `ADRs/` (uppercase) inside `src/content/docs/ctech/`.
 
-## O que é um ADR?
+## What is an ADR?
 
-Um Architecture Decision Record (ADR) é um documento que captura uma decisão arquitetural importante, incluindo o contexto, as alternativas consideradas e a decisão final. Isso ajuda a manter o histórico de decisões e fornece contexto para futuros desenvolvedores.
+An Architecture Decision Record (ADR) is a document that captures an important architectural decision, including the context, alternatives considered, and the final decision. This helps maintain a history of decisions and provides context for future developers.

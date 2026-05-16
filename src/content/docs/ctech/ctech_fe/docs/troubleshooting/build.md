@@ -2,39 +2,37 @@
 title: "Troubleshooting: Build"
 ---
 
+## Error: "Sharp is not available"
 
+**Cause:** Sharp (image processing) was not installed correctly.
 
-## Erro: "Sharp is not available"
-
-**Causa:** Sharp (processamento de imagens) não foi instalado corretamente.
-
-**Solução:**
+**Solution:**
 ```bash
 pnpm add sharp
 ```
 
-Se o erro persistir, instale as dependências nativas:
+If the error persists, install native dependencies:
 ```bash
 pnpm rebuild sharp
 ```
 
-## Erro: "Image Optimization Failed"
+## Error: "Image Optimization Failed"
 
-**Causa:** URL de imagem muito longa (ex: Google Drive).
+**Cause:** Image URL is too long (e.g., Google Drive).
 
-**Solução:** Baixe a imagem localmente para `src/assets/images/` e use o caminho local.
+**Solution:** Download the image locally to `src/assets/images/` and use the local path.
 
-## Erro: "Unexpected token" em arquivo .astro
+## Error: "Unexpected token" in .astro file
 
-**Causa:** Arquivo Astro com syntax error (tag não fechada, frontmatter inválido).
+**Cause:** Astro file with syntax error (unclosed tag, invalid frontmatter).
 
-**Solução:** Verifique o frontmatter (`---`) e a estrutura de tags HTML.
+**Solution:** Check the frontmatter (`---`) and the HTML tag structure.
 
-## Erro: "Build timed out"
+## Error: "Build timed out"
 
-**Causa:** Muitas páginas dinâmicas com consultas lentas ao Turso.
+**Cause:** Too many dynamic pages with slow Turso queries.
 
-**Solução:**
-- Reduza o número de páginas no build
-- Use ISR (Incremental Static Regeneration) em vez de SSG
-- Verifique a latência do Turso
+**Solution:**
+- Reduce the number of pages in the build
+- Use ISR (Incremental Static Regeneration) instead of SSG
+- Check Turso latency

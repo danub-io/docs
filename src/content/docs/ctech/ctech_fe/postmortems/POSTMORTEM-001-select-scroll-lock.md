@@ -1,54 +1,54 @@
 ---
-title: "Postmortem 001: Select dropdown causa encolhimento da página no mobile"
+title: "Postmortem 001: Select dropdown causes page shrinkage on mobile"
 ---
 
-## Sumário
+## Summary
 
-- **Data:** 2026-05-08
-- **Componente:** `OrdenacaoBusca` (Select Base UI) na página de busca
-- **Sintoma:** Ao clicar no dropdown de ordenação no mobile, a página diminuía de largura e aparecia uma barra branca à direita.
-- **Severidade:** Média — afetava apenas mobile, apenas na interação com o Select.
-- **Root cause:** `useAnchoredPopupScrollLock` do Base UI aplicava `overflow: hidden` no `<body>` via `useScrollLock` sempre que o Select abria. No mobile, isso recalculava o viewport, encolhendo o conteúdo.
+- **Date:** 2026-05-08
+- **Component:** `OrdenacaoBusca` (Base UI Select) on the search page
+- **Symptom:** Clicking the sort dropdown on mobile caused the page to shrink in width, revealing a white bar on the right side.
+- **Severity:** Medium — only affected mobile, only during Select interaction.
+- **Root cause:** Base UI's `useAnchoredPopupScrollLock` applied `overflow: hidden` to `<body>` via `useScrollLock` whenever the Select opened. On mobile, this triggered a viewport recalculation, shrinking the content.
 
 ## Timeline
 
-1. Usuário reportou que ao clicar no seletor de ordenação na página de busca, o site "encolhia" e aparecia uma barra branca à direita.
-2. Investigação inicial — inspeção de CSS descartou problemas de largura fixa, overflow, ou scrollbar-gutter.
-3. Busca no código-fonte do Base UI revelou o hook `useAnchoredPopupScrollLock` no `SelectPositioner`, que condiciona o scroll lock a `(alignItemWithTriggerActive || modal) && open`.
-4. Como `alignItemWithTrigger` default é `true`, o scroll lock era ativado em toda abertura do Select.
-5. Solução: passar `alignItemWithTrigger={false}` no `SelectContent` usado pelo `OrdenacaoBusca`.
+1. User reported that clicking the sort selector on the search page caused the site to "shrink" and show a white bar on the right.
+2. Initial investigation — CSS inspection ruled out fixed-width, overflow, or scrollbar-gutter issues.
+3. Source code search in Base UI revealed the `useAnchoredPopupScrollLock` hook in `SelectPositioner`, which conditionally enables scroll lock based on `(alignItemWithTriggerActive || modal) && open`.
+4. Since `alignItemWithTrigger` defaults to `true`, the scroll lock was activated on every Select open.
+5. Fix: pass `alignItemWithTrigger={false}` to the `SelectContent` used by `OrdenacaoBusca`.
 
 ## Root Cause
 
-O Base UI `Select` usa `@floating-ui` para posicionamento do popup. O positioner inclui o hook `useAnchoredPopupScrollLock`, que por sua vez chama `useScrollLock` do pacote `@base-ui/utils`. Esse hook:
+The Base UI `Select` uses `@floating-ui` for popup positioning. The positioner includes the `useAnchoredPopupScrollLock` hook, which in turn calls `useScrollLock` from `@base-ui/utils`. This hook:
 
-1. Detecta se o elemento de referência (trigger) precisa de scroll lock.
-2. Aplica `overflow: hidden` no `document.body` quando o popup abre.
-3. Em mobile (viewport < 768px), o `overflow: hidden` causa recálculo do viewport, encolhendo o body e gerando o white space à direita.
+1. Detects whether the trigger element needs scroll lock.
+2. Applies `overflow: hidden` to `document.body` when the popup opens.
+3. On mobile (viewport < 768px), `overflow: hidden` causes viewport recalculation, shrinking the body and creating white space on the right.
 
-O scroll lock é ativado quando `alignItemWithTriggerActive` é `true` (default) ou `modal` é `true`.
+Scroll lock is activated when `alignItemWithTriggerActive` is `true` (default) or `modal` is `true`.
 
-## Solução
+## Solution
 
-Adicionar `alignItemWithTrigger={false}` ao `SelectContent` no componente `OrdenacaoBusca`:
+Add `alignItemWithTrigger={false}` to `SelectContent` in the `OrdenacaoBusca` component:
 
 ```tsx
 <SelectContent align="end" alignItemWithTrigger={false}>
 ```
 
-Isso desabilita o scroll lock sem afetar o alinhamento do dropdown (`align="end"` continua funcionando). O popup passa a usar largura natural do conteúdo em vez de espelhar a largura do trigger.
+This disables the scroll lock without affecting the dropdown alignment (`align="end"` still works). The popup now uses its natural content width instead of mirroring the trigger width.
 
-## Arquivos alterados
+## Files changed
 
-- `src/modules/busca/components/OrdenacaoBusca.tsx` — adicionado `alignItemWithTrigger={false}`
+- `src/modules/busca/components/OrdenacaoBusca.tsx` — added `alignItemWithTrigger={false}`
 
-## Lições aprendidas
+## Lessons learned
 
-1. O Base UI Select ativa scroll lock por padrão via `alignItemWithTrigger`. Isso não é óbvio pela API pública.
-2. `overflow: hidden` no body em mobile causa recálculo de viewport em vários navegadores. Desabilitar scroll lock é a abordagem correta quando o popup não precisa de rolagem bloqueada.
-3. Para debugar esse tipo de problema, monitorar mudanças de estilo no `<body>` e `<html>` via DevTools ao interagir com o componente é mais rápido que seguir a cadeia de imports no node_modules.
+1. Base UI Select activates scroll lock by default via `alignItemWithTrigger`. This is not obvious from the public API.
+2. `overflow: hidden` on the body on mobile causes viewport recalculation in various browsers. Disabling scroll lock is the correct approach when the popup does not need blocked scrolling.
+3. To debug this type of issue, monitoring style changes on `<body>` and `<html>` via DevTools when interacting with the component is faster than tracing the import chain in node_modules.
 
-## Ações preventivas
+## Preventive actions
 
-- Ao usar `SelectContent` em novos contextos mobile, considerar se o scroll lock é necessário. Se o popup for pequeno (não full-screen), passar `alignItemWithTrigger={false}`.
-- Se o scroll lock for necessário (ex.: select modal em mobile), testar em dispositivo real para verificar se o viewport não encolhe.
+- When using `SelectContent` in new mobile contexts, evaluate whether scroll lock is needed. If the popup is small (not full-screen), pass `alignItemWithTrigger={false}`.
+- If scroll lock is required (e.g., modal select on mobile), test on a real device to ensure the viewport does not shrink.

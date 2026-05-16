@@ -1,49 +1,47 @@
 ---
-title: "Troubleshooting: Banco de Dados (Turso)"
+title: "Troubleshooting: Database (Turso)"
 ---
 
+## Error: "TURSO_DATABASE_URL is missing!"
 
+**Cause:** Environment variable not configured.
 
-## Erro: "TURSO_DATABASE_URL is missing!"
+**Solution:** Set `TURSO_DATABASE_URL` in `.env` (development) or in the platform environment variables (production).
 
-**Causa:** Variável de ambiente não configurada.
+## Error: "Authorization failed"
 
-**Solução:** Configure `TURSO_DATABASE_URL` no `.env` (desenvolvimento) ou nas variáveis de ambiente da plataforma (produção).
+**Cause:** Invalid or expired authentication token.
 
-## Erro: "Authorization failed"
-
-**Causa:** Token de autenticação inválido ou expirado.
-
-**Solução:**
+**Solution:**
 ```bash
 turso auth login
-turso db tokens create <nome-do-banco>
+turso db tokens create <database-name>
 ```
-Atualize `TURSO_AUTH_TOKEN` com o novo token.
+Update `TURSO_AUTH_TOKEN` with the new token.
 
-## Erro: "Connection refused"
+## Error: "Connection refused"
 
-**Causa:** Banco Turso offline ou URL incorreta.
+**Cause:** Turso database offline or incorrect URL.
 
-**Solução:**
-- Verifique se o banco existe: `turso db list`
-- Verifique a URL: `turso db show <nome-do-banco>`
-- Verifique o status do Turso: [status.turso.tech](https://status.turso.tech)
+**Solution:**
+- Check if the database exists: `turso db list`
+- Check the URL: `turso db show <database-name>`
+- Check Turso status: [status.turso.tech](https://status.turso.tech)
 
-## Banco retorna resultados vazios
+## Database returns empty results
 
-**Causa:** Dados ainda não foram inseridos pelo backend, ou filtro exclui todos os registros.
+**Cause:** Data has not been ingested by the backend yet, or the filter excludes all records.
 
-**Solução:**
-- Verifique se o backend (ctech_be) já processou produtos
-- Verifique o status dos produtos no banco (devem ter `status = 'AprovadoM4'`)
-- Teste a consulta diretamente: `turso db shell <nome-do-banco> "SELECT * FROM Produtos LIMIT 5"`
+**Solution:**
+- Verify that the backend (ctech_be) has processed products
+- Check product status in the database (must have `status = 'AprovadoM4'`)
+- Test the query directly: `turso db shell <database-name> "SELECT * FROM Produtos LIMIT 5"`
 
-## Performance Lenta
+## Slow Performance
 
-**Causa:** Consultas sem índice, latência de rede para Turso.
+**Cause:** Queries without indexes, network latency to Turso.
 
-**Solução:**
-- Verifique os índices no schema do banco
-- Considere cache adicional no frontend
-- Use `EXPLAIN QUERY PLAN` para diagnosticar consultas lentas
+**Solution:**
+- Review indexes in the database schema
+- Consider additional frontend caching
+- Use `EXPLAIN QUERY PLAN` to diagnose slow queries

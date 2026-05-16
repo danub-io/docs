@@ -1,93 +1,90 @@
 ---
-title: "Catálogo de Componentes"
+title: "Component Catalog"
 ---
 
-> **Nota:** Os componentes de comunidade (auth, reviews, feed) são condicionais à variável `COMMUNITY_ENABLED`. Quando desabilitados, as páginas redirecionam para 404 e as API routes retornam 404.
+> **Note:** Community components (auth, reviews, feed) are conditional on the `COMMUNITY_ENABLED` flag. When disabled, pages redirect to 404 and API routes return 404.
 
+## Astro Components (Static)
 
+Purely presentational components with no client interactivity.
 
-## Componentes Astro (Estáticos)
+| Component | Path | Props | Description |
+|-----------|------|-------|-------------|
+| `Layout` | `src/core/layouts/Layout.astro` | `title`, `description` | Base application layout |
+| `Navbar` | `src/core/layouts/Navbar.astro` | (categories from service) | Top navigation |
+| `Footer` | `src/core/layouts/Footer.astro` | — | Application footer |
+| `Icon` | `src/core/ui/Icon.astro` | `name`, `class` | Default SVG icon component (Material Symbols) |
+| `CategoryIcon` | `src/core/ui/CategoryIcon.astro` | `name`, `class` | Category-specific SVG icons |
+| `Breadcrumbs` | `src/core/ui/Breadcrumbs.astro` | `items: { label, href? }[]` | Structural breadcrumb navigation. Mobile: previous link only. Desktop: full trail with Schema.org `BreadcrumbList` |
+| `CartaoImprensa` | `src/core/ui/reviews/CartaoImprensa.astro` | `review: Avaliacao` | Press review card with external link and `open_in_new` icon |
+| `Destaque` | `src/modules/inicio/components/Destaque.astro` | `product: Product` | Landing page featured section |
+| `Categorias` | `src/modules/inicio/components/Categorias.astro` | `categories: Categoria[]` | Category grid on Home |
+| `Recentes` | `src/modules/inicio/components/Recentes.astro` | `products: Product[]` | "Recent" section with `server:defer` |
+| `ProdutoDestaque` | `src/modules/produto/components/ProdutoDestaque.astro` | `product: Product` | Product page hero |
+| `ProdutoOndeComprar` | `src/modules/produto/components/ProdutoOndeComprar.astro` | `product: Product` | Where to buy and pricing section |
+| `ProdutoVeredito` | `src/modules/produto/components/ProdutoVeredito.astro` | `product: Product` | Technical verdict and ratings |
+| `ProdutoEspecificacoes` | `src/modules/produto/components/ProdutoEspecificacoes.astro` | `product: Product` | Detailed technical specifications |
+| `ProdutoFontes` | `src/modules/produto/components/ProdutoFontes.astro` | `reviews: Avaliacao[]` | Press reviews and external sources |
+| `ProdutoAvaliacoesUsuarios` | `src/modules/comunidade/reviews/components/ProdutoAvaliacoesUsuarios.astro` | `reviews: Avaliacao[]` | User reviews on product page |
+| `CardGuia` | `src/modules/guia/components/CardGuia.astro` | `guia: Guia` | Recommendation guide card (icon, title, description) with link to `/guia/{slug}` |
+| `GrupoGuias` | `src/modules/guia/components/GrupoGuias.astro` | `grupo: GuiaGrupo` | Themed section with grid/carousel of `CardGuia` |
+| `CabecalhoGuia` | `src/modules/guia/components/CabecalhoGuia.astro` | `titulo: string, total: number` | Header with title, count badge, and editorial description |
+| `CartaoProdutoCategoria` | `src/modules/categoria/components/CartaoProdutoCategoria.astro` | `product: Product` | Product card for guides: image, semantic rating, title, brand, tier badge |
+| `GradeComparacao` | `src/modules/comparar/components/GradeComparacao.astro` | `products: Product[]` | Comparison grid |
+| `CabecalhoComparacao` | `src/modules/comparar/components/CabecalhoComparacao.astro` | `count: number` | Comparison header |
+| `FeedAvaliacoes` | `src/modules/comunidade/feed/components/FeedAvaliacoes.astro` | `reviews: AvaliacaoComunidade[]` | Community review feed |
+| `CabecalhoComunidade` | `src/modules/comunidade/feed/components/CabecalhoComunidade.astro` | — | Community page header |
+| `BarraBusca` | `src/modules/busca/components/BarraBusca.astro` | `termo?: string` | Search input |
+| `FiltrosBusca` | `src/modules/busca/components/FiltrosBusca.astro` | `categorias: string[], ativos: FiltrosAtivos` | Search filters |
+| `FiltroAtivo` | `src/modules/busca/components/FiltroAtivo.astro` | `filtro: string, valor: string` | Removable active filter tag |
+| `GradeResultados` | `src/modules/busca/components/GradeResultados.astro` | `products: Product[]` | Search results grid |
+| `PaginacaoBusca` | `src/modules/busca/components/PaginacaoBusca.astro` | `pagina: number, totalPaginas: number` | Results pagination |
+| `ResultadosBusca` | `src/modules/busca/components/ResultadosBusca.astro` | `results: ResultadoBusca` | Results container (title + count + grid + pagination) |
+| `DestacarTermo` | `src/modules/busca/components/DestacarTermo.astro` | `texto: string, termo: string` | Highlights the searched term in text |
+| `VazioBusca` | `src/modules/busca/components/VazioBusca.astro` | `termo?: string` | Search empty state |
 
-Componentes puramente de apresentação, sem interatividade no cliente.
+## React Components (Islands)
 
-| Componente | Path | Props | Descrição |
-|-----------|------|-------|-----------|
-| `Layout` | `src/core/layouts/Layout.astro` | `title`, `description` | Layout base da aplicação |
-| `Navbar` | `src/core/layouts/Navbar.astro` | (categorias do service) | Navegação superior |
-| `Footer` | `src/core/layouts/Footer.astro` | — | Rodapé da aplicação |
-| `Icon` | `src/core/ui/Icon.astro` | `name`, `class` | Componente padrão para ícones SVG (Material Symbols) |
-| `CategoryIcon` | `src/core/ui/CategoryIcon.astro` | `name`, `class` | Ícones SVG específicos por categoria |
-| `Breadcrumbs` | `src/core/ui/Breadcrumbs.astro` | `items: { label, href? }[]` | Navegação estrutural (migalhas de pão). Mobile: apenas link anterior. Desktop: trilha completa com Schema.org `BreadcrumbList` |
-| `CartaoImprensa` | `src/core/ui/reviews/CartaoImprensa.astro` | `review: Avaliacao` | Card de análise da imprensa com link externo e ícone `open_in_new` |
-| `Destaque` | `src/modules/inicio/components/Destaque.astro` | `product: Product` | Seção de destaque da Landing Page |
-| `Categorias` | `src/modules/inicio/components/Categorias.astro` | `categories: Categoria[]` | Grid de categorias na Home |
-| `Recentes` | `src/modules/inicio/components/Recentes.astro` | `products: Product[]` | Seção "Recentes" com `server:defer` |
-| `ProdutoDestaque` | `src/modules/produto/components/ProdutoDestaque.astro` | `product: Product` | Hero da página do produto |
-| `ProdutoOndeComprar` | `src/modules/produto/components/ProdutoOndeComprar.astro` | `product: Product` | Seção onde comprar e ofertas |
-| `ProdutoVeredito` | `src/modules/produto/components/ProdutoVeredito.astro` | `product: Product` | Veredito técnico e notas |
-| `ProdutoEspecificacoes` | `src/modules/produto/components/ProdutoEspecificacoes.astro` | `product: Product` | Especificações técnicas detalhadas |
-| `ProdutoFontes` | `src/modules/produto/components/ProdutoFontes.astro` | `reviews: Avaliacao[]` | Análises da imprensa e fontes externas |
-| `ProdutoAvaliacoesUsuarios` | `src/modules/comunidade/reviews/components/ProdutoAvaliacoesUsuarios.astro` | `reviews: Avaliacao[]` | Avaliações de usuários na página do produto |
-| `CardGuia` | `src/modules/guia/components/CardGuia.astro` | `guia: Guia` | Card de guia de recomendação (ícone, título, descrição) com link para `/guia/{slug}` |
-| `GrupoGuias` | `src/modules/guia/components/GrupoGuias.astro` | `grupo: GuiaGrupo` | Seção temática com grid/carrossel de `CardGuia` |
-| `CabecalhoGuia` | `src/modules/guia/components/CabecalhoGuia.astro` | `titulo: string, total: number` | Cabeçalho com título, badge de contagem e descrição editorial |
-| `CartaoProdutoCategoria` | `src/modules/categoria/components/CartaoProdutoCategoria.astro` | `product: Product` | Card de produto para guias: imagem, nota semântica, título, marca, tier badge |
-| `GradeComparacao` | `src/modules/comparar/components/GradeComparacao.astro` | `products: Product[]` | Grid de comparação |
-| `CabecalhoComparacao` | `src/modules/comparar/components/CabecalhoComparacao.astro` | `count: number` | Cabeçalho da comparação |
-| `FeedAvaliacoes` | `src/modules/comunidade/feed/components/FeedAvaliacoes.astro` | `reviews: AvaliacaoComunidade[]` | Feed de avaliações da comunidade |
-| `CabecalhoComunidade` | `src/modules/comunidade/feed/components/CabecalhoComunidade.astro` | — | Cabeçalho da página comunidade |
-| `BarraBusca` | `src/modules/busca/components/BarraBusca.astro` | `termo?: string` | Input de busca |
-| `FiltrosBusca` | `src/modules/busca/components/FiltrosBusca.astro` | `categorias: string[], ativos: FiltrosAtivos` | Filtros de busca |
-| `FiltroAtivo` | `src/modules/busca/components/FiltroAtivo.astro` | `filtro: string, valor: string` | Tag de filtro ativo removível |
-| `GradeResultados` | `src/modules/busca/components/GradeResultados.astro` | `products: Product[]` | Grid de resultados da busca |
-| `PaginacaoBusca` | `src/modules/busca/components/PaginacaoBusca.astro` | `pagina: number, totalPaginas: number` | Paginação dos resultados |
-| `ResultadosBusca` | `src/modules/busca/components/ResultadosBusca.astro` | `results: ResultadoBusca` | Container de resultados (título + contagem + grid + paginação) |
-| `DestacarTermo` | `src/modules/busca/components/DestacarTermo.astro` | `texto: string, termo: string` | Destaca o termo buscado no texto |
-| `VazioBusca` | `src/modules/busca/components/VazioBusca.astro` | `termo?: string` | Empty state da busca |
+Interactive components that hydrate on the client. Only these use `client:*` directives.
 
-## Componentes React (Islands)
+| Component | Path | Props | Hydration | Description |
+|-----------|------|-------|-----------|-------------|
+| `Badge` | `src/core/ui/badge.tsx` | `variant`, `className`, `children` | SSR (no `client:*`) | Badges and tags |
+| `Button` | `src/core/ui/button.tsx` | `variant`, `size`, `disabled` | SSR (no `client:*`) | Buttons |
+| `Card` | `src/core/ui/card.tsx` | `size`, subcomponents | SSR (no `client:*`) | Content cards |
+| `Progress` | `src/core/ui/progress.tsx` | `value`, `children` | SSR (no `client:*`) | Progress bars |
+| `CartaoAvaliacaoColapsavel` | `src/modules/comunidade/reviews/components/CartaoAvaliacaoColapsavel.tsx` | `review: Avaliacao` | `client:visible` | User review card with collapsible for long text |
+| `LoginDialog` | `src/modules/comunidade/auth/components/LoginDialog.tsx` | — | `client:load` | Login/register modal with tabs |
+| `UserMenu` | `src/modules/comunidade/auth/components/UserMenu.tsx` | — | `client:load` | Authenticated user menu |
+| `PainelDashboard` | `src/modules/comunidade/auth/components/PainelDashboard.tsx` | — | `client:load` | User dashboard panel |
+| `Collapsible` | `src/core/ui/collapsible.tsx` | `children` | via parent component | Expand/collapse primitive |
+| `NavDrawer` | `src/core/ui/nav-drawer.tsx` | — | `client:load` | Mobile navigation drawer |
+| `SearchCommand` | `src/core/ui/search-command.tsx` | — | `client:idle` | Search palette (CMD+K) |
 
-Componentes interativos que hidratam no cliente. Apenas estes usam `client:*` diretivas.
+> **Note:** UI components use `@base-ui/react` (MUI primitives) following the shadcn/ui pattern, **not** Radix.
 
-| Componente | Path | Props | Hidratação | Descrição |
-|-----------|------|-------|-----------|----------|
-| `Badge` | `src/core/ui/badge.tsx` | `variant`, `className`, `children` | SSR (sem `client:*`) | Selos e tags |
-| `Button` | `src/core/ui/button.tsx` | `variant`, `size`, `disabled` | SSR (sem `client:*`) | Botões |
-| `Card` | `src/core/ui/card.tsx` | `size`, subcomponentes | SSR (sem `client:*`) | Cards de conteúdo |
-| `Progress` | `src/core/ui/progress.tsx` | `value`, `children` | SSR (sem `client:*`) | Barras de progresso |
-| `CartaoAvaliacaoColapsavel` | `src/modules/comunidade/reviews/components/CartaoAvaliacaoColapsavel.tsx` | `review: Avaliacao` | `client:visible` | Card de avaliação de usuário com collapsible para texto longo |
-| `LoginDialog` | `src/modules/comunidade/auth/components/LoginDialog.tsx` | — | `client:load` | Modal de login/registro com abas |
-| `UserMenu` | `src/modules/comunidade/auth/components/UserMenu.tsx` | — | `client:load` | Menu do usuário autenticado |
-| `PainelDashboard` | `src/modules/comunidade/auth/components/PainelDashboard.tsx` | — | `client:load` | Dashboard do painel do usuário |
-| `Collapsible` | `src/core/ui/collapsible.tsx` | `children` | via componente pai | Primitiva de expandir/recolher |
-| `NavDrawer` | `src/core/ui/nav-drawer.tsx` | — | `client:load` | Drawer de navegação mobile |
-| `SearchCommand` | `src/core/ui/search-command.tsx` | — | `client:idle` | Paleta de busca (CMD+K) |
+## Iconography
 
-> **Nota:** Componentes UI usam `@base-ui/react` (MUI primitives) e seguem o padrão shadcn/ui, **não** Radix.
+The project uses **internal SVGs** via the `Icon` component to ensure visual consistency and performance (avoiding external dependencies like Google Fonts).
 
-## Iconografia
-
-O projeto utiliza **SVGs internos** via o componente `Icon` para garantir consistência visual e performance (evitando dependências externas como fontes do Google).
-
-### Como usar o componente `Icon`
+### How to use the `Icon` component
 
 ```astro
 ---
 import Icon from '@/core/ui/Icon.astro';
 ---
 
-<!-- Ícone simples -->
+<!-- Simple icon -->
 <Icon name="add_circle" class="w-5 h-5 text-primary" />
 
-<!-- Ícone com cor do texto herdada -->
+<!-- Icon with inherited text color -->
 <Icon name="shopping_cart" class="w-6 h-6" />
 ```
 
-### Lista de Ícones Suportados
-Os ícones estão mapeados em `src/core/ui/Icon.astro`. Nomes comuns incluem:
+### Supported Icon List
+Icons are mapped in `src/core/ui/Icon.astro`. Common names include:
 - `close`, `menu`, `open_in_new`, `chevron_right`, `arrow_forward`, `arrow_back`
-- `expand_more`, `expand_less` (chevron para expandir/recolher conteúdo)
+- `expand_more`, `expand_less` (chevron for expand/collapse content)
 - `add_circle`, `do_not_disturb_on`
 - `shopping_cart`, `storefront`
 - `star`, `thumb_up`, `groups`
-

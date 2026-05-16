@@ -1,28 +1,28 @@
 ---
-title: "Postmortem 002: Padding inconsistente na seção Veredito (layout-boxed)"
+title: "Postmortem 002: Inconsistent padding in the Veredito section (layout-boxed)"
 ---
 
-## Sumário
+## Summary
 
-- **Data:** 2026-05-08
-- **Componente:** `ProdutoVeredito.astro` na página de produto (`[categoria]/[slug].astro`)
-- **Sintoma:** A seção "Veredito" usava padding de 24px (`--spacing-box-padding`) vindo da classe compartilhada `layout-boxed`, enquanto o desejado era 16px (`p-4`). Tentativas de ajuste em outras seções da página falharam porque o modelo anterior não identificou que o padding vinha de uma classe CSS global compartilhada e não do componente em si.
-- **Severidade:** Baixa — apenas estética, sem quebra de funcionalidade.
-- **Root cause:** A classe `layout-boxed` (definida em `global.css`) aplica `padding: var(--spacing-box-padding)` (24px) via CSS custom property. Como é uma classe utilitária compartilhada entre vários componentes de seção, alterá-la globalmente quebraria o padding das demais seções.
+- **Date:** 2026-05-08
+- **Component:** `ProdutoVeredito.astro` on the product page (`[categoria]/[slug].astro`)
+- **Symptom:** The "Veredito" section used 24px padding (`--spacing-box-padding`) from the shared `layout-boxed` class, while 16px (`p-4`) was desired. Previous attempts to adjust padding in other sections failed because the earlier approach did not identify that the padding came from a shared global CSS class rather than the component itself.
+- **Severity:** Low — cosmetic only, no functionality broken.
+- **Root cause:** The `layout-boxed` class (defined in `global.css`) applies `padding: var(--spacing-box-padding)` (24px) via CSS custom property. Since it is a shared utility class used by multiple section components, changing it globally would break the padding of other sections.
 
 ## Timeline
 
-1. Usuário solicitou padding de 16px na seção "Veredito" da página de produto, sem quebrar as outras seções.
-2. Tentativa anterior com outro modelo/abordagem em seção diferente da página consumiu ~1h sem sucesso — o modelo não conseguiu localizar a origem do padding.
-3. Investigação identificou que:
-   - `layout-boxed` é usado em `ProdutoVeredito.astro` e `ProdutoEspecificacoes.astro`.
-   - `--spacing-box-padding` = 24px em `global.css`.
-   - `ProdutoEspecificacoes` já faz override com `p-0`.
-4. Solução aplicada em segundos: substituir `layout-boxed` pelas classes equivalentes sem o padding herdado.
+1. User requested 16px padding in the "Veredito" section of the product page, without breaking other sections.
+2. A previous attempt with a different model/approach on another section consumed ~1h without success — the model could not locate the padding origin.
+3. Investigation identified that:
+   - `layout-boxed` is used in `ProdutoVeredito.astro` and `ProdutoEspecificacoes.astro`.
+   - `--spacing-box-padding` = 24px in `global.css`.
+   - `ProdutoEspecificacoes` already overrides with `p-0`.
+4. Fix applied in seconds: replace `layout-boxed` with equivalent classes without the inherited padding.
 
 ## Root Cause
 
-A classe `.layout-boxed` no `global.css` é definida como:
+The `.layout-boxed` class in `global.css` is defined as:
 
 ```css
 .layout-boxed {
@@ -31,36 +31,36 @@ A classe `.layout-boxed` no `global.css` é definida como:
 }
 ```
 
-Ela é usada em múltiplos componentes de seção na página de produto. Como o padding vem de uma CSS custom property dentro de uma classe compartilhada, não era possível simplesmente adicionar `p-4` ao lado — a precedência depende da ordem de carga do CSS, o que é frágil. A abordagem correta foi substituir a classe compartilhada pelas classes Tailwind equivalentes, permitindo controlar o padding independentemente.
+It is used by multiple section components on the product page. Since the padding comes from a CSS custom property inside a shared class, simply adding `p-4` alongside was not reliable — the precedence depends on CSS load order, which is fragile. The correct approach was to replace the shared class with equivalent Tailwind classes, allowing independent padding control.
 
-## Solução
+## Solution
 
-Substituir `class="layout-boxed"` por `class="rounded-card bg-card ring-1 ring-foreground/10 p-4"` no componente `ProdutoVeredito.astro`:
+Replace `class="layout-boxed"` with `class="rounded-card bg-card ring-1 ring-foreground/10 p-4"` in `ProdutoVeredito.astro`:
 
-**Antes:**
+**Before:**
 ```astro
 <div class="layout-boxed">
 ```
 
-**Depois:**
+**After:**
 ```astro
 <div class="rounded-card bg-card ring-1 ring-foreground/10 p-4">
 ```
 
-Isso preserva todos os estilos visuais (cantos arredondados, fundo, borda) mas troca o padding de 24px para 16px. As demais seções que usam `layout-boxed` não são afetadas.
+This preserves all visual styles (rounded corners, background, border) but swaps padding from 24px to 16px. Other sections using `layout-boxed` remain unaffected.
 
-## Arquivos alterados
+## Files changed
 
-- `src/modules/produto/components/ProdutoVeredito.astro` — linha 24: `layout-boxed` → classes explícitas com `p-4`
+- `src/modules/produto/components/ProdutoVeredito.astro` — line 24: `layout-boxed` → explicit classes with `p-4`
 
-## Lições aprendidas
+## Lessons learned
 
-1. `layout-boxed` é uma classe compartilhada com padding via CSS custom property. Alterar globalmente quebra outras seções. O padrão correto é desacoplar (inline as classes necessárias) ou criar uma variante.
-2. Ao precisar de padding diferente em um componente que usa `layout-boxed`, substitua pelas classes Tailwind equivalentes + o padding desejado, em vez de tentar sobrescrever.
-3. `ProdutoEspecificacoes` já usava `layout-boxed p-0` — confirmando que outras seções já precisavam de padding diferente e usavam override. Isso é um code smell de que `layout-boxed` deveria talvez ser separado em `layout-boxed` (sem padding) + `layout-box-padding` (com o padding default).
-4. Para debug de padding, inspecionar o elemento no DevTools e verificar de onde vem o valor computado é mais rápido que buscar na base de código.
+1. `layout-boxed` is a shared class with padding via CSS custom property. Changing it globally breaks other sections. The correct pattern is to decouple (inline the necessary classes) or create a variant.
+2. When a component using `layout-boxed` needs different padding, replace it with equivalent Tailwind classes plus the desired padding, rather than attempting to override.
+3. `ProdutoEspecificacoes` already used `layout-boxed p-0` — confirming that other sections already needed different padding and used overrides. This is a code smell suggesting `layout-boxed` should perhaps be split into `layout-boxed` (no padding) + `layout-box-padding` (with default padding).
+4. For padding debugging, inspecting the element in DevTools and checking the computed value origin is faster than searching the codebase.
 
-## Ações preventivas
+## Preventive actions
 
-- Ao criar novos componentes de seção na página de produto, considerar se `layout-boxed` é adequado ou se classes inline são melhores para evitar acoplamento de padding.
-- Se houver uma terceira seção precisando de padding diferente, vale a pena refatorar: separar `layout-boxed` em uma classe sem padding e aplicar `layout-box-padding` (já existe) seletivamente.
+- When creating new section components on the product page, consider whether `layout-boxed` is suitable or if inline classes are better to avoid padding coupling.
+- If a third section needs different padding, consider refactoring: split `layout-boxed` into a padding-free class and apply `layout-box-padding` (already exists) selectively.

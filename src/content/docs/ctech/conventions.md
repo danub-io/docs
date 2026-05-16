@@ -290,7 +290,8 @@ script-src 'self' 'unsafe-inline'
 
 - **Service, component, and variable names:** Portuguese (`obterProdutoPorSlug`, `servicoCatalogo`)
 - **Code (keywords, types):** English (`interface`, `Promise`, `ProductSchema`)
-- **Comments and documentation:** Portuguese
+- **Code comments:** Portuguese (internal team convention)
+- **Documentation:** American English (all docs site content)
 
 ---
 

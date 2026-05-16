@@ -2,65 +2,63 @@
 title: "Islands Architecture"
 ---
 
+Astro uses the **Islands** concept — interactive components isolated within static HTML. This minimizes the JavaScript sent to the client.
 
+## Guidelines
 
-O Astro usa o conceito de **Islands** — componentes interativos ilhados em HTML estático. Isso minimiza o JavaScript enviado ao cliente.
+### Prefer Astro for Static Content
 
-## Diretrizes
+Components that only display data (lists, grids, headers) **must be Astro**. They generate pure HTML with zero JavaScript.
 
-### Prefira Astro para Conteúdo Estático
+### Use React Only for Interactivity
 
-Componentes que apenas exibem dados (listas, grids, headers) **devem ser Astro**. Eles geram HTML puro sem JavaScript.
+Reserve React components for:
+- Local state and events (`useState`, `useEffect`)
+- Hooks and contexts
+- Third-party library integration
 
-### Use React Apenas para Interatividade
+### Hydration Strategy
 
-Reserve componentes React para:
-- Estado local e eventos (`useState`, `useEffect`)
-- Hooks e contextos
-- Integração com bibliotecas de terceiros
+| Directive | When to use | Impact |
+|----------|-------------|--------|
+| `client:load` | Immediately needed (critical) | Loads JS on initial load |
+| `client:visible` | Below the fold (recommended default) | Loads when entering viewport |
+| `client:idle` | Non-urgent | Loads when browser is idle |
+| `client:media` | Responsive | Loads only at certain breakpoints |
+| `client:only` | SPA-like | No SSR, client only |
 
-### Estratégia de Hidratação
-
-| Diretiva | Quando usar | Impacto |
-|----------|------------|---------|
-| `client:load` | Imediatamente necessário (crítico) | Carrega JS na carga inicial |
-| `client:visible` | Abaixo da dobra (padrão recomendado) | Carrega quando entra no viewport |
-| `client:idle` | Não urgente | Carrega quando o navegador está ocioso |
-| `client:media` | Responsivo | Carrega apenas em certos breakpoints |
-| `client:only` | SPA-like | Sem SSR, apenas cliente |
-
-### Boas Práticas
+### Best Practices
 
 ```astro
-<!-- Mau: React Island para conteúdo estático -->
-<ProductList client:load />   ← JS desnecessário
+<!-- Bad: React Island for static content -->
+<ProductList client:load />   ← Unnecessary JS
 
-<!-- Bom: Astro nativo, zero JS -->
+<!-- Good: Native Astro, zero JS -->
 <ProductList />
 
-<!-- Bom: React apenas quando necessário -->
+<!-- Good: React only when necessary -->
 <CartaoAvaliacaoColapsavel client:visible />
 <NavDrawer client:load />
 <SearchCommand client:idle />
 ```
 
-## Estado Atual
+## Current State
 
-O projeto usa majoritariamente componentes **Astro** estáticos (zero JS no cliente). Componentes React UI (Badge, Button, Card, Progress) renderizam em SSR sem hidratação cliente.
+The project uses mostly static **Astro** components (zero JS on the client). React UI components (Badge, Button, Card, Progress) render in SSR without client hydration.
 
-**Islands ativas:**
+**Active islands:**
 
-| Componente | Path | Diretiva | Finalidade |
-|-----------|------|----------|-----------|
-| `CartaoAvaliacaoColapsavel` | `src/modules/comunidade/reviews/components/CartaoAvaliacaoColapsavel.tsx` | `client:visible` | Card de avaliação de usuário com expandir/recolher |
-| `NavDrawer` | `src/core/ui/nav-drawer.tsx` | `client:load` | Drawer de navegação mobile |
-| `SearchCommand` | `src/core/ui/search-command.tsx` | `client:load` | Paleta de busca (CMD+K) |
-| `LoginDialog` | `src/modules/comunidade/auth/components/LoginDialog.tsx` | `client:load` | Modal de login/registro com abas |
-| `UserMenu` | `src/modules/comunidade/auth/components/UserMenu.tsx` | `client:load` | Menu do usuário autenticado |
-| `PainelDashboard` | `src/modules/comunidade/auth/components/PainelDashboard.tsx` | `client:load` | Dashboard do painel do usuário |
-| `ComparadorInteractive` | `src/modules/comparar/components/ComparadorInteractive.tsx` | `client:load` | Comparação interativa de produtos |
-| `HeroCarousel` | `src/modules/inicio/components/HeroCarousel.tsx` | `client:load` | Carrossel de produtos em destaque |
+| Component | Path | Directive | Purpose |
+|-----------|------|-----------|---------|
+| `CartaoAvaliacaoColapsavel` | `src/modules/comunidade/reviews/components/CartaoAvaliacaoColapsavel.tsx` | `client:visible` | Expandable/collapsible user review card |
+| `NavDrawer` | `src/core/ui/nav-drawer.tsx` | `client:load` | Mobile navigation drawer |
+| `SearchCommand` | `src/core/ui/search-command.tsx` | `client:load` | Search palette (CMD+K) |
+| `LoginDialog` | `src/modules/comunidade/auth/components/LoginDialog.tsx` | `client:load` | Login/register modal with tabs |
+| `UserMenu` | `src/modules/comunidade/auth/components/UserMenu.tsx` | `client:load` | Authenticated user menu |
+| `PainelDashboard` | `src/modules/comunidade/auth/components/PainelDashboard.tsx` | `client:load` | User dashboard panel |
+| `ComparadorInteractive` | `src/modules/comparar/components/ComparadorInteractive.tsx` | `client:load` | Interactive product comparison |
+| `HeroCarousel` | `src/modules/inicio/components/HeroCarousel.tsx` | `client:load` | Featured products carousel |
 
-> **Regra:** só adicione `client:*` quando houver estado/evento inevitável. Prefira `client:visible` ou `client:idle` sobre `client:load`.
+> **Rule:** only add `client:*` when state/event handling is unavoidable. Prefer `client:visible` or `client:idle` over `client:load`.
 
-> **Nota:** Todas as islands de autenticação (LoginDialog, UserMenu, PainelDashboard) e reviews (CartaoAvaliacaoColapsavel) são renderizadas condicionalmente — só aparecem quando `COMMUNITY_ENABLED()` retorna `true`. Veja [comunidade.md](./comunidade.md) para detalhes.
+> **Note:** All authentication islands (LoginDialog, UserMenu, PainelDashboard) and reviews (CartaoAvaliacaoColapsavel) are conditionally rendered — they only appear when `COMMUNITY_ENABLED()` returns `true`. See [community.md](./comunidade.md) for details.
