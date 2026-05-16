@@ -7,3 +7,4 @@ Postmortems for the TURBO CODE project (TypeScript/Node.js).
 | # | Description | Date |
 |---|-------------|------|
 | 001 | [ChatInput textarea and send button misalignment](./postmortem-001-chatinput-header-alignment) | 2026-05-13 |
+| 002 | [Vite proxy WebSocket ECONNRESET + infinite page reload](./postmortem-002-vite-proxy-websocket-loop) | 2026-05-13 |
