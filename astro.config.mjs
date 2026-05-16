@@ -107,11 +107,12 @@ export default defineConfig({
           label: '⚡ TURBO CODE',
           collapsed: false,
           items: [
-            { label: 'README', slug: 'turbo-code/index' },
+            { label: 'README', slug: 'turbo-code' },
             { label: 'Quickstart', slug: 'turbo-code/quickstart' },
             { label: 'Architecture', slug: 'turbo-code/architecture' },
             { label: 'Modes', slug: 'turbo-code/modes' },
             { label: 'Streaming', slug: 'turbo-code/streaming' },
+            { label: 'Context Compression', slug: 'turbo-code/compression' },
             { label: 'Tools', slug: 'turbo-code/tools' },
             { label: 'Security', slug: 'turbo-code/security' },
             { label: 'Memory', slug: 'turbo-code/memory' },

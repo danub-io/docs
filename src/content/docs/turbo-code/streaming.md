@@ -42,25 +42,14 @@ The frontend uses the `useWebSocket` hook (in `web/src/hooks/useWebSocket.ts`) w
 
 ## Context Management
 
-The orchestrator manages context when estimated tokens exceed 40% of the model's context window, with a minimum of 2 tool rounds between interventions.
+The orchestrator uses a multi-layered context management system to keep conversation history within the model's context window. See the [Context Compression](/docs/turbo-code/compression/) page for full details.
 
-### Legacy Pruning (default)
+**Compression pipeline trigger**: when estimated tokens exceed 40% of the model's context window (`PRUNE_TOKEN_RATIO`) with at least 2 tool rounds since the last intervention.
 
-Mechanical truncation of old tool rounds:
-- **Trigger**: `estimateTokens() > contextWindow * 0.4`
-- **Estimator**: counts chars + structural overhead (20 chars/message + 50 chars/tool_call) divided by 4
-- **Retention**: keeps the last 3 full tool rounds (configurable via `KEEP_TOOL_ROUNDS`)
-- **Deduplication**: stale `_pruned_history` summaries are removed before each prune — only the latest is kept
-- **Safety**: `removeOrphanedTools()` runs after prune and before every LLM call to maintain message consistency
-- **Prefix Caching**: dynamic blocks (`<memories>`, `_active_files`, `_plan`) are inserted after the system message for cache efficiency
+The five layers are:
 
-### Async Compression (opt-in)
-
-When `contextCompression: true`, replaces pruning with LLM-based semantic summarization:
-- **Trigger**: same 40% threshold + 2 round minimum
-- **Process**: old messages before the last 3 tool rounds are sent to the LLM (via `compressConversation()`) with a compression prompt, running asynchronously (fire-and-forget)
-- **Result**: old messages are replaced by a single `_compressed` user message containing the LLM-generated summary
-- **Model**: uses `compressionModel` if set, otherwise falls back to `cheapModel`, then the main model
-- **Safety**: if compression fails (timeout, empty result), `compressionFailed` flag auto-resets after a 30s cooldown
-- **Cooldown**: 30s between compression runs to avoid over-compressing
-- **Events**: emits `info` events with "Compressing context..." (at dispatch) and "Context compressed: ~N → ~M tokens" (on completion)
+1. **Retroactive sync compression** — `PromptCompressor` compresses individual tool outputs over 4000 bytes
+2. **Async LLM compression** — fire-and-forget LLM call summarizes old conversation turns into a `_compressed` message
+3. **Emergency fallback** — if still above 80% context, runs sync compression with halved threshold
+4. **Per-output compression** — inline compression of tool outputs and tool call arguments on every round
+5. **Distillation** — optional structured summary via `cheapModel` when context exceeds 50% of the window

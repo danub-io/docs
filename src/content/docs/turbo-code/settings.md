@@ -42,7 +42,7 @@ Return optimized tuning parameters for a given model. Tuning is determined by mo
 | `gpt-*`, `o1-*`, `o3-*` | true | false | 0ms | 16K | 30 |
 | others (unknown) | true | false | 300ms | 16K | 30 |
 
-All model families default to `contextCompression: false` and `compressionModel: null`.
+All model families default to `contextCompression: true` and `compressionModel: null`. See the [Context Compression](/docs/turbo-code/compression/) page for details.
 
 ### `GET /api/config/provider-defaults`
 
@@ -154,8 +154,10 @@ Before saving, the server validates credentials by making a test `chatCompletion
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `autoDream` | `boolean` | `true` | Automatically consolidate memories after conversations in Normal/Code modes |
-| `contextCompression` | `boolean` | `false` | Enable async LLM-based context compression (replaces mechanical pruning with semantic summarization) |
+| `contextCompression` | `boolean` | `true` | Async LLM-based context compression (see [Context Compression](/docs/turbo-code/compression/)) |
 | `compressionModel` | `string \| null` | `null` | Model to use for compression (uses `cheapModel` or main model if null) |
+| `compressionRatio` | `number` | `0.5` | Target compression ratio for PromptCompressor |
+| `compressionThreshold` | `number` | `4000` | Byte threshold for PromptCompressor on tool outputs |
 
 ## SettingsDialog (Frontend)
 

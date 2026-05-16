@@ -48,9 +48,7 @@ turbo-code/
 4. **LLM Client** (`src/modules/providers/llm-client.ts`) — OpenAI-compatible API
 5. **Agent Prompts** (`src/modules/agents/`) — System prompts for the 4 modes
 6. **Tools** (`src/tools/`) — 13 tools + skills registered as tools, executable by the LLM
-7. **Session** (`src/state/session.ts`) — Session state, circuit breaker, token-aware context management. Two strategies available:
-   - **Legacy pruning** (default): mechanical truncation of old tool rounds, keeps last 3 via `KEEP_TOOL_ROUNDS`, preserves system messages + user context, deduplicates stale `_pruned_history` summaries
-   - **Async compression** (opt-in via `contextCompression: true`): LLM-based semantic summarization of old conversation turns, runs asynchronously in background using the cheap model, replaces old messages with a single `_compressed` summary message
+7. **Session** (`src/state/session.ts`) — Session state, circuit breaker, token-aware context management via a multi-layered [compression pipeline](/docs/turbo-code/compression/) (sync retroactive compression, async LLM summarization, emergency fallback, per-output compression, and distillation)
 8. **Memory** (`src/modules/memory/`) — Persistent memory + RAG injection + auto-dream consolidation in background
 
 ## Frontend Architecture
