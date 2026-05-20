@@ -104,7 +104,7 @@ export default defineConfig({
           ],
         },
         {
-          label: '⚡ TURBO CODE',
+          label: '⚡ Turbo Code OLD',
           collapsed: false,
           items: [
             { label: 'README', slug: 'turbo-code' },

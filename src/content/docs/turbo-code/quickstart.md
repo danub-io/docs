@@ -10,9 +10,11 @@ title: "Quickstart"
 ## Setup
 
 ```bash
-# Clone
+# Clone (default branch is gemini — Gemini-optimized, no build configs)
+# Switch to develop for the full repository:
 git clone https://github.com/danub-io/turbo-code.git
 cd turbo-code
+git checkout develop
 
 # Configure API key (server auto-creates .env from .env.example if missing)
 cp .env.example .env

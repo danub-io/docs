@@ -14,17 +14,47 @@ turbo-code/
 │   ├── config/             # ConfigModel (load/save JSON)
 │   ├── state/              # SessionState (messages, circuit breaker, pruning)
 │   ├── core/
-│   │   ├── orchestrator.ts # chatCompletionWithTools + streaming + tool loop
-│   │   └── planParser.ts   # Markdown plan parser
+│   │   ├── orchestrator.ts          # chatCompletionWithTools + streaming + tool loop
+│   │   ├── orchestrator-loop.ts     # Main agent loop with context management
+│   │   ├── planParser.ts            # Markdown plan parser
+│   │   ├── context-pruner.ts        # Semantic pruning via embedding similarity
+│   │   ├── contextBudget.ts         # Token budget calculation & enforcement
+│   │   ├── model-router.ts          # Model selection for task routing
+│   │   ├── auto-commit.ts           # Automatic git commits via LLM messages
+│   │   ├── pr-builder.ts            # Auto-create PRs from improvement branches
+│   │   ├── auto-merge-gate.ts       # Validate & merge PRs when gates pass
+│   │   ├── early-termination.ts     # Token-level early stopping via confidence/entropy
+│   │   ├── hierarchical-swarm.ts    # Multi-agent task decomposition
+│   │   ├── swarm-gate.ts            # Swarm eligibility detection & orchestration
+│   │   ├── decision-oracle.ts       # Self-evolution decision making
+│   │   ├── improvement-tracker.ts   # Track code improvements over time
+│   │   ├── experiment-registry.ts   # A/B experiment management
+│   │   ├── prompt-evolver.ts        # System prompt self-improvement
+│   │   ├── scaffold-generator.ts    # Generate code scaffolds from analysis
+│   │   ├── self-refactorer.ts       # Autonomous code refactoring
+│   │   ├── self-healer/             # Error recovery & self-healing
+│   │   │   ├── self-healer.ts       # SelfHealer with error severity levels
+│   │   │   ├── emergency-mode.ts    # Emergency recovery mode
+│   │   │   ├── connection-watchdog.ts # Connection health monitoring
+│   │   │   └── index.ts            # Failsafe system (snapshot, recovery)
+│   │   └── failsafe/               # Legacy failsafe module
+│   │       └── index.ts
 │   ├── modules/
 │   │   ├── agents/         # System prompts for the 4 modes
 │   │   ├── mcp/            # MCP tool registry
-│   │   ├── memory/         # MemoryStore (JSON) + dreamer + RAG
+│   │   ├── memory/         # MemoryStore (SQLite) + dreamer + RAG
 │   │   ├── compression/    # Async LLM-based context compression
 │   │   ├── providers/      # LLM Client (OpenAI-compatible)
 │   │   ├── skills/         # Skills system
+│   │   ├── analytics/      # Error reporting, usage tracking, self-diagnosis
+│   │   │   ├── error-report.ts     # ErrorReportGenerator (daily reports)
+│   │   │   ├── error-patterns.ts   # Error pattern library
+│   │   │   ├── self-diagnosis.ts   # System self-diagnosis
+│   │   │   ├── usage.ts            # Usage analytics
+│   │   │   └── debt-tracker.ts     # Technical debt tracking
 │   │   └── terminal/       # TerminalManager (node-pty)
-│   ├── tools/              # 13 tool implementations + ToolRegistry
+│   ├── services/           # AppDatabase (SQLite), semantic-cache, embedder
+│   ├── tools/              # 17 tool implementations + ToolRegistry
 │   ├── server/             # Express + WebSocket (/ws)
 │   └── types/              # Shared types (StreamEvent, ToolDefinition, etc.)
 ├── web/                    # Frontend React + Vite + shadcn/ui
@@ -47,9 +77,13 @@ turbo-code/
 3. **Orchestrator** (`src/core/orchestrator.ts`) — Chat loop, tool dispatch, streaming
 4. **LLM Client** (`src/modules/providers/llm-client.ts`) — OpenAI-compatible API
 5. **Agent Prompts** (`src/modules/agents/`) — System prompts for the 4 modes
-6. **Tools** (`src/tools/`) — 13 tools + skills registered as tools, executable by the LLM
-7. **Session** (`src/state/session.ts`) — Session state, circuit breaker, token-aware context management via a multi-layered [compression pipeline](/docs/turbo-code/compression/) (sync retroactive compression, async LLM summarization, emergency fallback, per-output compression, and distillation)
-8. **Memory** (`src/modules/memory/`) — Persistent memory + RAG injection + auto-dream consolidation in background
+6. **Tools** (`src/tools/`) — 17 tools (bash, read, write, edit, grep, find, ls, fetch, ask_user, add_to_context, project_inspector, update_task_progress, run_background, git, rollback, pr, review) + skills registered as tools, executable by the LLM
+7. **Auto-commit & PR** (`src/core/auto-commit.ts`, `pr-builder.ts`, `auto-merge-gate.ts`) — Post-edit auto-commit via LLM-generated messages, auto-PR creation from improvement branches, and auto-merge when CI gates pass
+8. **Session** (`src/state/session.ts`) — Session state, circuit breaker, token-aware context management via a multi-layered [compression pipeline](/docs/turbo-code/compression/) (sync retroactive compression, async LLM summarization, emergency fallback, per-output compression, and distillation)
+9. **Memory** (`src/modules/memory/`) — Persistent memory + RAG injection + auto-dream consolidation in background
+10. **Self-Evolution Engine** (`src/core/`) — DecisionOracle, ExperimentRegistry, PromptEvolver, HierarchicalSwarm, SelfRefactorer — modules that enable the system to improve its own code, prompts, and configuration autonomously
+11. **Failsafe & Self-Healing** (`src/core/failsafe/`, `src/core/self-healer/`) — Emergency mode, connection watchdog, self-healer with error severity classification, and factory reset recovery
+12. **Analytics** (`src/modules/analytics/`) — ErrorReportGenerator for daily error summaries, usage tracking, technical debt tracking, and self-diagnosis
 
 ## Frontend Architecture
 

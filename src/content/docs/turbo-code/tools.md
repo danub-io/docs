@@ -19,10 +19,14 @@ The LLM can invoke tools to interact with the system. Each mode has access to a 
 | `project_inspector` | Explores project structure (list, tree, file_info, git) |
 | `update_task_progress` | Marks task as completed in the active plan |
 | `run_background` | Runs command in background with output streaming |
+| `git` | Git operations (status, log, diff, add, commit, branch, push, stash, fetch, pull, merge, rebase, cherry-pick, tag — varies by mode) |
+| `rollback` | Rollback uncommitted changes to tracked files |
+| `pr` | Create and manage pull requests (requires GitHub CLI) |
+| `review` | Review PRs with structured feedback (requires GitHub CLI + LLM client) |
 
 ## Skills
 
-In addition to the 13 core tools, **skills** are registered as tools with a `skill_` prefix. Built-in skills include `skill_shadcn` (shadcn/ui component reference) and `skill_review-pr` (PR review guidelines). Each mode includes `skill_shadcn` in its available tool set.
+In addition to the 17 core tools, **skills** are registered as tools with a `skill_` prefix. Built-in skills include `skill_shadcn` (shadcn/ui component reference) and `skill_review-pr` (PR review guidelines). Each mode includes `skill_shadcn` in its available tool set.
 
 ## Tool Security
 
