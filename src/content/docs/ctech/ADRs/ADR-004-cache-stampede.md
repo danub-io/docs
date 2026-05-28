@@ -53,13 +53,20 @@ async function obter() {
 
 ## Current TTLs
 
-| Service | TTL |
-|---------|-----|
-| `servicoCatalogo.obterCategorias` | 5 min |
-| `servicoMenu.obterMenu` | 5 min |
-| `servicoProduto.obterTodosSlugs` | 1 h |
-| `servicoGuia.obterCategoriasComGuias` | 30 min |
-| `servicoInicio` (featured + recent) | 2 min |
+The default TTL is determined at runtime by environment:
+
+- **DEV** (`import.meta.env.DEV`): `TTL_PADRAO_DEV = 1_800_000ms` (30 min)
+- **PROD**: `TTL_PADRAO_PROD = 300_000ms` (5 min)
+
+Services that call `createCache(undefined, ...)` without an explicit TTL inherit the environment default. Only `cacheSlugs` uses an explicit override.
+
+| Service                               | TTL                                | Notes                         |
+| ------------------------------------- | ---------------------------------- | ----------------------------- |
+| `servicoCatalogo.obterCategorias`     | Default (DEV: 30 min, PROD: 5 min) | Uses environment default      |
+| `servicoMenu.obterMenu`               | Default (DEV: 30 min, PROD: 5 min) | Uses environment default      |
+| `servicoProduto.obterTodosSlugs`      | 1 h                                | Explicit TTL via `cacheSlugs` |
+| `servicoGuia.obterCategoriasComGuias` | Default (DEV: 30 min, PROD: 5 min) | Uses environment default      |
+| `servicoInicio` (featured + recent)   | Default (DEV: 30 min, PROD: 5 min) | Uses environment default      |
 
 ## References
 
