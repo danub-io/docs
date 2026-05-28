@@ -41,11 +41,11 @@ Turbo is a Python CLI orchestrator that uses the [pi coding agent](https://githu
 └──────────────────────────────────────────────────────┘
 ```
 
-## Integration with Flow
+## Runtime Resources
 
-Turbo depends on the **Flow project** (`~/Documentos/big-brain/flow/`) at runtime for:
+Turbo reads system prompts and AI skills from its own `agents/` and `skills/` directories:
 
-| Resource | Location in Flow | Purpose |
+| Resource | Location | Purpose |
 |---|---|---|
 | Planner system prompt | `agents/planner/prompt.md` | Instructions for the planning AI model |
 | Executor system prompt | `agents/executor/prompt.md` | Instructions for the execution AI model |
@@ -53,7 +53,7 @@ Turbo depends on the **Flow project** (`~/Documentos/big-brain/flow/`) at runtim
 | Skills | `skills/*/SKILL.md` | Domain-specific knowledge (Python, React, etc.) |
 | Model config | `public/model-provider-reference.md` | Provider/model/thinking selection UI |
 
-The Flow project is discovered automatically as a sibling directory (`../flow/`), or configured via the `FLOWCRAFT_DIR` environment variable.
+The prompts and skills are located at `agents/` and `skills/` relative to the project root, or configured via the `TURBO_DIR` environment variable.
 
 ## Module Architecture
 
