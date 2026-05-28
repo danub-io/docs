@@ -74,6 +74,6 @@ After any large edit block (>20 lines):
 
 ## ⚠️ Hard Rules
 
-1. **Never edit files in `/home/dan/Documentos/big-brain/turbo/`** — doing so violates the separation between Flow (frontend) and Turbo (orchestrator).
+1. **Never edit files in `/home/dan/Documentos/turbo/`** — doing so violates the separation between the Turbo orchestrator and its documentation.
 2. **Never edit system prompts in `agents/` without understanding the impact** on the pi agent's behavior during planner/executor/diagrammer execution.
 3. **Always create a postmortem** in `knowledge/postmortem-<slug>.md` when resolving a significant bug.
