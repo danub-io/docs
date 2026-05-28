@@ -22,7 +22,7 @@ title: "Flow Changelog"
 
 ### Changed
 - System prompts moved from Turbo's `system/` to Flow's `agents/` directory
-- Project structure established as dual-purpose (visual builder + flowcraft resources)
+- Project structure established as dual-purpose (visual pipeline builder + runtime resources for Turbo)
 
 ### Removed
 - Simulated modules (`pi-agent.ts`, `planner.ts`, `executor.ts`, `agents.ts`) — they only had mock implementations
