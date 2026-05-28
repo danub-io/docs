@@ -9,7 +9,7 @@ title: "ADR-001: Turso as the Database"
 
 ## Context
 
-The CTECH ecosystem needs a database that:
+The LUPINHO ecosystem needs a database that:
 - Is accessible both from the backend (Next.js) and the frontend (Astro)
 - Supports SSR with low latency
 - Has global read replication (data queried by the frontend worldwide)
@@ -39,5 +39,5 @@ We chose **Turso** (distributed SQLite via libsql) as the single database for th
 
 - [Turso Architecture](https://turso.tech)
 - [libsql-client](https://github.com/tursodatabase/libsql-client-ts)
-- `ctech_fe/src/core/lib/db.ts`
-- `ctech_be/drizzle.config.ts`
+- `lupinho_fe/src/core/lib/db.ts`
+- `lupinho_be/drizzle.config.ts`

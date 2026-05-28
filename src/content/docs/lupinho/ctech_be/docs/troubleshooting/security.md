@@ -1,5 +1,5 @@
 ---
-title: "Security - CTECH Panel"
+title: "Security - LUPINHO Panel"
 ---
 
 ## Overview

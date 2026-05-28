@@ -69,7 +69,7 @@ The `ENCRYPTION_KEY` in `.env` was changed, breaking keys saved in the database.
 
 ### Quick check
 ```bash
-cd /home/dan/Documentos/ctech/ctech_be
+cd /home/dan/Documentos/lupinho/lupinho_be
 pnpm build
 ```
 
@@ -92,7 +92,7 @@ Common errors:
 ## Clear Next.js Cache
 
 ```bash
-cd /home/dan/Documentos/ctech/ctech_be
+cd /home/dan/Documentos/lupinho/lupinho_be
 rm -rf .next
 pnpm dev
 ```

@@ -1,5 +1,5 @@
 ---
-title: "Contributing — CTECH Backend"
+title: "Contributing — LUPINHO Backend"
 ---
 
 Thank you for contributing to the project! This guide defines the standards and workflows for maintaining code quality and consistency.
@@ -15,7 +15,7 @@ Prerequisites:
 Steps:
 ```bash
 git clone <repo-url>
-cd ctech_be
+cd lupinho_be
 pnpm install
 cp .env.example .env.local
 # Configure the variables in .env.local

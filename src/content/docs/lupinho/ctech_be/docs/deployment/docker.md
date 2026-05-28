@@ -1,5 +1,5 @@
 ---
-title: "Deploy with Docker - CTECH Panel"
+title: "Deploy with Docker - LUPINHO Panel"
 ---
 
 ## Prerequisites
@@ -41,7 +41,7 @@ CMD ["pnpm", "start"]
 version: '3.8'
 
 services:
-  ctech:
+  lupinho:
     build: .
     ports:
       - "3000:3000"

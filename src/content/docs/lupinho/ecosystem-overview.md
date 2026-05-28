@@ -1,22 +1,22 @@
 ---
 title: "Ecosystem Overview"
-description: "Complete CTECH data flow: from backend ingestion to frontend display"
+description: "Complete LUPINHO data flow: from backend ingestion to frontend display"
 ---
 
-This document describes the complete flow of a product through the CTECH ecosystem, from raw input in the backend (ctech_be) to display on the public page (ctech_fe).
+This document describes the complete flow of a product through the LUPINHO ecosystem, from raw input in the backend (lupinho_be) to display on the public page (lupinho_fe).
 
 ---
 
 ## Two-Layer Architecture
 
 ```
-ctech_be (Next.js + Drizzle)
+lupinho_be (Next.js + Drizzle)
     | Server Actions write to the database
     v
 Turso DB (distributed SQLite)  ←  shared database
     ^
     | SSR queries read directly
-ctech_fe (Astro + @libsql/client)
+lupinho_fe (Astro + @libsql/client)
 ```
 
 There is no intermediate REST API. Both projects connect to the same Turso database.
@@ -79,16 +79,16 @@ Static HTML + hydrated Islands on client
 
 | Table | Description | Written by | Read by |
 |--------|----------|-------------|-------------|
-| `Produtos` | Central product catalog | ctech_be (M1-M7) | ctech_fe |
-| `Reviews` | Press (critic) and user reviews | ctech_be (M3) + ctech_fe | Both |
-| `Afiliados` | Store links with prices | ctech_be (M5-M6) | ctech_fe |
-| `historico_precos` | Price history (90 days) | ctech_be (M5) | — |
-| `fila_processamento` | Async jobs (M1-M6) | ctech_be | — |
-| `Guias` / `Guia_Produtos` | Editorial recommendation guides | ctech_be | ctech_fe |
-| `config_ai_models` | Configured AI models | ctech_be (M8) | ctech_be |
-| `config_scraping_services` | Scraping services | ctech_be (M8) | ctech_be |
-| `logs_entrada` | Audit (tokens, cost) | ctech_be | ctech_be |
-| `conflitos_entrada` | Detected duplicates | ctech_be (M1) | ctech_be |
+| `Produtos` | Central product catalog | lupinho_be (M1-M7) | lupinho_fe |
+| `Reviews` | Press (critic) and user reviews | lupinho_be (M3) + lupinho_fe | Both |
+| `Afiliados` | Store links with prices | lupinho_be (M5-M6) | lupinho_fe |
+| `historico_precos` | Price history (90 days) | lupinho_be (M5) | — |
+| `fila_processamento` | Async jobs (M1-M6) | lupinho_be | — |
+| `Guias` / `Guia_Produtos` | Editorial recommendation guides | lupinho_be | lupinho_fe |
+| `config_ai_models` | Configured AI models | lupinho_be (M8) | lupinho_be |
+| `config_scraping_services` | Scraping services | lupinho_be (M8) | lupinho_be |
+| `logs_entrada` | Audit (tokens, cost) | lupinho_be | lupinho_be |
+| `conflitos_entrada` | Detected duplicates | lupinho_be (M1) | lupinho_be |
 
 > Full schema: [database-schema.md](./database-schema.md)
 
@@ -96,7 +96,7 @@ Static HTML + hydrated Islands on client
 
 ## Frontend Services (Map)
 
-Each domain in ctech_fe has a service that encapsulates SQL queries.
+Each domain in lupinho_fe has a service that encapsulates SQL queries.
 
 ### Core Services (src/core/services/)
 

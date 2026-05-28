@@ -7,15 +7,15 @@ import { Badge, Aside, Tabs, TabItem, Steps, FileTree, Card } from '@astrojs/sta
 
 <Badge text="Production" variant="success" /> <Badge text="v2026.4" variant="note" /> <Badge text="Next.js + Astro" variant="tip" />
 
-Welcome to the **CTECH (TechReveal)** documentation, an automated ecosystem for hardware analysis, comparison, and curation powered by AI.
+Welcome to the **LUPINHO (TechReveal)** documentation, an automated ecosystem for hardware analysis, comparison, and curation powered by AI.
 
 This ecosystem is divided into **two projects** that share the same database:
 
-<Card title="ctech_be (Next.js)">
+<Card title="lupinho_be (Next.js)">
 Local tool that runs on your machine to populate the database. Product ingestion, prices, reviews, etc. No login needed, won't be deployed, only you use it.
 </Card>
 
-<Card title="ctech_fe (Astro + Cloudflare)">
+<Card title="lupinho_fe (Astro + Cloudflare)">
 Public site that reads from this database to display products, categories, and prices. It also writes user data (registration, login, Google OAuth, 2FA, user reviews).
 </Card>
 
@@ -23,20 +23,20 @@ Public site that reads from this database to display products, categories, and p
 
 ## Overview
 
-CTECH is divided into two repositories that share the same **Turso (SQLite)** database:
+LUPINHO is divided into two repositories that share the same **Turso (SQLite)** database:
 
 | Repository | Stack | Role |
 |-------------|-------|-------|
-| **ctech_be** | Next.js 16, Turso, Pino, AI SDK, Tailwind v4 | Backend/Panel: Automation, Scrapers, AI Processing |
-| **ctech_fe** | Astro 6, React 19, Tailwind v4, Turso, Zod v4 | Frontend/Public: High-performance interface optimized for SEO |
+| **lupinho_be** | Next.js 16, Turso, Pino, AI SDK, Tailwind v4 | Backend/Panel: Automation, Scrapers, AI Processing |
+| **lupinho_fe** | Astro 6, React 19, Tailwind v4, Turso, Zod v4 | Frontend/Public: High-performance interface optimized for SEO |
 
 ```
-ctech_be (Server Actions) → Turso DB (SQLite) ← ctech_fe (Astro SSR)
+lupinho_be (Server Actions) → Turso DB (SQLite) ← lupinho_fe (Astro SSR)
 ```
 
 ## Architecture — Automation Modules
 
-### Backend (ctech_be)
+### Backend (lupinho_be)
 
 The backend is divided into 9 independent modules (M1-M9):
 
@@ -52,7 +52,7 @@ The backend is divided into 9 independent modules (M1-M9):
 | M8 | Settings | Global settings panel (AI, Scrapers, Logs) |
 | M9 | Documentation | Integrated Markdown documentation viewer |
 
-### Frontend (ctech_fe)
+### Frontend (lupinho_fe)
 
 | Route | Description |
 |-------|-------------|
@@ -76,10 +76,10 @@ The backend is divided into 9 independent modules (M1-M9):
 ### Installation
 
 <Tabs>
-  <TabItem label="Backend (ctech_be)">
+  <TabItem label="Backend (lupinho_be)">
 
     ```bash
-    cd ctech/ctech_be
+    cd lupinho/lupinho_be
     pnpm install
     cp .env.example .env.local
     # Configure TURSO_DATABASE_URL and TURSO_AUTH_TOKEN
@@ -87,10 +87,10 @@ The backend is divided into 9 independent modules (M1-M9):
     ```
 
   </TabItem>
-  <TabItem label="Frontend (ctech_fe)">
+  <TabItem label="Frontend (lupinho_fe)">
 
     ```bash
-    cd ctech/ctech_fe
+    cd lupinho/lupinho_fe
     pnpm install
     cp .env.example .env
     # Configure TURSO_DATABASE_URL and TURSO_AUTH_TOKEN
@@ -102,7 +102,7 @@ The backend is divided into 9 independent modules (M1-M9):
 
 ## Security
 
-- CSP configured via middleware (ctech_fe)
+- CSP configured via middleware (lupinho_fe)
 - Parameterized database queries (no SQL injection)
 - Turso client used only in SSR (never exposed to the client)
 - HSTS, X-Frame-Options, X-Content-Type-Options

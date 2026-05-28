@@ -9,7 +9,7 @@ title: "ADR-002: Astro Islands + React for Interactive Components"
 
 ## Context
 
-The CTECH frontend is a content site (reviews, guides, comparisons) with critical SEO and some interactive parts (search, drawer, collapsible). We needed a framework that:
+The LUPINHO frontend is a content site (reviews, guides, comparisons) with critical SEO and some interactive parts (search, drawer, collapsible). We needed a framework that:
 
 - Delivers static HTML with maximum performance
 - Has SSR for SEO
@@ -39,4 +39,4 @@ We chose **Astro 6** with **Islands Architecture** as the main framework, using 
 ## References
 
 - [Astro Islands](https://docs.astro.build/en/concepts/islands/)
-- `ctech_fe/docs/architecture/islands.md`
+- `lupinho_fe/docs/architecture/islands.md`

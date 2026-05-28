@@ -1,5 +1,5 @@
 ---
-title: "Repository Pattern - CTECH Panel"
+title: "Repository Pattern - LUPINHO Panel"
 ---
 
 ## Overview

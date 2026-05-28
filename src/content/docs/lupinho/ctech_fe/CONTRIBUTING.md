@@ -1,5 +1,5 @@
 ---
-title: "Contributing — CTECH Frontend"
+title: "Contributing — LUPINHO Frontend"
 ---
 
 Thank you for contributing! This guide defines the standards and workflows to maintain code quality and consistency.
@@ -14,7 +14,7 @@ Prerequisites:
 Steps:
 ```bash
 git clone <repo-url>
-cd ctech_fe
+cd lupinho_fe
 pnpm install
 cp .env.example .dev.vars
 # Configure the variables in .dev.vars (TURSO_DATABASE_URL, TURSO_AUTH_TOKEN, AUTH_SECRET)

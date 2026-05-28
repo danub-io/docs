@@ -3,7 +3,7 @@ title: "Coding Conventions for AI Development"
 description: "Naming conventions, folder structure, and error handling patterns for consistent code generation"
 ---
 
-This document defines the CTECH ecosystem conventions so that AI tools generate code consistent with the rest of the project.
+This document defines the LUPINHO ecosystem conventions so that AI tools generate code consistent with the rest of the project.
 
 ## ShadCN UI
 
@@ -15,7 +15,7 @@ This document defines the CTECH ecosystem conventions so that AI tools generate 
 
 ---
 
-## Folder Structure (ctech_fe)
+## Folder Structure (lupinho_fe)
 
 ```
 src/
@@ -88,7 +88,7 @@ import { servicoProduto } from "../../modules/produto/services/servicoProduto";
 
 ## Database Connection
 
-### ctech_fe (SSR read)
+### lupinho_fe (SSR read)
 
 ```typescript
 // src/core/lib/db.ts
@@ -101,13 +101,13 @@ export const db = createClient({
 
 The Turso client is only used in SSR. Never import `db.ts` in React components.
 
-### ctech_be (read and write)
+### lupinho_be (read and write)
 
 Uses Drizzle ORM (`src/db/schema.ts`) + `@/lib/db` for direct queries when necessary.
 
 ---
 
-## Error Handling in Services (ctech_fe)
+## Error Handling in Services (lupinho_fe)
 
 Every service follows this pattern:
 
@@ -197,7 +197,7 @@ await db.execute(`SELECT * FROM Produtos WHERE categoria = '${categoria}'`);
 
 ---
 
-## Tests (ctech_fe)
+## Tests (lupinho_fe)
 
 ### Database Mock
 
@@ -237,7 +237,7 @@ UI components (Badge, Button, Card, Progress) are React but render in SSR withou
 
 ## Commands
 
-### ctech_fe
+### lupinho_fe
 
 | Command | Description |
 |---------|-------------|
@@ -251,7 +251,7 @@ UI components (Badge, Button, Card, Progress) are React but render in SSR withou
 | `pnpm format` | Prettier |
 | `pnpm deploy` | Deploy via wrangler |
 
-### ctech_be
+### lupinho_be
 
 | Command | Description |
 |---------|-------------|
@@ -305,4 +305,4 @@ Whenever you make significant changes, update the corresponding documentation:
 - New schema/table → update `database-schema.md`
 - Environment variable → update `docs/deployment/environment.md`
 - Non-trivial bug → create postmortem in `postmortems/`
-- New architecture document → add a `Contem:` inline in SKILL.md (`~/.config/kilo/skills/contexto-ctech/SKILL.md`) right after the `Leia` line(s) of the corresponding section. Format: 1 line, max 80 chars, comma-separated. Ex: `Contem: OpenTelemetry, tracing, metrics, alertas`
+- New architecture document → add a `Contem:` inline in SKILL.md (`~/.config/kilo/skills/contexto-lupinho/SKILL.md`) right after the `Leia` line(s) of the corresponding section. Format: 1 line, max 80 chars, comma-separated. Ex: `Contem: OpenTelemetry, tracing, metrics, alertas`

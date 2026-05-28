@@ -2,7 +2,7 @@
 title: "Troubleshooting — Documentation"
 ---
 
-Guide to resolving common issues in the CTECH frontend.
+Guide to resolving common issues in the LUPINHO frontend.
 
 ## Documents
 

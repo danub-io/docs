@@ -1,5 +1,5 @@
 ---
-title: "API Documentation - CTECH Panel (Backend)"
+title: "API Documentation - LUPINHO Panel (Backend)"
 ---
 
 This document describes the **Server Actions** (Next.js App Router) and **API Routes** available in the project.

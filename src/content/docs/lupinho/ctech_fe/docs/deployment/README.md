@@ -2,7 +2,7 @@
 title: "Deploy — Documentation"
 ---
 
-Guide for deploying the CTECH frontend in different environments.
+Guide for deploying the LUPINHO frontend in different environments.
 
 ## Documents
 

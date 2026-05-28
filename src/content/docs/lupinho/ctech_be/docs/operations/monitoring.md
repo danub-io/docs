@@ -1,5 +1,5 @@
 ---
-title: "Monitoring and Operations — CTECH Backend"
+title: "Monitoring and Operations — LUPINHO Backend"
 ---
 
 This document describes how to monitor and operate the backend in production.
@@ -30,7 +30,7 @@ Returns the server and queue status:
 ### Quick Check
 
 ```bash
-curl https://ctech-be.vercel.app/api/health
+curl https://lupinho-be.vercel.app/api/health
 ```
 
 ## Logging (Pino)

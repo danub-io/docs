@@ -1,8 +1,8 @@
 ---
-title: "CTECH — Hardware Curation Ecosystem"
+title: "LUPINHO — Hardware Curation Ecosystem"
 ---
 
-Welcome to **CTECH** (TechReveal), an automated ecosystem for hardware analysis, comparison, and curation. This project leverages Artificial Intelligence and web automation to turn raw data into valuable business insights.
+Welcome to **LUPINHO** (TechReveal), an automated ecosystem for hardware analysis, comparison, and curation. This project leverages Artificial Intelligence and web automation to turn raw data into valuable business insights.
 
 ## Project Structure
 
@@ -10,13 +10,13 @@ The ecosystem is split into two main repositories that share the same **Turso (S
 
 | Repository | Technology | Role in the Ecosystem |
 | :--- | :--- | :--- |
-| [**ctech_be**](./ctech_be) | Next.js 16+, Turso, Pino | **Backend / Panel:** Automation (M1-M6), Scrapers, and AI Processing |
-| [**ctech_fe**](./ctech_fe) | Astro 6+, React 19, Tailwind v4 | **Frontend / Public:** High-performance interface optimized for SEO |
+| [**lupinho_be**](./lupinho_be) | Next.js 16+, Turso, Pino | **Backend / Panel:** Automation (M1-M6), Scrapers, and AI Processing |
+| [**lupinho_fe**](./lupinho_fe) | Astro 6+, React 19, Tailwind v4 | **Frontend / Public:** High-performance interface optimized for SEO |
 
 ## Data Flow
 
 ```
-ctech_be (Server Actions) → Turso DB (SQLite) ← ctech_fe (Astro SSR)
+lupinho_be (Server Actions) → Turso DB (SQLite) ← lupinho_fe (Astro SSR)
 ```
 
 The **Backend** injects processed data (reviews, prices, images). The **Frontend** reads that data in real-time via Server-side Rendering (SSR).
@@ -32,5 +32,5 @@ The **Backend** injects processed data (reviews, prices, images). The **Frontend
 
 | Project | Documents |
 |---------|-----------|
-| **ctech_fe** | [README](./ctech_fe/README.md), [ARCHITECTURE](./ctech_fe/ARCHITECTURE.md), [CONTRIBUTING](./ctech_fe/CONTRIBUTING.md), [DATA_LAYER](./ctech_fe/DATA_LAYER.md), [CHANGELOG](./ctech_fe/CHANGELOG.md) |
-| **ctech_be** | [README](./ctech_be/README.md), [ARCHITECTURE](./ctech_be/ARCHITECTURE.md), [CONTRIBUTING](./ctech_be/CONTRIBUTING.md), [API](./ctech_be/API.md), [CHANGELOG](./ctech_be/CHANGELOG.md) |
+| **lupinho_fe** | [README](./lupinho_fe/README.md), [ARCHITECTURE](./lupinho_fe/ARCHITECTURE.md), [CONTRIBUTING](./lupinho_fe/CONTRIBUTING.md), [DATA_LAYER](./lupinho_fe/DATA_LAYER.md), [CHANGELOG](./lupinho_fe/CHANGELOG.md) |
+| **lupinho_be** | [README](./lupinho_be/README.md), [ARCHITECTURE](./lupinho_be/ARCHITECTURE.md), [CONTRIBUTING](./lupinho_be/CONTRIBUTING.md), [API](./lupinho_be/API.md), [CHANGELOG](./lupinho_be/CHANGELOG.md) |

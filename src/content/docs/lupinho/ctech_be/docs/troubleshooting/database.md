@@ -42,7 +42,7 @@ SQLITE_BUSY: database is locked
 
 ### Check status
 ```bash
-cd /home/dan/Documentos/ctech/ctech_be
+cd /home/dan/Documentos/lupinho/lupinho_be
 cat migrations/*.sql
 ```
 

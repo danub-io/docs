@@ -7,7 +7,7 @@ title: "Postmortem 005: Horizontal Scroll, Padding, and Visual Clipping"
 ## Summary
 
 - **Date:** 2026-05-08
-- **Component:** `ctech_fe/src/modules/inicio/components/HeroHorizontal.astro`
+- **Component:** `lupinho_fe/src/modules/inicio/components/HeroHorizontal.astro`
 - **Symptom:** The Hero cards were touching the screen edges (visual clipping at 0px) during horizontal scrolling, differing from the pattern of other sections that had a 16px breathing room before disappearing from view.
 - **Severity:** Low — UI/UX inconsistency
 - **Root cause:** Applying padding (`px-4`) *inside* the scroll container (`overflow-x-auto`) causes the container to occupy 100% of the screen, visually clipping the cards exactly at the monitor edge and often "swallowing" the right padding.

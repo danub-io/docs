@@ -1,5 +1,5 @@
 ---
-title: "Architecture — CTECH Backend"
+title: "Architecture — LUPINHO Backend"
 ---
 
 ## Overview

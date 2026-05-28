@@ -70,5 +70,5 @@ Services that call `createCache(undefined, ...)` without an explicit TTL inherit
 
 ## References
 
-- `ctech_fe/DATA_LAYER.md`
-- `ctech_fe/AGENTS.md`
+- `lupinho_fe/DATA_LAYER.md`
+- `lupinho_fe/AGENTS.md`

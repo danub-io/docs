@@ -44,7 +44,7 @@ Error: playwright-chromium not found
 
 ### Solution
 ```bash
-cd /home/dan/Documentos/ctech/ctech_be
+cd /home/dan/Documentos/lupinho/lupinho_be
 pnpm exec playwright install chromium
 ```
 

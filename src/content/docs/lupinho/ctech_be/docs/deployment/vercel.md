@@ -1,5 +1,5 @@
 ---
-title: "Deploy on Vercel - CTECH Panel"
+title: "Deploy on Vercel - LUPINHO Panel"
 ---
 
 ## Prerequisites
@@ -13,7 +13,7 @@ title: "Deploy on Vercel - CTECH Panel"
 ### 1. Connect Repository
 
 ```bash
-cd /home/dan/Documentos/ctech/ctech_be
+cd /home/dan/Documentos/lupinho/lupinho_be
 vercel login
 vercel link
 ```

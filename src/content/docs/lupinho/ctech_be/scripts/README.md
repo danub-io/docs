@@ -1,8 +1,8 @@
 ---
-title: "CTECH Scripts"
+title: "LUPINHO Scripts"
 ---
 
-This directory contains operational utilities and scripts for the CTECH backend.
+This directory contains operational utilities and scripts for the LUPINHO backend.
 
 ## Operational (Root)
 - **check-scrapers.ts**: Checks the status and connectivity of configured scrapers.

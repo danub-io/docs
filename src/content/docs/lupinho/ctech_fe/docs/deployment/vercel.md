@@ -2,7 +2,7 @@
 title: "Deploy on Cloudflare Workers"
 ---
 
-> **Note:** ctech_fe deploys exclusively on **Cloudflare Workers**, not Vercel.
+> **Note:** lupinho_fe deploys exclusively on **Cloudflare Workers**, not Vercel.
 
 ## Prerequisites
 
@@ -31,7 +31,7 @@ git push origin v1.0.0
 pnpm deploy
 ```
 
-The Worker will be available at `https://ctech-fe.<your-subdomain>.workers.dev`.
+The Worker will be available at `https://lupinho-fe.<your-subdomain>.workers.dev`.
 
 ## Environment Variables (Secrets)
 

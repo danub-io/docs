@@ -1,5 +1,5 @@
 ---
-title: "Security — CTECH Frontend"
+title: "Security — LUPINHO Frontend"
 ---
 
 This document describes the security measures implemented in the frontend.

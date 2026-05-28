@@ -1,15 +1,15 @@
 ---
-title: "Data Layer — CTECH Frontend"
+title: "Data Layer — LUPINHO Frontend"
 ---
 
 This document describes how the frontend consumes, transforms, and displays data, including the Turso database connection, available services, and shared types.
 
 ## Overview
 
-ctech_fe queries the Turso database **directly** in Server-Side Rendering (SSR) via the `@libsql/client` driver. There is no intermediate REST API layer — the backend (ctech_be) writes data, and the frontend reads it.
+lupinho_fe queries the Turso database **directly** in Server-Side Rendering (SSR) via the `@libsql/client` driver. There is no intermediate REST API layer — the backend (lupinho_be) writes data, and the frontend reads it.
 
 ```
-ctech_be (Server Actions) → Turso DB (SQLite) ← ctech_fe (Astro SSR)
+lupinho_be (Server Actions) → Turso DB (SQLite) ← lupinho_fe (Astro SSR)
 ```
 
 > **Security Note:** The Turso client is only used in SSR (never exposed to the browser). All queries are parameterized to prevent SQL injection.

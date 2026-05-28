@@ -4,7 +4,7 @@ title: "Integration with Multiple AI Providers"
 
 ## Overview
 
-The CTECH Panel supports multiple AI providers through the **Vercel AI SDK**, dynamically configured in M8 (Settings).
+The LUPINHO Panel supports multiple AI providers through the **Vercel AI SDK**, dynamically configured in M8 (Settings).
 
 ## Supported Providers
 

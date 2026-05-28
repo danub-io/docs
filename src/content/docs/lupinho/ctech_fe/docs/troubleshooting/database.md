@@ -33,7 +33,7 @@ Update `TURSO_AUTH_TOKEN` with the new token.
 **Cause:** Data has not been ingested by the backend yet, or the filter excludes all records.
 
 **Solution:**
-- Verify that the backend (ctech_be) has processed products
+- Verify that the backend (lupinho_be) has processed products
 - Check product status in the database (must have `status = 'AprovadoM4'`)
 - Test the query directly: `turso db shell <database-name> "SELECT * FROM Produtos LIMIT 5"`
 

@@ -1,5 +1,5 @@
 ---
-title: "Architecture — CTECH Frontend"
+title: "Architecture — LUPINHO Frontend"
 ---
 
 This document details the architectural decisions, data flow, and development patterns for the frontend.
@@ -49,7 +49,7 @@ src/
 ## Data Flow
 
 ```
-Turso DB (libsql) ← ctech_be (writes)
+Turso DB (libsql) ← lupinho_be (writes)
     ↑↓ SSR queries (parameterized with ? placeholders)
     ↓
 Services (try/catch → safeParse Zod)

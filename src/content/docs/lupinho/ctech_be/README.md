@@ -1,12 +1,12 @@
 ---
-title: "CTECH Panel (Backend)"
+title: "LUPINHO Panel (Backend)"
 ---
 
 **Local tool that runs on your machine to populate the database.** Product ingestion, prices, reviews, etc. No login needed, won't be deployed, only you use it.
 
 ---
 
-This is the "Brain" of the CTECH ecosystem. An admin panel and automation engine built with **Next.js 16+** that manages the data pipeline from raw input to final AI-powered consolidation.
+This is the "Brain" of the LUPINHO ecosystem. An admin panel and automation engine built with **Next.js 16+** that manages the data pipeline from raw input to final AI-powered consolidation.
 
 ## Technologies
 
@@ -123,4 +123,4 @@ turso db shell <database> < migrations/file.sql
 
 ## License
 
-MIT — CTECH Backend
+MIT — LUPINHO Backend

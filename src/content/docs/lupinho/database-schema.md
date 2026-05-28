@@ -1,11 +1,11 @@
 ---
 title: "Database Schema (Consolidated)"
-description: "Tables, indexes, and relationships of the shared Turso database between ctech_be and ctech_fe"
+description: "Tables, indexes, and relationships of the shared Turso database between lupinho_be and lupinho_fe"
 ---
 
-The CTECH ecosystem uses a single shared **Turso (distributed SQLite)** database, shared between the backend (write) and frontend (SSR read).
+The LUPINHO ecosystem uses a single shared **Turso (distributed SQLite)** database, shared between the backend (write) and frontend (SSR read).
 
-> Original documentation: [ctech_be/docs/architecture/database-schema.md](ctech_be/docs/architecture/database-schema.md)
+> Original documentation: [lupinho_be/docs/architecture/database-schema.md](lupinho_be/docs/architecture/database-schema.md)
 
 ---
 

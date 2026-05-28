@@ -1,12 +1,12 @@
 ---
-title: "CTECH Frontend (TechReveal)"
+title: "LUPINHO Frontend (TechReveal)"
 ---
 
 **Public-facing site that reads from the database to display products, categories, and prices.** It also writes user data (registration, login, Google OAuth, 2FA, user reviews).
 
 ---
 
-High-performance public interface for the CTECH ecosystem. Built with **Astro 6** and **React 19**, focused on SEO, speed, and user experience. Deployed on **Cloudflare Workers**.
+High-performance public interface for the LUPINHO ecosystem. Built with **Astro 6** and **React 19**, focused on SEO, speed, and user experience. Deployed on **Cloudflare Workers**.
 
 ## Technologies
 
@@ -91,7 +91,7 @@ src/
 ## Data Flow
 
 ```
-Turso DB (libsql) ← ctech_be (writes)
+Turso DB (libsql) ← lupinho_be (writes)
     ↓ SSR queries (parameterized)
 Services (try/catch → Zod validation)
     ↓
@@ -165,4 +165,4 @@ If Cloudflare adds an `images` binding in the future, it's worth revisiting.
 
 ## License
 
-MIT — CTECH Frontend
+MIT — LUPINHO Frontend

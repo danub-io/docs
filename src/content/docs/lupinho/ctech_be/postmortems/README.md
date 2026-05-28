@@ -1,7 +1,7 @@
 ---
-title: "Postmortems — ctech_be"
+title: "Postmortems — lupinho_be"
 ---
 
-This directory stores postmortems for the CTECH backend.
+This directory stores postmortems for the LUPINHO backend.
 
-See the [template and conventions](/docs/ctech/postmortems) to create new postmortems.
+See the [template and conventions](/docs/lupinho/postmortems) to create new postmortems.

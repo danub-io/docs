@@ -1,5 +1,5 @@
 ---
-title: "Local Setup — CTECH Backend"
+title: "Local Setup — LUPINHO Backend"
 ---
 
 Step-by-step guide to setting up the backend development environment.
@@ -24,7 +24,7 @@ curl -sSfL https://get.turso.tech | bash
 
 ```bash
 git clone <repo-url>
-cd ctech_be
+cd lupinho_be
 pnpm install
 ```
 

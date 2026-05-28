@@ -1,5 +1,5 @@
 ---
-title: "Local Setup — CTECH Frontend"
+title: "Local Setup — LUPINHO Frontend"
 ---
 
 Step-by-step guide for setting up the frontend development environment.
@@ -24,7 +24,7 @@ curl -sSfL https://get.turso.tech | bash
 
 ```bash
 git clone <repo-url>
-cd ctech_fe
+cd lupinho_fe
 pnpm install
 ```
 
@@ -62,9 +62,9 @@ turso db tokens create <database-name>
 Recommended for development. Use the team's shared database or create your own:
 
 ```bash
-turso db create ctech-dev
-turso db show ctech-dev        # URL
-turso db tokens create ctech-dev  # Token
+turso db create lupinho-dev
+turso db show lupinho-dev        # URL
+turso db tokens create lupinho-dev  # Token
 ```
 
 ### Option B: Local database (SQLite)
@@ -118,7 +118,7 @@ pnpm rebuild sharp
 
 ### Database returns empty
 
-Check whether the backend (ctech_be) has already populated the database with products having `status = 'AprovadoM4'`.
+Check whether the backend (lupinho_be) has already populated the database with products having `status = 'AprovadoM4'`.
 
 ```bash
 turso db shell <database-name> "SELECT COUNT(*) FROM Produtos WHERE status = 'AprovadoM4'"

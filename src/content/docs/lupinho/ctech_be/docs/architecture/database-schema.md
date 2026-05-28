@@ -2,7 +2,7 @@
 title: "Database Schema — Turso (SQLite)"
 ---
 
-This document describes all tables, indexes, and relationships in the Turso database shared between the backend (ctech_be) and frontend (ctech_fe).
+This document describes all tables, indexes, and relationships in the Turso database shared between the backend (lupinho_be) and frontend (lupinho_fe).
 
 ## Overview
 

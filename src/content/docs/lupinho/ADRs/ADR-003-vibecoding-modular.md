@@ -44,5 +44,5 @@ src/
 
 ## References
 
-- `ctech_fe/ARCHITECTURE.md`
-- `ctech_fe/AGENTS.md`
+- `lupinho_fe/ARCHITECTURE.md`
+- `lupinho_fe/AGENTS.md`

@@ -2,7 +2,7 @@
 title: "Architecture Decision Records (ADRs)"
 ---
 
-ADRs document important architectural decisions in the CTECH ecosystem, following the [ADR](https://adr.github.io/) format.
+ADRs document important architectural decisions in the LUPINHO ecosystem, following the [ADR](https://adr.github.io/) format.
 
 ## ADR List
 
@@ -11,7 +11,7 @@ ADRs document important architectural decisions in the CTECH ecosystem, followin
 - [ADR-003: Modular Vibe Coding](./ADRs/ADR-003-vibecoding-modular/) — Modular structure for AI-assisted development
 - [ADR-004: Cache Stampede](./ADRs/ADR-004-cache-stampede/) — In-memory cache with stampede protection
 
-> The files are in `ADRs/` (uppercase) inside `src/content/docs/ctech/`.
+> The files are in `ADRs/` (uppercase) inside `src/content/docs/lupinho/`.
 
 ## What is an ADR?
 

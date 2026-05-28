@@ -2,7 +2,7 @@
 title: "Troubleshooting"
 ---
 
-This folder contains solutions for common issues encountered during development and operation of the CTECH Panel.
+This folder contains solutions for common issues encountered during development and operation of the LUPINHO Panel.
 
 ## Contents
 

@@ -1,5 +1,5 @@
 ---
-title: "Queue System and DLQ - CTECH Panel"
+title: "Queue System and DLQ - LUPINHO Panel"
 ---
 
 ## Overview

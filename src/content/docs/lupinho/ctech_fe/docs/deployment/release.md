@@ -16,7 +16,7 @@ Production deployment is done via GitHub Actions, triggered by semantic tags.
 3. GitHub Actions automatically runs:
    - **CI:** lint, typecheck, build, unit and E2E tests
    - **Deploy:** build + `wrangler deploy` → Cloudflare Workers
-   - **Changelog:** the `scripts/update-changelog.sh` script (in the ctech_fe repo) generates the entry from git log and commits directly to the `danub-io/docs` repository
+   - **Changelog:** the `scripts/update-changelog.sh` script (in the lupinho_fe repo) generates the entry from git log and commits directly to the `danub-io/docs` repository
 
 ## Commit to Changelog Mapping
 
@@ -32,7 +32,7 @@ Production deployment is done via GitHub Actions, triggered by semantic tags.
 
 ## Responsible Script
 
-**Location:** `scripts/update-changelog.sh` in the `danub-io/ctech_fe` repository
+**Location:** `scripts/update-changelog.sh` in the `danub-io/lupinho_fe` repository
 
 **What it does:**
 
@@ -49,4 +49,4 @@ Production deployment is done via GitHub Actions, triggered by semantic tags.
 
 ## Changelog
 
-The changelog lives in `src/content/docs/ctech/ctech_fe/CHANGELOG.md` in the `danub-io/docs` repository.
+The changelog lives in `src/content/docs/lupinho/lupinho_fe/CHANGELOG.md` in the `danub-io/docs` repository.

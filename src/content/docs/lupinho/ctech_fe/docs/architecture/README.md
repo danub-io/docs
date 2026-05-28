@@ -2,7 +2,7 @@
 title: "Architecture — Documentation"
 ---
 
-Index of the CTECH frontend architecture documentation.
+Index of the LUPINHO frontend architecture documentation.
 
 ## Documents
 

@@ -2,7 +2,7 @@
 title: "Deployment"
 ---
 
-This folder contains guides and documentation related to deploying the CTECH Panel application.
+This folder contains guides and documentation related to deploying the LUPINHO Panel application.
 
 ## Contents
 
