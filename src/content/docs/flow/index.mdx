@@ -5,32 +5,35 @@ description: Visual agent pipeline builder — a node-based editor for designing
 
 import { Badge, Aside, Tabs, TabItem, Steps, FileTree, Card } from '@astrojs/starlight/components';
 
-<Badge text="Alpha" variant="note" /> <Badge text="v1.0.0" variant="caution" /> <Badge text="React 19 + Vite" variant="tip" />
+<Badge text="Deprecated" variant="danger" /> <Badge text="Absorbed into Turbo" variant="note" />
 
-Welcome to the **Flow** documentation — a visual agent pipeline builder with a node-based editor for designing and orchestrating multi-agent workflows, built with React Flow and a VS Code-inspired dark theme.
+<Aside type="caution">
+  **Flow was absorbed into Turbo.** The React frontend (visual pipeline builder) was abandoned — it never connected to real data. The Turbo TUI (`turbo-tui`) replaced it entirely. The system prompts, AI skills, and runtime resources formerly in Flow's `agents/` and `skills/` directories now live directly in the [Turbo](/docs/turbo/) repository at `/home/dan/Documentos/turbo/`.
+</Aside>
+
+Welcome to the **Flow** documentation — this project was a visual agent pipeline builder built with React Flow that was absorbed into the [Turbo](/docs/turbo/) orchestrator before reaching production.
 
 ---
 
-## Overview
+## Historical Overview
 
-Flow is a **dual-purpose project**:
+Flow was a **dual-purpose project** during development:
 
-1. **Visual Pipeline Builder** — A React frontend for designing agent pipelines visually using nodes and edges (React Flow)
-2. **Flowcraft Directory** — Contains system prompts, AI skills, and agent configurations consumed by the [Turbo](/docs/turbo/) orchestrator at runtime
+1. **Visual Pipeline Builder (Abandoned)** — A React frontend for designing agent pipelines visually using nodes and edges (React Flow). Replaced by the Turbo TUI.
+2. **Runtime Resources (Absorbed into Turbo)** — System prompts, AI skills, and agent configurations now live directly in `/home/dan/Documentos/turbo/agents/` and `/home/dan/Documentos/turbo/skills/`
+
+Flow's directory structure (for historical reference):
 
 ```
 flow/
-├── agents/             # System prompts for planners, executors, diagrammers
-│   ├── planner/
-│   ├── executor/
-│   └── diagrammer/
-├── skills/             # AI skills (22 domains: Python, React, Astro, etc.)
-├── public/             # Model provider reference (shared with Turbo)
-├── src/                # React application (visual pipeline builder)
-└── saves/              # YAML backups of pipeline flows
+├── agents/             # System prompts — now in turbo/agents/
+├── skills/             # AI skills — now in turbo/skills/
+├── public/             # Model provider reference — now in turbo/public/
+├── src/                # React application (abandoned)
+└── saves/              # YAML backups (archived)
 ```
 
-## Tech Stack
+## Tech Stack (Historical)
 
 | Layer | Technology |
 |---|---|
@@ -43,7 +46,9 @@ flow/
 | Icons | Lucide React |
 | Persistence | In-memory + YAML disk backup |
 
-## Quick Start
+## Quick Start (Historical — Project No Longer Active)
+
+These commands are preserved for archival reference:
 
 ```bash
 pnpm install
@@ -51,14 +56,14 @@ pnpm dev        # http://localhost:5173
 pnpm build      # output in dist/
 ```
 
-## Relationship with Turbo
+## Relationship with Turbo (Historical)
 
-Flow provides the **runtime resources** that [Turbo](/docs/turbo/) consumes:
+Flow originally provided the **runtime resources** that [Turbo](/docs/turbo/) consumed. These resources have been moved into the Turbo repository directly:
 
-- `agents/planner/prompt.md` — System prompt for the planning AI
-- `agents/executor/prompt.md` — System prompt for the execution AI
-- `agents/diagrammer/prompt.md` — System prompt for diagram generation
-- `skills/*/SKILL.md` — Domain-specific AI skills
-- `public/model-provider-reference.md` — Model configuration
+- `agents/planner/prompt.md` → now at `/home/dan/Documentos/turbo/agents/planner/prompt.md`
+- `agents/executor/prompt.md` → now at `/home/dan/Documentos/turbo/agents/executor/prompt.md`
+- `agents/diagrammer/prompt.md` → now at `/home/dan/Documentos/turbo/agents/diagrammer/prompt.md`
+- `skills/*/SKILL.md` → now at `/home/dan/Documentos/turbo/skills/*/SKILL.md`
+- `public/model-provider-reference.md` → now at `/home/dan/Documentos/turbo/public/model-provider-reference.md`
 
-When `planner`, `executor`, or `diagrammer` are invoked from the terminal, they read their system prompts from Flow's `agents/` directory and skills from Flow's `skills/` directory.
+When `planner`, `executor`, or `diagrammer` are invoked, they read their system prompts and skills directly from the Turbo project at `/home/dan/Documentos/turbo/`.
