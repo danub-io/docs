@@ -4,13 +4,15 @@ title: "Flow Architecture"
 
 # Flow Architecture
 
-## Dual Purpose
+> **Deprecated:** The Flow React frontend was abandoned (never connected to real data). The system prompts and AI skills formerly in the "Flowcraft Directory" have been absorbed into the [Turbo](/docs/turbo/) repository at `/home/dan/Documentos/turbo/agents/` and `/home/dan/Documentos/turbo/skills/`. The TUI (`turbo-tui`) replaced the visual pipeline builder. See [Turbo Architecture](/docs/turbo/architecture/) for current architecture.
 
-Flow serves two distinct roles in the ecosystem:
+## Historical Overview
 
-### 1. Visual Pipeline Builder (React Application)
+Flow served two distinct roles during its development:
 
-A node-based editor where users design multi-agent workflows visually. Supports two node types:
+### 1. Visual Pipeline Builder (React Application — Abandoned)
+
+A React Flow-based node-based editor that was replaced by the Turbo TUI before reaching production. Supported two node types:
 
 - **Agent Nodes** — Represent AI agents with configurable:
   - Label, description, prompt
@@ -25,9 +27,9 @@ A node-based editor where users design multi-agent workflows visually. Supports 
   - Content display and editing
   - Edge connections to agents
 
-### 2. Flowcraft Directory (Runtime Resources for Turbo)
+### 2. Runtime Resources (Absorbed into Turbo)
 
-Contains the system prompts, skills, and configuration consumed by the [Turbo](/docs/turbo/) orchestrator:
+Contained the system prompts, skills, and configuration consumed by the [Turbo](/docs/turbo/) orchestrator. These resources now live directly in the Turbo repository:
 
 ```
 agents/
@@ -102,7 +104,9 @@ App.setState (nodes/edges)
 
 ## Postmortems
 
-Current postmortems in `knowledge/`:
+Postmortems for Turbo (including historical Flow issues) are at [`/home/dan/Documentos/turbo/knowledge/`](https://github.com/danub-io/turbo/tree/production/knowledge).
+
+Historical Flow postmortems (archived):
 
 | Date | Issue |
 |------|-------|
@@ -128,4 +132,4 @@ The following simulated modules were removed because they only contained mock im
 - `src/lib/agents.ts` — Pipeline runner, not imported anywhere
 - `PipelineStatePanel.tsx` — Not imported anywhere
 
-The `handleRun` in `App.tsx` was simplified to write the prompt to the blackboard and log that the backend is not connected. When a real backend is integrated, these modules should be recreated as HTTP clients.
+The `handleRun` in `App.tsx` was simplified to write the prompt to the blackboard and log that the backend is not connected. The TUI (`turbo-tui`) replaced this entire visual pipeline approach — no backend integration was ever completed.
