@@ -1,10 +1,12 @@
 ---
-title: "Flow — Visual Pipeline Builder"
+title: "Flow — Visual Pipeline Builder (Deprecated)"
 ---
 
 # Flow
 
-Visual agent pipeline builder — a node-based editor for designing and orchestrating multi-agent workflows.
+> **Deprecated:** This project was absorbed into [Turbo](/docs/turbo/). The React Flow frontend was abandoned and replaced by the Turbo TUI (`turbo-tui`). System prompts and skills now live at `/home/dan/Documentos/turbo/agents/` and `/home/dan/Documentos/turbo/skills/`.
+
+Visual agent pipeline builder — a node-based editor that was absorbed into the Turbo orchestrator before reaching production.
 
 Built with React Flow and a VS Code-inspired dark theme.
 
