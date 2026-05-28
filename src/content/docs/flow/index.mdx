@@ -1,0 +1,64 @@
+---
+title: Flow
+description: Visual agent pipeline builder — a node-based editor for designing and orchestrating multi-agent workflows
+---
+
+import { Badge, Aside, Tabs, TabItem, Steps, FileTree, Card } from '@astrojs/starlight/components';
+
+<Badge text="Alpha" variant="note" /> <Badge text="v1.0.0" variant="caution" /> <Badge text="React 19 + Vite" variant="tip" />
+
+Welcome to the **Flow** documentation — a visual agent pipeline builder with a node-based editor for designing and orchestrating multi-agent workflows, built with React Flow and a VS Code-inspired dark theme.
+
+---
+
+## Overview
+
+Flow is a **dual-purpose project**:
+
+1. **Visual Pipeline Builder** — A React frontend for designing agent pipelines visually using nodes and edges (React Flow)
+2. **Flowcraft Directory** — Contains system prompts, AI skills, and agent configurations consumed by the [Turbo](/docs/turbo/) orchestrator at runtime
+
+```
+flow/
+├── agents/             # System prompts for planners, executors, diagrammers
+│   ├── planner/
+│   ├── executor/
+│   └── diagrammer/
+├── skills/             # AI skills (22 domains: Python, React, Astro, etc.)
+├── public/             # Model provider reference (shared with Turbo)
+├── src/                # React application (visual pipeline builder)
+└── saves/              # YAML backups of pipeline flows
+```
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | React 19 |
+| Build | Vite 6 |
+| Language | TypeScript (strict) |
+| Package Manager | pnpm |
+| CSS | Tailwind 4 |
+| Flow Editor | React Flow (@xyflow/react) |
+| Icons | Lucide React |
+| Persistence | In-memory + YAML disk backup |
+
+## Quick Start
+
+```bash
+pnpm install
+pnpm dev        # http://localhost:5173
+pnpm build      # output in dist/
+```
+
+## Relationship with Turbo
+
+Flow provides the **runtime resources** that [Turbo](/docs/turbo/) consumes:
+
+- `agents/planner/prompt.md` — System prompt for the planning AI
+- `agents/executor/prompt.md` — System prompt for the execution AI
+- `agents/diagrammer/prompt.md` — System prompt for diagram generation
+- `skills/*/SKILL.md` — Domain-specific AI skills
+- `public/model-provider-reference.md` — Model configuration
+
+When `planner`, `executor`, or `diagrammer` are invoked from the terminal, they read their system prompts from Flow's `agents/` directory and skills from Flow's `skills/` directory.

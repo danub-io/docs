@@ -104,7 +104,7 @@ export default defineConfig({
           ],
         },
         {
-          label: '⚡ Turbo Code OLD',
+          label: '⚡ Turbo Code',
           collapsed: false,
           items: [
             { label: 'README', slug: 'turbo-code' },
@@ -124,6 +124,38 @@ export default defineConfig({
               label: 'Postmortems',
               collapsed: true,
               autogenerate: { directory: 'turbo-code/postmortems' },
+            },
+          ],
+        },
+        {
+          label: '🤖 Turbo CLI',
+          collapsed: false,
+          items: [
+            { label: 'Overview', slug: 'turbo' },
+            { label: 'README', slug: 'turbo/readme' },
+            { label: 'Architecture', slug: 'turbo/architecture' },
+            { label: 'Contributing', slug: 'turbo/contributing' },
+            { label: 'Changelog', slug: 'turbo/changelog' },
+            {
+              label: 'Postmortems',
+              collapsed: true,
+              autogenerate: { directory: 'turbo/postmortems' },
+            },
+          ],
+        },
+        {
+          label: '🔀 Flow',
+          collapsed: false,
+          items: [
+            { label: 'Overview', slug: 'flow' },
+            { label: 'README', slug: 'flow/readme' },
+            { label: 'Architecture', slug: 'flow/architecture' },
+            { label: 'Contributing', slug: 'flow/contributing' },
+            { label: 'Changelog', slug: 'flow/changelog' },
+            {
+              label: 'Postmortems',
+              collapsed: true,
+              autogenerate: { directory: 'flow/postmortems' },
             },
           ],
         },

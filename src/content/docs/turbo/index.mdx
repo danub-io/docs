@@ -1,0 +1,68 @@
+---
+title: Turbo
+description: AI Agent Orchestrator — plan and execute complex software engineering tasks via pi coding agent
+---
+
+import { Badge, Aside, Tabs, TabItem, Steps, FileTree, Card } from '@astrojs/starlight/components';
+
+<Badge text="Alpha" variant="note" /> <Badge text="v0.1.0" variant="caution" /> <Badge text="Python 3.14" variant="tip" />
+
+Welcome to the **Turbo** documentation — an AI Agent Orchestrator that breaks complex software tasks into structured plans and executes them autonomously through the [pi coding agent](https://github.com/earendil-works/pi-coding-agent).
+
+---
+
+## Overview
+
+Turbo takes a single high-level prompt and:
+
+1. **Plans** — Decomposes the prompt into ordered, isolated tasks via an AI model
+2. **Executes** — Runs each task through the pi coding agent with live progress tracking
+3. **Reports** — Shows per-task status, token usage, and dollar costs
+
+```
+prompt → [Planner] → plan.yaml + tasks/*.md → [Executor] → completed tasks
+```
+
+## CLI Commands
+
+The `turbo` command has been replaced by three separate commands:
+
+| Command | Description |
+|---------|-------------|
+| `planner [-a] "prompt"` | Plan + auto-execute (no confirmation). `-a` opens visible terminal windows |
+| `executor [-a] <plan_id>` | Execute an existing plan. `-a` opens visible terminal windows |
+| `diagrammer "prompt"` | Generate an ASCII diagram from a description |
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| Language | Python 3.14+ |
+| CLI Framework | argparse (stdlib) |
+| Terminal UI | `rich` library |
+| Serde | `pyyaml` |
+| AI Agent | pi coding agent (Node.js 22.12+) |
+| Process Safety | `PR_SET_PDEATHSIG` via `ctypes` (Linux) |
+| Testing | pytest + pytest-asyncio + pytest-mock |
+
+## Quick Start
+
+```bash
+# Set up provider key
+export OPENCODE_API_KEY=sk-your-key-here
+
+# Run a full plan
+planner "Build a CLI tool that reads CSV files and exports JSON"
+
+# Or plan first, then execute separately
+planner "Refactor authentication to use JWT"
+executor <plan_id>
+```
+
+## Relationship with Flow
+
+Turbo is the **execution engine**. It reads system prompts and skills from the [Flow](/docs/flow/) project (the `agents/` directory), and generates plans in YAML/Markdown format. Flow is a visual pipeline builder that can eventually orchestrate Turbo via file-based communication.
+
+<Card title="Flow (frontend)">
+Visual agent pipeline builder — a node-based editor for designing and orchestrating multi-agent workflows. System prompts, skills, and agent configurations live in the Flow project and are consumed by Turbo at runtime.
+</Card>
