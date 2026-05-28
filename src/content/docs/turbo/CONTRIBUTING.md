@@ -58,5 +58,5 @@ All tests must pass with zero ruff warnings.
 
 ## ⚠️ Hard Rules
 
-1. **Never edit files in `~/Documentos/big-brain/flow/agents/` or `~/Documentos/big-brain/flow/skills/`** — these are system prompts and skills for the pi agent. Edits can break the planner/executor pipelines.
-2. **Never edit files in `~/Documentos/big-brain/flow/public/model-provider-reference.md`** — this is the model configuration file read by turbo at runtime.
+1. **Never edit files in `agents/` or `skills/`** — these are system prompts and skills for the pi agent. Edits can break the planner/executor pipelines.
+2. **Never edit files in `public/model-provider-reference.md`** — this is the model configuration file read by turbo at runtime.
