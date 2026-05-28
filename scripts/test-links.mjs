@@ -11,7 +11,8 @@ function fetchUrl(url) {
 }
 
 async function testLinks() {
-  const baseUrl = 'http://localhost:4322';
+  const port = process.env.PORT || '4321';
+  const baseUrl = 'http://localhost:' + port;
   const startUrl = baseUrl + '/docs/';
   console.log(`Buscando ${startUrl}...`);
 
