@@ -57,13 +57,17 @@ The backend is divided into 9 independent modules (M1-M9):
 | Route | Description |
 |-------|-------------|
 | `/` | Home with featured product and trends |
-| `/category/[category]` | Recommendation guide hub by category |
-| `/guide/[slug]` | Individual guide page with selected products |
-| `/product/[slug]` | Detailed product page with specs, reviews, and prices |
-| `/product/[slug]/reviews` | All press reviews for a product |
-| `/product/[slug]/user-reviews` | All user reviews for a product |
-| `/compare` | Side-by-side product comparison |
-| `/community` | Community review feed |
+| `/:categoria` | Category page and guide hub |
+| `/:categoria/[slug]` | Detailed product page with specs, reviews, and prices |
+| `/:categoria/[slug]/reviews` | All press reviews for a product |
+| `/:categoria/[slug]/user-reviews` | All user reviews for a product |
+| `/:categoria/[slug]/criar-analise` | Create a user review |
+| `/guia` | Guide index |
+| `/guia/[slug]` | Individual guide page with selected products |
+| `/busca?q=...` | Full-text search with filters |
+| `/comparar?ids=...` | Side-by-side product comparison |
+| `/comunidade` | Community review feed |
+| `/painel` | Authenticated user panel |
 
 ## Getting Started
 
