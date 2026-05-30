@@ -22,21 +22,24 @@ src/
 │   └── types/                   # Zod schemas and TypeScript types (product, review, guide)
 │
 ├── modules/                     # Isolated feature domains
-│   ├── home/                    # Home page (Hero, Categories, Trends)
-│   ├── product/                 # Product detail pages
-│   ├── category/                # Category pages with label grouping
-│   ├── guide/                   # Editorial recommendation guides
-│   ├── compare/                 # Product comparison engine
-│   ├── community/               # Community feed
-│   ├── auth/                    # Authentication (services, components, schemas)
-│   └── horizontalScroll/        # Horizontal carousel components
+│   ├── inicio/                  # Home page (Hero, Categories, Trends)
+│   ├── produto/                 # Product detail pages
+│   ├── categoria/               # Category pages with label grouping
+│   ├── guia/                    # Editorial recommendation guides
+│   ├── comparar/                # Product comparison engine
+│   ├── comunidade/              # Community module (auth, feed, reviews)
+│   │   ├── auth/                # Authentication (services, components, schemas)
+│   │   ├── feed/                # Community review feed
+│   │   └── reviews/             # User review components
+│   ├── busca/                   # Full-text search
+│   └── rolagem_horizontal/      # Horizontal carousel components
 │
 ├── pages/                       # Routing layer (Astro)
 │   ├── index.astro              # Home
-│   ├── [category]/[slug]        # Individual product
-│   ├── [category]/              # Category listing
-│   ├── guide/[slug].astro       # Individual guide
-│   ├── dashboard/               # User dashboard
+│   ├── [categoria]/[slug]       # Individual product
+│   ├── [categoria]/             # Category listing
+│   ├── guia/[slug].astro        # Individual guide
+│   ├── painel.astro             # User dashboard
 │   └── api/auth/                # Authentication endpoints
 ```
 
@@ -63,7 +66,7 @@ Astro/React Components (props → render)
 - **Never on the client:** The database is not accessed in the browser
 - **Components with `server:defer`** can fetch their own data (e.g., Trends, WhereToBuy)
 - **Error handling:** Services return `[]` or `null` on failure
-- **Aggregate function:** `servicoProduto.getFullProduct()` parallelizes 3 queries (product + press reviews + affiliates)
+- **Aggregate function:** `servicoProduto.obterProdutoCompleto()` parallelizes 3 queries (product + press reviews + affiliates)
 
 ## In-Memory Cache
 
@@ -71,11 +74,11 @@ Stampede-protected cache (Map-based TTL + shared `pendingFetch`):
 
 | Service | Method | TTL |
 |---------|--------|-----|
-| `servicoCatalogo` | `getCategories()` | 5 min |
-| `servicoMenu` | `getMenu()` | 5 min |
-| `servicoProduto` | `getAllSlugs()` | 1h |
-| `servicoGuia` | `getCategoriesWithGuides()` | 30 min |
-| `servicoInicio` | `getFeaturedProduct()`, `getRecentProducts()` | 2 min |
+| `servicoCatalogo` | `obterCategorias()` | 5 min |
+| `servicoMenu` | `obterMenu()` | 5 min |
+| `servicoProduto` | `obterTodosSlugs()` | 1h |
+| `servicoGuia` | `obterCategoriasComGuias()` | 30 min |
+| `servicoInicio` | `obterProdutosDestaque()`, `obterProdutosRecentes()` | 2 min |
 
 Cache is invalidated only on server restart.
 
@@ -87,21 +90,21 @@ Each domain has a service that encapsulates SQL queries and transformations.
 
 | Service | File | Functions |
 |---------|------|-----------|
-| `servicoCatalogo` | `src/core/services/servicoCatalogo.ts` | `getCategories()` |
-| `servicoMenu` | `src/core/services/servicoMenu.ts` | `getMenu()` |
+| `servicoCatalogo` | `src/core/services/servicoCatalogo.ts` | `obterCategorias()` |
+| `servicoMenu` | `src/core/services/servicoMenu.ts` | `obterMenu()` |
 
 ### Module Services
 
 | Module | Service | Functions |
 |--------|---------|-----------|
-| Home | `servicoInicio` | `getFeaturedProduct()`, `getRecentProducts()` |
-| Product | `servicoProduto` | `getProductBySlug()`, `getAllSlugs()`, `getPressReviews()`, `getUserReviews()`, `getAffiliates()`, `getFullProduct()` |
-| Category | `servicoCategoria` + `categorySectionsService` | `getProductsByCategory()`, `getSections()` |
-| Guide | `servicoGuia` | `getGuidesByCategory()`, `getGuideBySlug()`, `getGuideProducts()` |
-| Search | `servicoBusca` | `search()` |
-| Compare | `servicoComparacao` | `getComparisonProducts()`, `getTopProducts()`, `getSearchSuggestions()` |
-| Community | `servicoComunidade` | `getRecentReviews()` |
-| Auth | `servicoAuth` | `verifyToken()`, `getUserById()`, `userToPublic()` |
+| Home | `servicoInicio` | `obterProdutosDestaque()`, `obterProdutosRecentes()` |
+| Product | `servicoProduto` | `obterProdutoPorSlug()`, `obterTodosSlugs()`, `obterAvaliacoesCriticas()`, `obterAvaliacoesUsuarios()`, `obterAfiliados()`, `obterProdutoCompleto()` |
+| Category | `servicoCategoria` + `servicoSecoesCategoria` | `obterProdutosPorCategoria()`, `obterSecoes()` |
+| Guide | `servicoGuia` | `obterGuiasPorCategoria()`, `obterGuiaPorSlug()`, `obterProdutosDoGuia()` |
+| Search | `servicoBusca` | `buscar()` |
+| Compare | `servicoComparacao` | `obterProdutosComparacao()`, `obterTopProdutos()`, `obterSugestoesBusca()` |
+| Community | `servicoComunidade` | `obterAvaliacoesRecentes()` |
+| Auth | `servicoAuth` | `verificarToken()`, `buscarUsuarioPorId()`, `usuarioParaPublico()` |
 
 ## Islands Architecture
 
@@ -179,11 +182,11 @@ The project uses Astro Islands — interactive React components embedded in stat
 
 ## Authentication
 
-Module at `src/modules/auth/`:
+Module at `src/modules/comunidade/auth/`:
 
 - `services/servicoAuth.ts` — Registration, login, 2FA verification (JWT with jose, bcryptjs, otplib)
-- `services/rateLimitService.ts` — Rate limiting (in-memory in dev, D1 in prod)
-- `services/cryptoService.ts` — Password hashing, JWT, 2FA
+- `services/servicoRateLimit.ts` — Rate limiting (in-memory in dev, D1 in prod)
+- `services/servicoCriptografia.ts` — Password hashing, JWT, 2FA
 
 ### Security Middleware
 
@@ -193,20 +196,15 @@ The middleware (`src/middleware.ts`) applies:
 - Rate limiting on `/api/auth/*` routes (5 req/min login, 3 req/min 2FA, 10 req/h register)
 - Security headers: CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy
 
-### CSP blocks Astro inline scripts
+### CSP policy includes `'unsafe-inline'`
 
-The `script-src 'self'` policy in the middleware (`src/middleware.ts`) **blocks the inline scripts** that Astro uses for React component hydration (`<astro-island>`, `Astro.load` definition, etc.).
-
-**Symptom:** All React islands with `client:load` fail silently — the SSR HTML is rendered but components never hydrate. No visible errors in the browser console, only CSP warnings in the console.
-
-**Diagnosis:** Check whether `<astro-island>` retains the `ssr` attribute after page load. If it does, hydration did not occur. Use devtools or `page.evaluate(() => document.querySelector('astro-island').hasAttribute('ssr'))`.
-
-**Fix:** Add `'unsafe-inline'` to `script-src`:
+The middleware CSP (`src/middleware.ts:187`) allows Astro's inline hydration scripts:
 ```
 script-src 'self' 'unsafe-inline'
 ```
+React islands hydrate correctly via `<astro-island>` elements.
 
-**Code location:** `src/middleware.ts:180`
+**Historical note:** Astro 6 requires `'unsafe-inline'` in the `script-src` directive for React component hydration. Without it, islands render SSR HTML but never hydrate.
 
 ## Tests
 

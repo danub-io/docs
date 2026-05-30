@@ -100,14 +100,16 @@ Each agent prompt follows canonical sections: Autonomous Execution Mandate (C0),
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|------------|
-| Language | Python 3.14+ |
-| CLI Framework | Typer |
-| Terminal UI | `rich` library |
-| AI Agent | pi coding agent (Node.js 22.12+) |
-| Database | SQLite (WAL mode) via `turbo/db.py` |
-| Testing | pytest + pytest-asyncio + pytest-mock |
+| Layer         | Technology                                                            |
+| ------------- | --------------------------------------------------------------------- |
+| Language      | Python 3.14+ (≥3.12 supported)                                        |
+| CLI Framework | Typer (built on Click)                                                |
+| Terminal UI   | `rich` library (full-screen Live, Layout, Panels)                     |
+| AI Agent      | pi coding agent (`@earendil-works/pi-coding-agent`, Node.js 22+)      |
+| Database      | SQLite (WAL mode) via `turbo/db.py` — 8 tables                        |
+| Config        | YAML (`plan.yaml`, `demand.yaml`) + JSON (`model-provider-data.json`) |
+| Testing       | pytest + pytest-asyncio + pytest-cov (155+ tests, 80% coverage)       |
+| Diagramming   | mermaid-ascii (Unicode box-drawing)                                   |
 
 ## Quick Start
 
