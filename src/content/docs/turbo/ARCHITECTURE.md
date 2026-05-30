@@ -256,10 +256,16 @@ The system prompts incorporate findings from KRAFTON AI's Terminus-KIRA research
 ## Testing Architecture
 
 - **Framework:** pytest with `asyncio_mode = "auto"`
+- **Coverage:** 80% minimum (`--cov-fail-under=80`) with HTML report
 - **Structure:** One test file per module, mirroring `src/turbo/`
+- **Test count:** 155+ tests
 - **Key test areas:**
-  - CLI argument parsing and entry points
-  - Plan generation and YAML reading
-  - Task execution with mock pi subprocesses
-  - Parallel concurrency verification
-  - Process safety (PR_SET_PDEATHSIG)
+  - CLI argument parsing and entry points (`test_cli.py`)
+  - Plan generation and YAML reading (`test_planner.py`)
+  - Task execution with mock pi subprocesses (`test_executor.py`)
+  - Parallel concurrency verification (`test_orchestrator.py`)
+  - Process safety (PR_SET_PDEATHSIG) (`test_proc.py`)
+  - SQLite database operations (`test_db.py`)
+  - Pipeline integration (full demand→plan→execute flow) (`tests/pipeline/`)
+  - TUI rendering and DirectorRPC (`test_tui.py`)
+  - Visible executor terminal spawning (`test_visible_executor.py`)

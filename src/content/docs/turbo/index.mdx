@@ -81,19 +81,22 @@ All agents operate under the **Autonomous Execution Mandate**:
 
 ## System Prompts
 
-All agent instructions live in `agents/director/`:
+Agent instructions live across `agents/`:
 
-| File | Role |
-|------|------|
-| `AGENTS.md` | Base director prompt (always active) |
-| `modes/smart.md` | Intelligent/proactive overlay (`/smart`) |
-| `modes/critic.md` | Critical/restrained overlay (`/critic`) |
-| `modes/manager.md` | Task decomposition instructions |
-| `modes/planner.md` | Execution plan instructions |
-| `modes/executor.md` | Task execution instructions |
-| `modes/draw.md` | Diagram generation instructions |
+| File                                     | Role                                                                  |
+| ---------------------------------------- | --------------------------------------------------------------------- |
+| `agents/director/AGENTS.md`              | Base director prompt (always active)                                  |
+| `agents/director/modes/smart.md`         | Intelligent/proactive overlay (`/smart`)                              |
+| `agents/director/modes/critic.md`        | Critical/restrained overlay (`/critic`)                               |
+| `agents/director/modes/work-template.md` | Work output template                                                  |
+| `agents/director/memory/`                | 10 topic files (architecture, decisions, postmortems, patterns, etc.) |
+| `agents/director/index.yaml`             | Memory index (~0.5K tokens)                                           |
+| `agents/manager/prompt.md`               | Task decomposition instructions                                       |
+| `agents/planner/prompt.md`               | Execution plan generation instructions                                |
+| `agents/executor/prompt.md`              | Task execution instructions                                           |
+| `agents/draw/prompt.md`                  | Diagram generation instructions                                       |
 
-Each mode follows canonical sections: Autonomous Mandate (C0), Role, Principles, Constraints, Workflow, Output, Self-Verification, Anti-Patterns.
+Each agent prompt follows canonical sections: Autonomous Execution Mandate (C0), Core Objective, Absolute Constraints, Serial vs. Parallel, Output Format, Verification.
 
 ## Tech Stack
 
