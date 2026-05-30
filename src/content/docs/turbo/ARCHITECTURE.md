@@ -99,10 +99,10 @@ All installed in PATH via the `turbo` package:
 | Command | Source | Purpose |
 |---|---|---|
 | `turbo` | `turbo.tui:main` | Full-screen TUI (4 modes: Director, Manager, Planner, Executor) |
-| `manager` | `turbo.cli:manager_main` | Invokes the decomposition agent |
-| `planner` | `turbo.cli:planner_main` | Invokes the planning agent |
-| `executor` | `turbo.cli:executor_main` | Invokes the execution agent |
-| `draw` | `turbo.cli:draw_main` | Invokes the diagrammer agent |
+| `manager` | `turbo.cli:manager_main` | Decomposes tasks into discipline-based demands (flags: -q, -a, -m) |
+| `planner` | `turbo.cli:planner_main` | Generates structured plans from descriptions or demands (flags: -q, -a, --plan-id-prefix, --demand-id) |
+| `executor` | `turbo.cli:executor_main` | Executes plan tasks sequentially or in parallel (flags: -a, --plan-dir, --max-retries) |
+| `draw` | `turbo.cli:draw_main` | Generates Unicode box-drawing diagrams from descriptions |
 
 ## Runtime Resources
 
