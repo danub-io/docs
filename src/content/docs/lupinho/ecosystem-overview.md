@@ -109,7 +109,7 @@ Each domain in lupinho_fe has a service that encapsulates SQL queries.
 
 | Module | Service | Key methods | Cache |
 |--------|---------|--------------------|-------|
-| Home | `servicoInicio` | `obterProdutoDestaque()`, `obterProdutosRecentes()` | 2 min |
+| Home | `servicoInicio` | `obterProdutosDestaque()`, `obterProdutosRecentes()` | 2 min |
 | Product | `servicoProduto` | `obterProdutoPorSlug()`, `obterProdutoCompleto()`, `obterAvaliacoesCriticas()`, `obterAfiliados()` | Slugs: 1h |
 | Category | `servicoCategoria` | `obterProdutosPorCategoria()`, `obterProdutosAgrupadosPorNivel()` | — |
 | Guide | `servicoGuia` | `obterGuiasPorCategoria()`, `obterGuiaPorSlug()`, `obterProdutosDoGuia()`, `obterCategoriasComGuias()` | Cats: 30min |

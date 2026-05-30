@@ -9,7 +9,7 @@ title: "Architecture — GospelReads"
 Static blog (SSG) focused on performance, SEO, and typography. Content is managed via Astro Content Collections, and the entire site is pre-rendered at build time.
 
 ```
-Markdown (MD) → Content Collections → Astro Pages → Static HTML → Firebase Hosting
+Markdown (MD) → Content Collections → Astro Pages → Static HTML → GitHub Pages
 ```
 
 ## Project Structure
@@ -53,6 +53,10 @@ Static pages with `title` and `description`.
 
 - Astro 6 (SSG)
 - React 19 (islands of interactivity)
-- Tailwind CSS v4 + @tailwindcss/typography
+- Tailwind CSS v4 + @tailwindcss/typography + @tailwindcss/vite
+- @base-ui/react (accessible UI primitives)
+- lucide-react (icons)
+- react-markdown (MD rendering in React)
 - date-fns (pt-BR date formatting)
-- Firebase Hosting (global CDN)
+- sharp (image processing)
+- GitHub Pages (hosting with global CDN)
