@@ -47,7 +47,7 @@ Static pages with `title` and `description`.
 - **100/100 Lighthouse** — Pure SSG with no JavaScript on initial load
 - **Optimized images** — `aspect-video`, `object-cover`, grayscale filter via CSS
 - **Refined typography** — serif fonts for headings, sans-serif for body
-- **Aggressive caching** — Firebase configured with `max-age=31536000` for assets
+- **Aggressive caching** — Cache headers set to `max-age=31536000` (1 year) for static assets
 
 ## Stack
 
