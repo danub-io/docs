@@ -67,13 +67,17 @@ All agents operate under the **Autonomous Execution Mandate**:
 
 ## CLI Commands
 
-| Command | Source | Description |
-|---------|--------|-------------|
-| `turbo` | `turbo.tui:main` | Full-screen TUI (Director, Manager, Planner, Executor modes) |
-| `manager "prompt"` | `turbo.cli:manager_main` | Decompose a task into discipline-based work packages |
-| `planner <demand-id>` | `turbo.cli:planner_main` | Create execution plan from a demand |
-| `executor <plan-id>` | `turbo.cli:executor_main` | Execute a plan's tasks |
-| `draw "prompt"` | `turbo.cli:draw_main` | Generate a Unicode box-drawing diagram |
+| Command              | Source                    | Description                                                                                             |
+| -------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `turbo`              | `turbo.tui:main`          | Full-screen TUI (4 modes: Director, Manager, Planner, Executor)                                         |
+| `manager "prompt"`   | `turbo.cli:manager_main`  | Decompose complex task into discipline-based demands. Flags: `-q` (query), `-a` (audit), `-m` (monitor) |
+| `planner "desc"`     | `turbo.cli:planner_main`  | Generate structured execution plan. Flags: `-q`, `-a`, `--plan-id-prefix`, `--demand-id`                |
+| `executor <plan-id>` | `turbo.cli:executor_main` | Execute existing plan. Flags: `-a`, `--plan-dir`, `--max-retries`                                       |
+| `draw "prompt"`      | `turbo.cli:draw_main`     | Generate Unicode box-drawing diagram                                                                    |
+| `turbo plan "desc"`  | `turbo.cli:main`          | Plan + execute in one step (legacy)                                                                     |
+| `turbo exec <id>`    | `turbo.cli:cmd_exec`      | Execute existing plan (legacy)                                                                          |
+| `turbo status <id>`  | `turbo.cli:cmd_status`    | Show plan execution status                                                                              |
+| `turbo list`         | `turbo.cli:cmd_list`      | List available plans                                                                                    |
 
 ## System Prompts
 
