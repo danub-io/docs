@@ -1,12 +1,12 @@
 ---
-title: Documentation
-description: Project documentation hub
+title: Ecosystem
+description: Quikly development ecosystem documentation hub
 template: splash
 hero:
-  title: Documentation
-  tagline: Project documentation hub
+  title: Quikly
+  tagline: Development Ecosystem Documentation
   actions:
-    - text: View Projects
+    - text: Explore Projects
       link: /docs/lupinho/
       icon: right-arrow
       variant: primary
@@ -14,14 +14,22 @@ hero:
 
 import { LinkCard, CardGrid } from '@astrojs/starlight/components';
 
+**Quikly** is a development studio building tools and products across multiple domains — from AI-powered technical curation and agent orchestration to automated publishing and theological content. This hub centralizes architecture decisions, conventions, postmortems, and reference documentation for every project in the ecosystem.
+
 ## Projects
 
 <CardGrid>
-  <LinkCard title="💻 Lupinho" href="/docs/lupinho/" description="AI-powered technical hardware curation ecosystem" />
-  <LinkCard title="📖 Editora" href="/docs/editora/" description="Automated AI personal publishing tool for book production" />
-  <LinkCard title="✝️ GospelReads" href="/docs/gospelreads/" description="Theological content blog and Christian reflections" />
-  <LinkCard title="🎓 MBA Lite" href="/docs/mbalite/" description="MBA Lite course landing page — High Performance Management" />
-  <LinkCard title="⚡ Turbo Code" href="/docs/turbo-code/" description="Multi-agent terminal AI assistant with web interface" />
-  <LinkCard title="🤖 Turbo CLI" href="/docs/turbo/" description="AI Agent Orchestrator — plan and execute tasks via pi coding agent" />
-  <LinkCard title="🔀 Flow" href="/docs/flow/" description="Visual agent pipeline builder with node-based editor" />
+  <LinkCard title="💻 Lupinho" href="/docs/lupinho/" description="AI-powered technical hardware curation ecosystem — frontend, backend, and community" />
+  <LinkCard title="📖 Editora" href="/docs/editora/" description="Automated AI personal publishing tool for book production with web editor" />
+  <LinkCard title="✝️ GospelReads" href="/docs/gospelreads/" description="Theological content blog and Christian reflections — SSG with Astro content collections" />
+  <LinkCard title="🎓 MBA Lite" href="/docs/mbalite/" description="MBA Lite course landing page — High Performance Management, SSG" />
+  <LinkCard title="⚡ Turbo Code" href="/docs/turbo-code/" description="Multi-agent terminal AI assistant with web interface and MCP server" />
+  <LinkCard title="🤖 Turbo CLI" href="/docs/turbo/" description="AI Agent Orchestrator — plan, decompose, and execute tasks via pi coding agent" />
+  <LinkCard title="🔀 Flow" href="/docs/flow/" description="Visual agent pipeline builder with node-based React Flow editor" />
 </CardGrid>
+
+## Quick Links
+
+- [Architecture Decisions](/docs/lupinho/adrs/) — Rationale behind key technical choices across projects
+- [Postmortems](/docs/lupinho/postmortems/) — Lessons learned from failures, bugs, and mistakes
+- [Conventions](/docs/lupinho/conventions/) — Cross-project standards, patterns, and coding guidelines

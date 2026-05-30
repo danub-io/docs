@@ -7,7 +7,7 @@ export default defineConfig({
   base: '/docs',
   integrations: [
     starlight({
-      title: 'Documentation',
+      title: 'Quikly',
       customCss: ['./src/styles/theme.css', './src/styles/layout.css'],
       lastUpdated: true,
       sidebar: [
