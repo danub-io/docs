@@ -1,0 +1,112 @@
+---
+title: Lupinho (TechReveal)
+description: Technical Hardware Curation Ecosystem
+---
+
+import { Badge, Aside, Tabs, TabItem, Steps, FileTree, Card } from '@astrojs/starlight/components';
+
+<Badge text="Production" variant="success" /> <Badge text="v2026.4" variant="note" /> <Badge text="Next.js + Astro" variant="tip" />
+
+Welcome to the **LUPINHO (TechReveal)** documentation, an automated ecosystem for hardware analysis, comparison, and curation powered by AI.
+
+This ecosystem is divided into **two projects** that share the same database:
+
+<Card title="lupinho_be (Next.js)">
+Local tool that runs on your machine to populate the database. Product ingestion, prices, reviews, etc. No login needed, won't be deployed, only you use it.
+</Card>
+
+<Card title="lupinho_fe (Astro + Cloudflare)">
+Public site that reads from this database to display products, categories, and prices. It also writes user data (registration, login, Google OAuth, 2FA, user reviews).
+</Card>
+
+---
+
+## Overview
+
+LUPINHO is divided into two repositories that share the same **Turso (SQLite)** database:
+
+| Repository | Stack | Role |
+|-------------|-------|-------|
+| **lupinho_be** | Next.js 16, Turso, Pino, AI SDK, Tailwind v4 | Backend/Panel: Automation, Scrapers, AI Processing |
+| **lupinho_fe** | Astro 6, React 19, Tailwind v4, Turso, Zod v4 | Frontend/Public: High-performance interface optimized for SEO |
+
+```
+lupinho_be (Server Actions) → Turso DB (SQLite) ← lupinho_fe (Astro SSR)
+```
+
+## Architecture — Automation Modules
+
+### Backend (lupinho_be)
+
+The backend is divided into 9 independent modules (M1-M9):
+
+| Module | Name | Function |
+|--------|------|---------|
+| M1 | Entry | Ingestion and semantic duplicate detection via AI |
+| M2 | Discovery | Technical review link search |
+| M3 | Extraction | Review processing and spec extraction via AI |
+| M4 | Consolidation | Review unification with Bayesian scoring |
+| M5 | Prices | Price monitoring across stores |
+| M6 | Auditing | Affiliate link and stock auditing |
+| M7 | CMS | Central product catalog manager |
+| M8 | Settings | Global settings panel (AI, Scrapers, Logs) |
+| M9 | Documentation | Integrated Markdown documentation viewer |
+
+### Frontend (lupinho_fe)
+
+| Route | Description |
+|-------|-------------|
+| `/` | Home with featured product and trends |
+| `/:categoria` | Category page and guide hub |
+| `/:categoria/[slug]` | Detailed product page with specs, reviews, and prices |
+| `/:categoria/[slug]/reviews` | All press reviews for a product |
+| `/:categoria/[slug]/user-reviews` | All user reviews for a product |
+| `/:categoria/[slug]/criar-analise` | Create a user review |
+| `/guia` | Guide index |
+| `/guia/[slug]` | Individual guide page with selected products |
+| `/busca?q=...` | Full-text search with filters |
+| `/comparar?ids=...` | Side-by-side product comparison |
+| `/comunidade` | Community review feed |
+| `/painel` | Authenticated user panel |
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 22+
+- pnpm
+- A [Turso](https://turso.tech) account
+
+### Installation
+
+<Tabs>
+  <TabItem label="Backend (lupinho_be)">
+
+    ```bash
+    cd lupinho/lupinho_be
+    pnpm install
+    cp .env.example .env.local
+    # Configure TURSO_DATABASE_URL and TURSO_AUTH_TOKEN
+    pnpm dev
+    ```
+
+  </TabItem>
+  <TabItem label="Frontend (lupinho_fe)">
+
+    ```bash
+    cd lupinho/lupinho_fe
+    pnpm install
+    cp .env.example .env
+    # Configure TURSO_DATABASE_URL and TURSO_AUTH_TOKEN
+    pnpm dev
+    ```
+
+  </TabItem>
+</Tabs>
+
+## Security
+
+- CSP configured via middleware (lupinho_fe)
+- Parameterized database queries (no SQL injection)
+- Turso client used only in SSR (never exposed to the client)
+- HSTS, X-Frame-Options, X-Content-Type-Options
