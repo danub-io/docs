@@ -8,7 +8,7 @@ Hardware technical curation and business intelligence ecosystem. An automated pi
 
 ```
 Raw text → M1 (Entry) → M2 (Discovery) → M3 (Extraction) → M4 (Consolidation) → Final product
-                                                               M5 (Prices) → M6 (Checkout) → Affiliate
+                                                               M5 (Prices) → M6 (Auditing) → Affiliate
 ```
 
 ## Directory Structure
@@ -16,25 +16,30 @@ Raw text → M1 (Entry) → M2 (Discovery) → M3 (Extraction) → M4 (Consolida
 ```
 src/
 ├── app/
-│   ├── 1-entry/          # M1: Entry UI
-│   ├── 2-discovery/      # M2: Discovery UI
-│   ├── 3-extraction/     # M3: Extraction UI
-│   ├── 4-consolidation/  # M4: Consolidation UI
-│   ├── 5-prices/         # M5: Prices UI
-│   ├── 6-checkout/       # M6: Checkout UI
+│   ├── 1-entrada/        # M1: Entry UI
+│   ├── 2-descoberta/     # M2: Discovery UI
+│   ├── 3-extracao/       # M3: Extraction UI
+│   ├── 4-consolidacao/   # M4: Consolidation UI
+│   ├── 5-precos/         # M5: Prices UI
+│   ├── 6-conferencia/    # M6: Auditing UI
 │   ├── 7-cms/            # M7: Catalog CMS
-│   ├── 8-settings/       # M8: Global settings
-│   ├── 9-docs/           # M9: Documentation viewer
+│   ├── 8-configuracoes/  # M8: Global settings
+│   ├── docs/             # M9: Documentation viewer
 │   ├── actions/          # Server Actions (business logic)
-│   │   ├── 1-entry/      # M1 actions
-│   │   ├── 2-discovery/  # M2 actions
-│   │   ├── 3-extraction/ # M3 actions
-│   │   ├── 4-consolidation/ # M4 actions
-│   │   ├── 5-prices/     # M5 actions
-│   │   ├── 6-checkout/   # M6 actions
-│   │   ├── 7-cms/        # M7 actions
-│   │   ├── 8-settings/   # M8 actions (ai-models, scraping-services, logs, preferences)
-│   │   └── worker.ts     # Queue worker
+│   │   ├── entrada.ts    # M1 actions
+│   │   ├── descoberta.ts # M2 actions
+│   │   ├── extracao.ts   # M3 actions
+│   │   ├── consolidacao.ts # M4 actions
+│   │   ├── precos.ts     # M5 actions
+│   │   ├── conferencia.ts # M6 actions
+│   │   ├── cms.ts        # M7 actions
+│   │   ├── 8-configuracoes/ # M8 actions (ai-models, scraping-services, logs, preferences)
+│   │   ├── atualizar-ia.ts # AI model update
+│   │   ├── manutencao.ts # Maintenance utilities
+│   │   ├── settings.ts   # Settings helpers
+│   │   ├── sidebar.ts    # Sidebar state
+│   │   ├── worker.ts     # Queue worker
+│   │   └── __tests__/    # Action unit tests
 │   └── api/              # API routes (if any)
 ├── components/           # Global UI (ActivityBar, Sidebar, CommandPalette, Logs)
 ├── lib/                  # DB, scraping, queue, cache, encryption helpers
