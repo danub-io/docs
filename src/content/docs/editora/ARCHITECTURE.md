@@ -58,5 +58,5 @@ Supports multiple providers via the abstraction layer in `ai/llm.py`:
 - **Rich** — Colored output and tables in the terminal
 - **Pandoc** — Universal document conversion
 - **LaTeX (XeLaTeX)** — Professional print-ready typesetting
-- **LangChain** — AI call orchestration
+- **LangChain + LangGraph** — AI call orchestration and agent workflows
 - **LanguageTool** — Open-source grammar checker (pt-BR)
