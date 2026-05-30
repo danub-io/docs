@@ -104,9 +104,33 @@ All installed in PATH via the `turbo` package:
 | `executor` | `turbo.cli:executor_main` | Executes plan tasks sequentially or in parallel (flags: -a, --plan-dir, --max-retries) |
 | `draw` | `turbo.cli:draw_main` | Generates Unicode box-drawing diagrams from descriptions |
 
+## Python Modules (src/turbo/, 20 modules, ~7000 lines)
+
+| Module | Lines | Responsibility |
+|--------|-------|----------------|
+| `tui.py` | 2440 | Full-screen Rich terminal UI with DirectorRPC, paste detection, config/help overlays |
+| `cli.py` | 2174 | CLI entry points, demand pipeline orchestration, model config resolution |
+| `db.py` | 476 | SQLite database with WAL mode, 8 tables (board, demands, audit_events, etc.) |
+| `executor.py` | 850 | Task execution with pi subprocess, retry logic, .md file polling |
+| `planner.py` | 278 | Plan generation via pi agent, plan_id format, retry support |
+| `display.py` | 406 | Rich terminal output: ExecutionProgressTable, demand/plan summaries |
+| `orchestrator.py` | 130 | SerialParallelRunner — shared orchestration pattern |
+| `models.py` | 72 | Dataclasses: Plan, Task, TaskMode, TaskStatus, Demand, ParentDemand, Discipline |
+| `config.py` | 55 | pi binary lookup, plans dir, turbo root resolution |
+| `plan_reader.py` | 73 | YAML + markdown plan deserialization, checklist parsing |
+| `demand_reader.py` | 121 | YAML demand deserialization, parent/child demand reading |
+| `config_screen.py` | 464 | Provider/model/thinking configuration overlay |
+| `help_screen.py` | 79 | Help keyboard shortcut overlay |
+| `draw.py` | 148 | ASCII diagram generation via pi agent + mermaid-ascii |
+| `monitor.py` | 64 | Plan execution status polling |
+| `update_check.py` | 111 | pi coding agent update notifications |
+| `visible_executor.py` | 231 | Terminal-window-per-task execution (xterm/konsole/gnome-terminal) |
+| `proc.py` | 11 | Process safety: PR_SET_PDEATHSIG |
+| `cache.ts` + `cacheStats.ts` | 164 | Cache usage tracking for director commands |
+
 ## Runtime Resources
 
-Turbo reads system prompts from its own `agents/` directory:
+Turbo reads system prompts from its own `agents/` and `skills/` directories:
 
 | Resource | Location | Purpose |
 |---|---|---|
