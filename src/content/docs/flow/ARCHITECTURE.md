@@ -4,7 +4,7 @@ title: "Flow Architecture"
 
 # Flow Architecture
 
-> **Deprecated:** The Flow React frontend was abandoned (never connected to real data). The system prompts and AI skills formerly in the "Flowcraft Directory" have been absorbed into the [Turbo](/docs/turbo/) repository at `/home/dan/Documentos/turbo/agents/` and `/home/dan/Documentos/turbo/skills/`. The TUI (`turbo-tui`) replaced the visual pipeline builder. See [Turbo Architecture](/docs/turbo/architecture/) for current architecture.
+> **Deprecated — Source directory removed:** The Flow project directory (`/home/dan/Documentos/flow/`) no longer exists on disk. The React frontend was abandoned before connecting to real data. The system prompts (now in `turbo/agents/`), AI skills (now in `turbo/skills/` — 22 skills), and agent configurations have been fully absorbed into the [Turbo](/docs/turbo/) repository. The Turbo TUI (`turbo-tui`) replaced the visual pipeline builder. See [Turbo Architecture](/docs/turbo/architecture/) for current architecture.
 
 ## Historical Overview
 
