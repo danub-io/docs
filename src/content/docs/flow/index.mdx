@@ -5,7 +5,7 @@ description: Visual agent pipeline builder — a node-based editor for designing
 
 import { Badge, Aside, Tabs, TabItem, Steps, FileTree, Card } from '@astrojs/starlight/components';
 
-<Badge text="Deprecated" variant="danger" /> <Badge text="Absorbed into Turbo" variant="note" />
+<Badge text="Deprecated" variant="danger" /> <Badge text="Absorbed into Turbo" variant="note" /> <Badge text="Source removed" variant="caution" />
 
 <Aside type="caution">
   **Flow was absorbed into Turbo.** The React frontend (visual pipeline builder) was abandoned — it never connected to real data. The Turbo TUI (`turbo-tui`) replaced it entirely. The system prompts, AI skills, and runtime resources formerly in Flow's `agents/` and `skills/` directories now live directly in the [Turbo](/docs/turbo/) repository at `/home/dan/Documentos/turbo/`.
@@ -20,7 +20,9 @@ Welcome to the **Flow** documentation — this project was a visual agent pipeli
 Flow was a **dual-purpose project** during development:
 
 1. **Visual Pipeline Builder (Abandoned)** — A React frontend for designing agent pipelines visually using nodes and edges (React Flow). Replaced by the Turbo TUI.
-2. **Runtime Resources (Absorbed into Turbo)** — System prompts, AI skills, and agent configurations now live directly in `/home/dan/Documentos/turbo/agents/` and `/home/dan/Documentos/turbo/skills/`
+2. **Runtime Resources (Absorbed into Turbo)** — System prompts, AI skills (22 total), and agent configurations now live directly in `/home/dan/Documentos/turbo/agents/` and `/home/dan/Documentos/turbo/skills/`
+
+The Flow source directory (`/home/dan/Documentos/flow/`) has been removed from disk. This documentation page is maintained for **historical reference only**.
 
 Flow's directory structure (for historical reference):
 
