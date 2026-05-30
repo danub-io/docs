@@ -182,6 +182,62 @@ User message (with optional mode prefix)
               └── Pipeline state tracked in .ai/turbo.db (8 tables)
 ```
 
+## Pipeline Execution Model
+
+Turbo executes through a **3-level batch hierarchy** for maximum throughput:
+
+```
+DEMAND
+│
+├── GROUP 1 (serial)
+│ └── security ──► plan ──► T1(s) ──► T2(p) ──► T3(s)
+│
+├── GROUP 2 (parallel)
+│ ├── ui-ux ──► plan ──► T1(p) ──► T2(s)
+│ └── perf ──► plan ──► T1(p) ──► T2(p)
+│
+└── GROUP 3 (serial)
+  └── docs ──► plan ──► T1(s) ──► T2(s)
+```
+
+**Level 1 — Groups (Disciplines):** Consecutive same-mode disciplines form a group. Groups execute in order; a group starts only when ALL previous groups complete.
+
+**Level 2 — Tasks (SerialParallelRunner):** Within each discipline, serial tasks execute immediately; parallel tasks batch into Python-threaded dispatch.
+
+**Level 3 — Steps:** The pi agent executes steps sequentially from each `task-XX.md`.
+
+### Agent Swarms
+
+Turbo scales to hundreds of agents running simultaneously:
+- Each parallel group launches multiple planner + executor pairs concurrently
+- Parallel tasks dispatch across Python threads, each spawning a pi subprocess
+- A single `manager` command can orchestrate 50+ agents across 4+ parallel disciplines
+- The SQLite state machine tracks every agent's status in real-time
+
+### Concept-to-Code Mapping
+
+| Concept | File Format | Location | Created By |
+|---------|-------------|----------|------------|
+| Work | Natural language | User input | User |
+| ParentDemand | `parent_demand.yaml` | `demands/<id>/` | Manager |
+| Demand | `demand.yaml` | `demands/<id>/<discipline>/` | Manager |
+| Plan | `plan.yaml` | `plans/<id>/` | Planner |
+| Task | `<plan_id>-NN.md` | `plans/<id>/tasks/` | Planner |
+| Step | Markdown checklist | `task-XX.md` (inline) | Planner |
+
+### Database Schema (.ai/turbo.db, SQLite WAL mode)
+
+| Table | Purpose |
+|-------|---------|
+| `board` | Demands, plans, execution tracking per discipline |
+| `demands` | Demand metadata (status, description, timestamps) |
+| `prompts` | Versioned agent prompts |
+| `model_config` | Per-role provider/model/thinking/retry config |
+| `secrets` | Encrypted API keys |
+| `sessions` | Conversation history with token/cost tracking |
+| `decisions` | Architectural decisions log |
+| `audit_events` | Every state transition with timestamp |
+
 ## KRAFTON-Inspired Improvements
 
 The system prompts incorporate findings from KRAFTON AI's Terminus-KIRA research:
