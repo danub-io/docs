@@ -165,16 +165,21 @@ User message (with optional mode prefix)
         └── Delegated execution:
               │
               ├── Manager: manager "prompt"
-              │     └── Creates demands/<id>/demand.yaml + per-discipline files
+              │     └── Creates demands/<parent_id>/parent_demand.yaml
+              │         └── + demands/<parent_id>/<discipline>/demand.yaml (per discipline)
               │
-              ├── Planner: planner "<demand-id>"
-              │     └── Creates plans/<id>/plan.yaml + tasks/*.md
+              ├── Planner: planner "description" (or with --demand-id)
+              │     └── Creates plans/<plan_id>/plan.yaml + tasks/<plan_id>-NN.md
               │
-              ├── Executor: executor "<plan-id>"
-              │     ├── Serial: sequential task execution
-              │     └── Parallel: concurrent via threading
+              ├── Pipeline: _execute_demand_pipeline()
+              │     ├── Groups consecutive same-mode disciplines → groups
+              │     ├── Each group runs sequentially (ALL must complete)
+              │     ├── Within group: serial disciplines run one-by-one
+              │     │                 parallel disciplines run concurrently (threading)
+              │     ├── Planner spawned per discipline (headless or xterm)
+              │     └── Executor spawned per discipline (SerialParallelRunner)
               │
-              └── Pipeline state tracked in .ai/turbo.db
+              └── Pipeline state tracked in .ai/turbo.db (8 tables)
 ```
 
 ## KRAFTON-Inspired Improvements
