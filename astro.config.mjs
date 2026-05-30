@@ -104,30 +104,6 @@ export default defineConfig({
           ],
         },
         {
-          label: '⚡ Turbo Code',
-          collapsed: false,
-          items: [
-            { label: 'README', slug: 'turbo-code' },
-            { label: 'Quickstart', slug: 'turbo-code/quickstart' },
-            { label: 'Architecture', slug: 'turbo-code/architecture' },
-            { label: 'Modes', slug: 'turbo-code/modes' },
-            { label: 'Streaming', slug: 'turbo-code/streaming' },
-            { label: 'Context Compression', slug: 'turbo-code/compression' },
-            { label: 'Tools', slug: 'turbo-code/tools' },
-            { label: 'Security', slug: 'turbo-code/security' },
-            { label: 'Memory', slug: 'turbo-code/memory' },
-            { label: 'Providers', slug: 'turbo-code/providers' },
-            { label: 'Testing', slug: 'turbo-code/testing' },
-            { label: 'Contributing', slug: 'turbo-code/contributing' },
-            { label: 'Changelog', slug: 'turbo-code/changelog' },
-            {
-              label: 'Postmortems',
-              collapsed: true,
-              autogenerate: { directory: 'turbo-code/postmortems' },
-            },
-          ],
-        },
-        {
           label: '🤖 Turbo CLI',
           collapsed: false,
           items: [
@@ -140,22 +116,6 @@ export default defineConfig({
               label: 'Postmortems',
               collapsed: true,
               autogenerate: { directory: 'turbo/postmortems' },
-            },
-          ],
-        },
-        {
-          label: '🔀 Flow',
-          collapsed: false,
-          items: [
-            { label: 'Overview', slug: 'flow' },
-            { label: 'README', slug: 'flow/readme' },
-            { label: 'Architecture', slug: 'flow/architecture' },
-            { label: 'Contributing', slug: 'flow/contributing' },
-            { label: 'Changelog', slug: 'flow/changelog' },
-            {
-              label: 'Postmortems',
-              collapsed: true,
-              autogenerate: { directory: 'flow/postmortems' },
             },
           ],
         },

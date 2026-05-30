@@ -33,7 +33,6 @@ This single command installs **everything**:
 | ✅ **pi coding agent**      | `@earendil-works/pi-coding-agent` (npm global)                          |
 | ✅ **Turbo CLI**            | `turbo` · `manager` · `planner` · `executor` · `draw`                   |
 | ✅ **22 agent skills**      | React · Astro · Python · Next.js · Tailwind · Git · and more            |
-| ✅ **4 pi extensions**      | skill-usage tracker · diagnostics-sync · formatter · web-access         |
 | ✅ **6 specialized agents** | director · manager · planner · executor · draw — each with full prompts |
 | ✅ **6 director modes**     | critic · smart · planner · manager · executor · draw                    |
 | ✅ **Shell integration**    | PATH setup, alias for `turbo` command                                   |
