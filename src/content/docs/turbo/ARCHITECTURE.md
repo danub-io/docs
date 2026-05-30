@@ -110,16 +110,18 @@ Turbo reads system prompts from its own `agents/` directory:
 
 | Resource | Location | Purpose |
 |---|---|---|
-| Base system prompt | `agents/director/AGENTS.md` | Always-active director instructions |
+| Base director prompt | `agents/director/AGENTS.md` | Always-active director instructions |
+| Director memory (10 topics) | `agents/director/memory/*.md` | Architecture, decisions, postmortems, patterns, changelog, meta, etc. |
+| Director memory index | `agents/director/index.yaml` | Token-optimized 1-line summaries (~0.5K tokens) |
 | Critic mode | `agents/director/modes/critic.md` | Critical/restrained overlay |
 | Smart mode | `agents/director/modes/smart.md` | Intelligent/proactive overlay |
-| Manager prompt | `agents/director/modes/manager.md` | Task decomposition |
-| Planner prompt | `agents/director/modes/planner.md` | Execution planning |
-| Executor prompt | `agents/director/modes/executor.md` | Task execution |
-| Draw prompt | `agents/director/modes/draw.md` | Diagram generation |
 | Work template | `agents/director/modes/work-template.md` | Work output template |
-| Skills | `skills/*/SKILL.md` | Domain-specific knowledge |
-| DB | `.ai/turbo.db` | SQLite (WAL mode) pipeline state |
+| Manager prompt | `agents/manager/prompt.md` | Task decomposition (creates demand files) |
+| Planner prompt | `agents/planner/prompt.md` | Execution planning (creates plan.yaml + task files) |
+| Executor prompt | `agents/executor/prompt.md` | Task execution with git safety and rollback |
+| Draw prompt | `agents/draw/prompt.md` | Diagram generation via mermaid-ascii |
+| Skills (22 total) | `skills/*/SKILL.md` | Domain-specific knowledge for pi agent |
+| DB | `.ai/turbo.db` | SQLite (WAL mode) — 8 tables |
 
 ## Data Flow
 
