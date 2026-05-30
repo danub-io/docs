@@ -1,68 +1,89 @@
 ---
 title: Turbo
-description: AI Agent Orchestrator — plan and execute complex software engineering tasks via pi coding agent
+description: AI Agent Orchestrator — decompose, plan, and execute software engineering tasks via specialized LLM agents
 ---
 
 import { Badge, Aside, Tabs, TabItem, Steps, FileTree, Card } from '@astrojs/starlight/components';
 
-<Badge text="Alpha" variant="note" /> <Badge text="v0.1.0" variant="caution" /> <Badge text="Python 3.14" variant="tip" />
+<Badge text="Alpha" variant="note" /> <Badge text="Python 3.14" variant="tip" />
 
-Welcome to the **Turbo** documentation — an AI Agent Orchestrator that breaks complex software tasks into structured plans and executes them autonomously through the [pi coding agent](https://github.com/earendil-works/pi-coding-agent).
+Welcome to the **Turbo** documentation — an agent ecosystem orchestrator. Turbo provides a squad of specialized LLM agents that decompose complex tasks, plan execution, and deliver results autonomously — no human-in-the-loop.
 
 ---
 
 ## Overview
 
-Turbo takes a single high-level prompt and:
+Turbo operates on a **Director → Agent Pipeline** model:
 
-1. **Plans** — Decomposes the prompt into ordered, isolated tasks via an AI model
-2. **Executes** — Runs each task through the pi coding agent with live progress tracking
-3. **Reports** — Shows per-task status, token usage, and dollar costs
+1. **Director** (single point of contact) — converses with the user, refines scope, loads mode overlays (`/critic` or `/smart`)
+2. **Manager** — decomposes tasks into discipline-based work packages
+3. **Planner** — creates structured execution plans (serial/parallel tasks)
+4. **Executor** — executes plan tasks with git safety and rollback
+5. **Draw** — generates Unicode box-drawing diagrams
 
 ```
-prompt → [Planner] → plan.yaml + tasks/*.md → [Executor] → completed tasks
+User → Director (AGENTS.md + modes/{critic,smart})
+         │
+         ├── Direct execution (edit/write/bash)
+         └── Delegated pipeline:
+               Manager → Planner → Executor
 ```
+
+## Philosophy
+
+All agents operate under the **Autonomous Execution Mandate**:
+
+- Agents do **not** assist — they **do**
+- No human reads, reviews, or touches the output
+- Submission is FINAL — no second chance, no handoff
+- False completion is worse than failure
+- Agents have no eyes or ears — verification is programmatic
 
 ## CLI Commands
 
-The `turbo` command has been replaced by three separate commands:
+| Command | Source | Description |
+|---------|--------|-------------|
+| `turbo` | `turbo.tui:main` | Full-screen TUI (Director, Manager, Planner, Executor modes) |
+| `manager "prompt"` | `turbo.cli:manager_main` | Decompose a task into discipline-based work packages |
+| `planner <demand-id>` | `turbo.cli:planner_main` | Create execution plan from a demand |
+| `executor <plan-id>` | `turbo.cli:executor_main` | Execute a plan's tasks |
+| `draw "prompt"` | `turbo.cli:draw_main` | Generate a Unicode box-drawing diagram |
 
-| Command | Description |
-|---------|-------------|
-| `planner [-a] "prompt"` | Plan + auto-execute (no confirmation). `-a` opens visible terminal windows |
-| `executor [-a] <plan_id>` | Execute an existing plan. `-a` opens visible terminal windows |
-| `diagrammer "prompt"` | Generate an ASCII diagram from a description |
+## System Prompts
+
+All agent instructions live in `agents/director/`:
+
+| File | Role |
+|------|------|
+| `AGENTS.md` | Base director prompt (always active) |
+| `modes/smart.md` | Intelligent/proactive overlay (`/smart`) |
+| `modes/critic.md` | Critical/restrained overlay (`/critic`) |
+| `modes/manager.md` | Task decomposition instructions |
+| `modes/planner.md` | Execution plan instructions |
+| `modes/executor.md` | Task execution instructions |
+| `modes/draw.md` | Diagram generation instructions |
+
+Each mode follows canonical sections: Autonomous Mandate (C0), Role, Principles, Constraints, Workflow, Output, Self-Verification, Anti-Patterns.
 
 ## Tech Stack
 
 | Layer | Technology |
 |-------|------------|
 | Language | Python 3.14+ |
-| CLI Framework | argparse (stdlib) |
+| CLI Framework | Typer |
 | Terminal UI | `rich` library |
-| Serde | `pyyaml` |
 | AI Agent | pi coding agent (Node.js 22.12+) |
-| Process Safety | `PR_SET_PDEATHSIG` via `ctypes` (Linux) |
+| Database | SQLite (WAL mode) via `turbo/db.py` |
 | Testing | pytest + pytest-asyncio + pytest-mock |
 
 ## Quick Start
 
 ```bash
-# Set up provider key
-export OPENCODE_API_KEY=sk-your-key-here
+# TUI (recommended)
+turbo
 
-# Run a full plan
-planner "Build a CLI tool that reads CSV files and exports JSON"
-
-# Or plan first, then execute separately
-planner "Refactor authentication to use JWT"
-executor <plan_id>
+# Or CLI directly
+manager "Refactor auth module to use JWT"
+planner <demand-id>
+executor <plan-id>
 ```
-
-## Relationship with Flow
-
-Turbo is the **execution engine**. It reads system prompts and skills from the [Flow](/docs/flow/) project (the `agents/` directory), and generates plans in YAML/Markdown format. Flow is a visual pipeline builder that can eventually orchestrate Turbo via file-based communication.
-
-<Card title="Flow (frontend)">
-Visual agent pipeline builder — a node-based editor for designing and orchestrating multi-agent workflows. System prompts, skills, and agent configurations live in the Flow project and are consumed by Turbo at runtime.
-</Card>

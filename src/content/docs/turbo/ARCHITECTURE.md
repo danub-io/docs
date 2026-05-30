@@ -6,127 +6,165 @@ title: "Turbo Architecture"
 
 ## System Overview
 
-Turbo is a Python CLI orchestrator that uses the [pi coding agent](https://github.com/earendil-works/pi-coding-agent) to plan and execute software engineering tasks. It reads system prompts and AI skills from the [Flow](/docs/flow/) project at runtime.
+Turbo is an agent ecosystem orchestrator. It provides a squad of specialized LLM agents that decompose, plan, execute, and diagram software engineering tasks — all without human intervention in the execution loop.
+
+The user interacts **only with the Director agent** (via conversation or TUI). The Director thinks, refines scope, and when the user decides, either executes directly or delegates to the agent pipeline.
 
 ```
-┌──────────────────────────────────────────────────────┐
-│                      User                            │
-│   planner "refactor auth to use JWT"                 │
-└──────────────────┬───────────────────────────────────┘
-                   │
-                   ▼
-┌──────────────────────────────────────────────────────┐
-│                     CLI Entry Points                 │
-│  planner_main()   executor_main()   diagrammer_main()│
-└──────────────────┬───────────────────────────────────┘
-                   │
-                   ▼
-┌──────────────────────────────────────────────────────┐
-│                    Planner                           │
-│  Reads system prompt from:                           │
-│    flow/agents/planner/prompt.md                     │
-│  Calls pi agent with prompt + config                 │
-│  Outputs plan.yaml + tasks/*.md                      │
-└──────────────────┬───────────────────────────────────┘
-                   │
-                   ▼
-┌──────────────────────────────────────────────────────┐
-│                    Executor                          │
-│  Reads system prompt from:                           │
-│    flow/agents/executor/prompt.md                    │
-│  Spawns per-task pi subprocesses                     │
-│  Serial mode: sequential execution                   │
-│  Parallel mode: concurrent via threading             │
-│  Visible mode: opens terminal windows                │
-└──────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────┐
+│                           User                                   │
+│  "preciso refatorar o módulo de auth"                            │
+└────────────────────────┬─────────────────────────────────────────┘
+                         │
+                         ▼
+┌──────────────────────────────────────────────────────────────────┐
+│                     Director (single POC)                        │
+│  AGENTS.md + modes/{critic,smart,manager,planner,executor,draw}  │
+│                                                                  │
+│  ┌──────────┐  ┌──────────┐  ┌──────┐  ┌────────┐  ┌─────────┐ │
+│  │  critic  │  │  smart   │  │manager│  │planner │  │executor │ │
+│  │ (modo    │  │ (modo    │  │decomp.│  │  plan  │  │ execute │ │
+│  │ restrito)│  │ proativo)│  │       │  │       │  │         │ │
+│  └──────────┘  └──────────┘  └───┬───┘  └───┬───┘  └────┬────┘ │
+│                                  │          │           │       │
+│  ┌──────────┐                    │          │           │       │
+│  │  draw    │                    │          │           │       │
+│  │diagrams  │                    └──────────┴───────────┘       │
+│  └──────────┘                       agent pipeline              │
+└──────────────────────────────────────────────────────────────────┘
 ```
+
+## Autonomous Execution Philosophy
+
+All agents operate under a single principle: **agents do not assist — they DO.**
+
+- No human reads, reviews, or touches the output
+- There is no handoff, no second chance, no human-in-the-loop
+- Every recommendation and deliverable must be complete enough for autonomous execution
+- The user scopes and decides; agents deliver
+
+This philosophy is codified as **Section 0 (Autonomous Execution Mandate)** in every mode file.
+
+## Canonical Sections
+
+Every mode file follows a standardized section structure:
+
+| Code | Section | Purpose |
+|---|---|---|
+| **C0** | **Autonomous Execution Mandate** | No human handoff, no partial work, no eyes/ears |
+| **C1** | **Core Objective / Role** | What this agent does |
+| **C2** | **Operating Principles** | How to think (ideation, sufficiency, context, constraints) |
+| **C3** | **Strategy / Rules** | Serial/parallel, drawing rules, surgical changes |
+| **C4** | **Workflow / Iteration** | SOP, quick iteration, fail fast |
+| **C5** | **Output Format / Deliverables** | What to produce, where to save |
+| **C6** | **Self-Verification** | Checklist before finishing (incl. completeness check) |
+| **C7** | **Anti-Patterns** | Common mistakes to avoid |
+| **C8** | **Diagram Rule** | Reference to draw.md (where applicable) |
+
+## Agent Squad
+
+### Director (AGENTS.md — always active)
+
+The persistent brain. Single point of contact for the user. Routes to modes based on prefix (`/critic`, `/smart`).
+
+| Capability | Mechanism |
+|---|---|
+| Conversation | Direct with user in pt-BR |
+| Memory | `agents/director/memory/<topic>.md` + `index.yaml` |
+| Delegation | manager, planner, executor, draw CLI commands |
+| Direct execution | edit/write/bash tools (when user says "execute") |
+| Git safety | `git ls-files` + `git diff` before every operation |
+
+### Director Overlays (loaded on prefix)
+
+| Mode | File | When to use |
+|---|---|---|
+| `/critic` | `modes/critic.md` | Sufficiency gate, surgical changes, push back on waste |
+| `/smart` | `modes/smart.md` | Ideation, exploration, complete solutions, quick iteration |
+| _(none)_ | Base AGENTS.md only | Default — no overlay |
+
+### Agent Instructions (invoked via CLI or delegation)
+
+| Agent | File | Responsibility |
+|---|---|---|
+| **Manager** | `modes/manager.md` | Decompose tasks into discipline-based work packages |
+| **Planner** | `modes/planner.md` | Create structured execution plans with serial/parallel tasks |
+| **Executor** | `modes/executor.md` | Execute plan tasks, commit, verify, rollback on failure |
+| **Draw** | `modes/draw.md` | Create Unicode box-drawing diagrams via mermaid-ascii |
+
+## CLI Entry Points
+
+All installed in PATH via the `turbo` package:
+
+| Command | Source | Purpose |
+|---|---|---|
+| `turbo` | `turbo.tui:main` | Full-screen TUI (4 modes: Director, Manager, Planner, Executor) |
+| `manager` | `turbo.cli:manager_main` | Invokes the decomposition agent |
+| `planner` | `turbo.cli:planner_main` | Invokes the planning agent |
+| `executor` | `turbo.cli:executor_main` | Invokes the execution agent |
+| `draw` | `turbo.cli:draw_main` | Invokes the diagrammer agent |
 
 ## Runtime Resources
 
-Turbo reads system prompts and AI skills from its own `agents/` and `skills/` directories:
+Turbo reads system prompts from its own `agents/` directory:
 
 | Resource | Location | Purpose |
 |---|---|---|
-| Planner system prompt | `agents/planner/prompt.md` | Instructions for the planning AI model |
-| Executor system prompt | `agents/executor/prompt.md` | Instructions for the execution AI model |
-| Diagrammer system prompt | `agents/diagrammer/prompt.md` | Instructions for diagram generation |
-| Skills | `skills/*/SKILL.md` | Domain-specific knowledge (Python, React, etc.) |
-| Model config | `public/model-provider-reference.md` | Provider/model/thinking selection UI |
-
-The prompts and skills are located at `agents/` and `skills/` relative to the project root, or configured via the `TURBO_DIR` environment variable.
-
-## Module Architecture
-
-### CLI Layer (`cli.py`)
-
-Three independent entry points, each parsing their own arguments:
-
-- **`planner_main()`** — Generates a plan and executes it automatically. Supports `-a` for visible terminal windows.
-- **`executor_main()`** — Executes an existing plan by plan ID. Supports `-a` for visible terminal windows.
-- **`diagrammer_main()`** — Sends a prompt to the diagrammer agent and saves the output as a Markdown file.
-
-All three call `check_pi_update()` on startup to notify about new pi agent versions.
-
-### Planner Module (`planner.py`)
-
-1. Generates a unique `plan_id` from the current timestamp
-2. Creates `~/.ai/plans/<plan_id>/` with a `tasks/` subdirectory
-3. Reads the planner system prompt from the Flow project
-4. Calls `pi` with `--mode json --no-context-files` and provider/model flags
-5. Parses the pi agent's JSON output for token usage and cost
-6. Validates that `plan.yaml` was created
-7. Returns the plan directory and usage statistics
-
-### Executor Module (`executor.py`)
-
-1. Reads the executor system prompt from the Flow project
-2. Iterates through tasks in order, respecting their `mode` (serial/parallel)
-3. For each task:
-   - Creates a Python wrapper script with the task metadata
-   - Spawns `python3 <wrapper>.py <meta>.json` as a subprocess
-   - The wrapper reads the pi agent, streams output, and writes a done file
-   - The main process polls for the done file (up to 15 minutes timeout)
-4. Serial tasks: process one at a time, waiting for completion
-5. Parallel tasks: process all concurrently using threading
-6. A Markdown poller thread monitors task file changes for live display updates
-
-### Process Safety (`proc.py`)
-
-- Linux: Uses `PR_SET_PDEATHSIG` via `ctypes` to ensure child processes receive `SIGTERM` when the parent dies
-- macOS/Windows: Degrades gracefully (default SIGHUP propagation applies)
-- Visible executor tasks are exempt (they run in their own terminal windows)
-
-### Visible Executor (`visible_executor.py`)
-
-- Monkey-patches `executor._start_task` to open each task in a separate terminal window
-- Supports: `x-terminal-emulator`, `xterm`, `konsole`, `gnome-terminal` (Linux); `Terminal`, `iTerm2`, `Warp` (macOS); `wt.exe`, `cmd` (Windows)
-- Uses the `TERMINAL` environment variable for custom terminal emulators
-
-### Model Config Resolution (`cli.py`)
-
-Two-stage resolution:
-
-1. **JSON config** (`model-provider-data.json`) — machine-readable, checked first
-2. **Markdown config** (`model-provider-reference.md`) — human-editable checkboxes, fallback
-
-Both files live in the Flow project's `public/` directory.
+| Base system prompt | `agents/director/AGENTS.md` | Always-active director instructions |
+| Critic mode | `agents/director/modes/critic.md` | Critical/restrained overlay |
+| Smart mode | `agents/director/modes/smart.md` | Intelligent/proactive overlay |
+| Manager prompt | `agents/director/modes/manager.md` | Task decomposition |
+| Planner prompt | `agents/director/modes/planner.md` | Execution planning |
+| Executor prompt | `agents/director/modes/executor.md` | Task execution |
+| Draw prompt | `agents/director/modes/draw.md` | Diagram generation |
+| Work template | `agents/director/modes/work-template.md` | Work output template |
+| Skills | `skills/*/SKILL.md` | Domain-specific knowledge |
+| DB | `.ai/turbo.db` | SQLite (WAL mode) pipeline state |
 
 ## Data Flow
 
 ```
-planner "prompt"
+User message (with optional mode prefix)
   │
-  ├── planner.py: plan(prompt, provider, model, thinking)
-  │     ├── reads system prompt from flow/agents/planner/prompt.md
-  │     ├── calls pi agent with --mode json
-  │     └── writes plan.yaml + tasks/*.md
+  ├── Director loads AGENTS.md
+  │     └── If /critic or /smart prefix → loads corresponding mode overlay
   │
-  └── execute_plan(plan_dir, exec_cfg)
+  ├── Director converses, refines scope
+  │     └── Reads memory/ + index.yaml for context
+  │
+  └── User decides → "execute" or "delegate"
         │
-        └── executor.py: execute_all(plan, provider, model, thinking, visible)
-              ├── serial: _exec_serial_tasks → _start_task → pi subprocess
-              └── parallel: _exec_parallel_tasks → _start_task → pi subprocesses
+        ├── Direct execution: Director uses tools (edit, write, bash)
+        │
+        └── Delegated execution:
+              │
+              ├── Manager: manager "prompt"
+              │     └── Creates demands/<id>/demand.yaml + per-discipline files
+              │
+              ├── Planner: planner "<demand-id>"
+              │     └── Creates plans/<id>/plan.yaml + tasks/*.md
+              │
+              ├── Executor: executor "<plan-id>"
+              │     ├── Serial: sequential task execution
+              │     └── Parallel: concurrent via threading
+              │
+              └── Pipeline state tracked in .ai/turbo.db
 ```
+
+## KRAFTON-Inspired Improvements
+
+The system prompts incorporate findings from KRAFTON AI's Terminus-KIRA research:
+
+| Insight | Implementation |
+|---|---|
+| No human handoff | C0 in every mode: "agents do not assist — they DO" |
+| Complete without intervention | C0: "submission is FINAL", no partial work |
+| Self-evaluation of completeness | C6 in smart, critic, executor, planner, manager |
+| Adaptive replanning | C4 in smart, C4 in executor, C3 in planner |
+| No eyes/ears → use tools | C0 in smart, critic, executor |
+| Scope clarification | C5 in manager, C7 in planner/smart |
+| Avoid heavy dependencies | C4 + C6 in executor |
+| Re-evaluation checkpoints | C3 + C6 in planner |
 
 ## Testing Architecture
 
@@ -134,8 +172,7 @@ planner "prompt"
 - **Structure:** One test file per module, mirroring `src/turbo/`
 - **Key test areas:**
   - CLI argument parsing and entry points
-  - Plan generation and YAML reading (including backward-compatible Portuguese keys)
+  - Plan generation and YAML reading
   - Task execution with mock pi subprocesses
-  - Parallel concurrency verification via timestamp recording
+  - Parallel concurrency verification
   - Process safety (PR_SET_PDEATHSIG)
-  - Update check caching and notifications
