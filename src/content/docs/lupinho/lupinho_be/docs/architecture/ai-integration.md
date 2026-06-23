@@ -1,5 +1,5 @@
 ---
-title: "Integration with Multiple AI Providers"
+title: 'Integration with Multiple AI Providers'
 ---
 
 ## Overview
@@ -8,13 +8,13 @@ The LUPINHO Panel supports multiple AI providers through the **Vercel AI SDK**, 
 
 ## Supported Providers
 
-| Provider | SDK Package | Example Model |
-|----------|-------------|---------------|
-| Google | `@ai-sdk/google` | `gemini-2.0-flash` |
-| Groq | `@ai-sdk/groq` | `llama3-70b-8192` |
-| Cerebras | `@ai-sdk/cerebras` | `llama3.1-70b` |
-| OpenRouter | `@ai-sdk/openrouter` | `meta-llama/...` |
-| GitHub Models | `@ai-sdk/github-models` | `gpt-4o` |
+| Provider      | SDK Package             | Example Model      |
+| ------------- | ----------------------- | ------------------ |
+| Google        | `@ai-sdk/google`        | `gemini-2.0-flash` |
+| Groq          | `@ai-sdk/groq`          | `llama3-70b-8192`  |
+| Cerebras      | `@ai-sdk/cerebras`      | `llama3.1-70b`     |
+| OpenRouter    | `@ai-sdk/openrouter`    | `meta-llama/...`   |
+| GitHub Models | `@ai-sdk/github-models` | `gpt-4o`           |
 
 ## Configuration (M8)
 
@@ -52,7 +52,7 @@ Tier 5: Final fallback
 ## Factory Pattern (`lib/model-factory.ts`)
 
 ```typescript
-import { getModelInstance } from "@/lib/model-factory";
+import { getModelInstance } from '@/lib/model-factory';
 
 // Returns a configured AI SDK instance
 const model = getModelInstance(provider, model_id, api_key);
@@ -63,22 +63,22 @@ The factory instantiates the correct provider based on the `provider` string sav
 ## Usage in Practice
 
 ```typescript
-import { generateObject } from "ai";
-import { z } from "zod";
+import { generateObject } from 'ai';
+import { z } from 'zod';
 
 // 1. Fetch configured model (M8)
-const models = await getAIModels("extracao");
-const modelConfig = models.find(m => m.provider === "google") || models[0];
+const models = await getAIModels('extracao');
+const modelConfig = models.find((m) => m.provider === 'google') || models[0];
 
 // 2. Create instance via factory
 const model = getModelInstance(modelConfig.provider, modelConfig.model_id, modelConfig.api_key);
 
 // 3. Use with AI SDK
 const { object } = await generateObject({
-    model,
-    schema: z.object({ nota: z.number(), pros: z.string() }),
-    system: modelConfig.system_prompt || getDefaultPrompt("extracao"),
-    prompt: "Analyze this review..."
+  model,
+  schema: z.object({ nota: z.number(), pros: z.string() }),
+  system: modelConfig.system_prompt || getDefaultPrompt('extracao'),
+  prompt: 'Analyze this review...',
 });
 ```
 
@@ -87,7 +87,7 @@ const { object } = await generateObject({
 API keys are encrypted at rest using `AES-256-CBC`:
 
 ```typescript
-import { encrypt, decrypt } from "@/lib/encryption";
+import { encrypt, decrypt } from '@/lib/encryption';
 
 // Save (in upsertAIModel)
 const encrypted = encrypt(api_key);

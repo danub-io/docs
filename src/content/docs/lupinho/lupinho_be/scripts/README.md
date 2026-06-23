@@ -1,10 +1,11 @@
 ---
-title: "LUPINHO Scripts"
+title: 'LUPINHO Scripts'
 ---
 
 This directory contains operational utilities and scripts for the LUPINHO backend.
 
 ## Operational (Root)
+
 - **check-scrapers.ts**: Checks the status and connectivity of configured scrapers.
 - **debug-m6-errors.ts**: Tool for diagnosing specific failures in the M6 module (Checkout).
 - **prepare-m6.ts**: Prepares data and the queue for running the M6 module.
@@ -12,6 +13,7 @@ This directory contains operational utilities and scripts for the LUPINHO backen
 - **sync-m6.ts**: Synchronizes processed M6 data with the main database.
 
 ## Utilities (/utils)
+
 - **diagnose-db.ts**: General health diagnosis of the Turso database.
 - **fetch-product-images-v2.ts**: Automated product image fetching via Serper API.
 - **find-config.ts**: Utility for locating configuration keys in the database.
@@ -22,4 +24,5 @@ This directory contains operational utilities and scripts for the LUPINHO backen
 - **sync-images.ts**: Synchronizes image metadata between tables.
 
 ---
-*Note: All scripts should be run via `npx tsx scripts/[name].ts` to ensure proper TypeScript environment loading.*
+
+_Note: All scripts should be run via `npx tsx scripts/[name].ts` to ensure proper TypeScript environment loading._

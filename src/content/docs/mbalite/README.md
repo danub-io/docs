@@ -1,8 +1,6 @@
 ---
-title: "MBA Lite"
+title: 'MBA Lite'
 ---
-
-
 
 Landing page for the **MBA Lite — Gestao para Alta Performance** course, built with **Astro 6**, **React 19**, **Tailwind CSS v4**, and **shadcn/ui**.
 

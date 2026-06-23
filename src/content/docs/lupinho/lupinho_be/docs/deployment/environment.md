@@ -1,5 +1,5 @@
 ---
-title: "Environment Variables Configuration"
+title: 'Environment Variables Configuration'
 ---
 
 ## `.env.example` File
@@ -34,6 +34,7 @@ PINO_LOG_LEVEL=info  # trace|debug|info|warn|error|fatal
 ### Local Development
 
 1. Copy the example:
+
 ```bash
 cp .env.example .env
 ```
@@ -44,6 +45,7 @@ cp .env.example .env
 ### Production (Vercel)
 
 Add via dashboard or CLI:
+
 ```bash
 vercel env add TURSO_DATABASE_URL
 vercel env add TURSO_AUTH_TOKEN
@@ -53,6 +55,7 @@ vercel env add TURSO_AUTH_TOKEN
 ### Verification
 
 When starting the project, verify that all variables are loaded:
+
 ```bash
 pnpm dev
 # Check the startup logs
@@ -61,12 +64,14 @@ pnpm dev
 ## Required vs Optional Variables
 
 ### Required
+
 - `TURSO_DATABASE_URL`
 - `TURSO_AUTH_TOKEN`
 - `ENCRYPTION_KEY` (32 hex characters = 16 bytes)
 - `NEXTAUTH_SECRET`
 
 ### Optional
+
 - API keys for AI providers (configured via M8)
 - `PINO_LOG_LEVEL` (default: `info`)
 

@@ -1,5 +1,5 @@
 ---
-title: "Contributing — LUPINHO Backend"
+title: 'Contributing — LUPINHO Backend'
 ---
 
 Thank you for contributing to the project! This guide defines the standards and workflows for maintaining code quality and consistency.
@@ -7,12 +7,14 @@ Thank you for contributing to the project! This guide defines the standards and 
 ## Setting Up the Development Environment
 
 Prerequisites:
+
 - Node.js >= 22.12.0
 - pnpm (package manager)
 - Turso account (database)
 - API keys for AI services (optional, for local development)
 
 Steps:
+
 ```bash
 git clone <repo-url>
 cd lupinho_be
@@ -33,15 +35,15 @@ pnpm dev
 
 ## Commit Convention (Conventional Commits)
 
-| Type | Description |
-|------|-------------|
-| `feat` | New feature |
-| `fix` | Bug fix |
-| `docs` | Documentation changes |
-| `style` | Code formatting (no logic change) |
+| Type       | Description                            |
+| ---------- | -------------------------------------- |
+| `feat`     | New feature                            |
+| `fix`      | Bug fix                                |
+| `docs`     | Documentation changes                  |
+| `style`    | Code formatting (no logic change)      |
 | `refactor` | Refactoring (no new features or fixes) |
-| `test` | Adding or updating tests |
-| `chore` | Maintenance (deps, scripts, etc.) |
+| `test`     | Adding or updating tests               |
+| `chore`    | Maintenance (deps, scripts, etc.)      |
 
 ## Code Standards
 
@@ -57,6 +59,7 @@ pnpm dev
 ## Running Tests
 
 ### Unit Tests (Vitest)
+
 ```bash
 pnpm test:run          # Single run
 pnpm test:ui           # Visual interface
@@ -65,6 +68,7 @@ pnpm test:ui           # Visual interface
 Minimum coverage: lines 60%, functions 60%, branches 50%
 
 ### E2E Tests (Playwright)
+
 ```bash
 pnpm exec playwright test
 ```

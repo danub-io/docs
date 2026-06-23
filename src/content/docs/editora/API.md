@@ -1,8 +1,6 @@
 ---
-title: "Editora CLI — Command Reference"
+title: 'Editora CLI — Command Reference'
 ---
-
-
 
 ## Basic Usage
 
@@ -20,10 +18,10 @@ Creates a new book project.
 editora init --title "Title" --author "Author" --output ./my-book
 ```
 
-| Option | Description | Default |
-|--------|-------------|---------|
-| `--title` | Book title | required |
-| `--author` | Author name | required |
+| Option     | Description      | Default     |
+| ---------- | ---------------- | ----------- |
+| `--title`  | Book title       | required    |
+| `--author` | Author name      | required    |
 | `--output` | Output directory | `./<title>` |
 
 ### `build`
@@ -36,10 +34,10 @@ editora build --format pdf       # PDF only
 editora build --output ./dist    # Custom directory
 ```
 
-| Option | Description | Default |
-|--------|-------------|---------|
-| `--format` | Format: `pdf`, `epub`, `both` | `both` |
-| `--output` | Output directory | `configured in editora.yaml` |
+| Option     | Description                   | Default                      |
+| ---------- | ----------------------------- | ---------------------------- |
+| `--format` | Format: `pdf`, `epub`, `both` | `both`                       |
+| `--output` | Output directory              | `configured in editora.yaml` |
 
 ### `edit`
 
@@ -50,10 +48,10 @@ editora edit --preview           # Preview without applying changes
 editora edit --mode medium       # Apply medium-level editing
 ```
 
-| Option | Description | Default |
-|--------|-------------|---------|
-| `--preview` | Shows diff without applying | `false` |
-| `--mode` | Level: `light`, `medium`, `aggressive` | `light` |
+| Option      | Description                            | Default |
+| ----------- | -------------------------------------- | ------- |
+| `--preview` | Shows diff without applying            | `false` |
+| `--mode`    | Level: `light`, `medium`, `aggressive` | `light` |
 
 ### `proofread`
 
@@ -64,8 +62,8 @@ editora proofread                # Review and apply corrections
 editora proofread --report       # Generate report only
 ```
 
-| Option | Description | Default |
-|--------|-------------|---------|
+| Option     | Description                       | Default |
+| ---------- | --------------------------------- | ------- |
 | `--report` | Generates report without applying | `false` |
 
 ### `consistency`

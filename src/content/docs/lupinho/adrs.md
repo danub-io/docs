@@ -1,5 +1,5 @@
 ---
-title: "Architecture Decision Records (ADRs)"
+title: 'Architecture Decision Records (ADRs)'
 ---
 
 ADRs document important architectural decisions in the LUPINHO ecosystem, following the [ADR](https://adr.github.io/) format.

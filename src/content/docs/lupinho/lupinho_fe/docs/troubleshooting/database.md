@@ -1,5 +1,5 @@
 ---
-title: "Troubleshooting: Database (Turso)"
+title: 'Troubleshooting: Database (Turso)'
 ---
 
 ## Error: "TURSO_DATABASE_URL is missing!"
@@ -13,10 +13,12 @@ title: "Troubleshooting: Database (Turso)"
 **Cause:** Invalid or expired authentication token.
 
 **Solution:**
+
 ```bash
 turso auth login
 turso db tokens create <database-name>
 ```
+
 Update `TURSO_AUTH_TOKEN` with the new token.
 
 ## Error: "Connection refused"
@@ -24,6 +26,7 @@ Update `TURSO_AUTH_TOKEN` with the new token.
 **Cause:** Turso database offline or incorrect URL.
 
 **Solution:**
+
 - Check if the database exists: `turso db list`
 - Check the URL: `turso db show <database-name>`
 - Check Turso status: [status.turso.tech](https://status.turso.tech)
@@ -33,6 +36,7 @@ Update `TURSO_AUTH_TOKEN` with the new token.
 **Cause:** Data has not been ingested by the backend yet, or the filter excludes all records.
 
 **Solution:**
+
 - Verify that the backend (lupinho_be) has processed products
 - Check product status in the database (must have `status = 'AprovadoM4'`)
 - Test the query directly: `turso db shell <database-name> "SELECT * FROM Produtos LIMIT 5"`
@@ -42,6 +46,7 @@ Update `TURSO_AUTH_TOKEN` with the new token.
 **Cause:** Queries without indexes, network latency to Turso.
 
 **Solution:**
+
 - Review indexes in the database schema
 - Consider additional frontend caching
 - Use `EXPLAIN QUERY PLAN` to diagnose slow queries

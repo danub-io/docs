@@ -1,5 +1,5 @@
 ---
-title: "Architecture — LUPINHO Backend"
+title: 'Architecture — LUPINHO Backend'
 ---
 
 ## Overview
@@ -69,12 +69,12 @@ Structured logging via Pino across all critical modules (M1-M6). Worker health c
 
 Multiple providers via Vercel AI SDK:
 
-| Provider | Package | Usage |
-|----------|--------|-------|
-| Groq | `@ai-sdk/groq` | Fast extraction |
-| Cerebras | `@ai-sdk/cerebras` | Batch processing |
-| OpenRouter | `@openrouter/ai-sdk-provider` | Fallback |
-| GitHub Models | `@github/models` | Various models |
+| Provider      | Package                       | Usage            |
+| ------------- | ----------------------------- | ---------------- |
+| Groq          | `@ai-sdk/groq`                | Fast extraction  |
+| Cerebras      | `@ai-sdk/cerebras`            | Batch processing |
+| OpenRouter    | `@openrouter/ai-sdk-provider` | Fallback         |
+| GitHub Models | `@github/models`              | Various models   |
 
 Resilience cascade (6 tiers) configurable via `config_ai_models` table.
 
@@ -82,13 +82,13 @@ Resilience cascade (6 tiers) configurable via `config_ai_models` table.
 
 In-memory cache (Map) via `CacheLayer`:
 
-| Query | TTL | Invalidation |
-|-------|-----|-------------|
-| `getAIModels` | 10 min | upsert/delete/toggle AI model |
-| `getScrapingServices` | 10 min | upsert/delete/toggle scraping service |
-| `getDefaultPrompt` | 10 min | (manual) |
-| `getProductsToConsolidate` | 5 min | M3/M4 approval |
-| `getProductsForReviewSearch` | 5 min | M3/M4 approval |
+| Query                        | TTL    | Invalidation                          |
+| ---------------------------- | ------ | ------------------------------------- |
+| `getAIModels`                | 10 min | upsert/delete/toggle AI model         |
+| `getScrapingServices`        | 10 min | upsert/delete/toggle scraping service |
+| `getDefaultPrompt`           | 10 min | (manual)                              |
+| `getProductsToConsolidate`   | 5 min  | M3/M4 approval                        |
+| `getProductsForReviewSearch` | 5 min  | M3/M4 approval                        |
 
 Cache bypass: `{ refresh: true }` forces reload.
 

@@ -1,5 +1,5 @@
 ---
-title: "Deploy with Docker - LUPINHO Panel"
+title: 'Deploy with Docker - LUPINHO Panel'
 ---
 
 ## Prerequisites
@@ -44,7 +44,7 @@ services:
   lupinho:
     build: .
     ports:
-      - "3000:3000"
+      - '3000:3000'
     environment:
       - TURSO_DATABASE_URL=${TURSO_DATABASE_URL}
       - TURSO_AUTH_TOKEN=${TURSO_AUTH_TOKEN}
@@ -52,7 +52,7 @@ services:
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      test: ['CMD', 'wget', '--quiet', '--tries=1', '--spider', 'http://localhost:3000/api/health']
       interval: 30s
       timeout: 10s
       retries: 3

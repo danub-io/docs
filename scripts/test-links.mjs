@@ -2,11 +2,13 @@ import http from 'http';
 
 function fetchUrl(url) {
   return new Promise((resolve, reject) => {
-    http.get(url, (res) => {
-      let data = '';
-      res.on('data', chunk => data += chunk);
-      res.on('end', () => resolve({ statusCode: res.statusCode, data }));
-    }).on('error', reject);
+    http
+      .get(url, (res) => {
+        let data = '';
+        res.on('data', (chunk) => (data += chunk));
+        res.on('end', () => resolve({ statusCode: res.statusCode, data }));
+      })
+      .on('error', reject);
   });
 }
 
@@ -38,7 +40,7 @@ async function testLinks() {
   for (const link of links) {
     let resolvedPath = link;
     if (!link.startsWith('/')) {
-        resolvedPath = '/docs/' + link;
+      resolvedPath = '/docs/' + link;
     }
     const url = baseUrl + resolvedPath;
     const res = await fetchUrl(url);

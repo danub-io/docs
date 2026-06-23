@@ -1,5 +1,5 @@
 ---
-title: "Troubleshooting: Build"
+title: 'Troubleshooting: Build'
 ---
 
 ## Error: "Sharp is not available"
@@ -7,11 +7,13 @@ title: "Troubleshooting: Build"
 **Cause:** Sharp (image processing) was not installed correctly.
 
 **Solution:**
+
 ```bash
 pnpm add sharp
 ```
 
 If the error persists, install native dependencies:
+
 ```bash
 pnpm rebuild sharp
 ```
@@ -33,6 +35,7 @@ pnpm rebuild sharp
 **Cause:** Too many dynamic pages with slow Turso queries.
 
 **Solution:**
+
 - Reduce the number of pages in the build
 - Use ISR (Incremental Static Regeneration) instead of SSG
 - Check Turso latency

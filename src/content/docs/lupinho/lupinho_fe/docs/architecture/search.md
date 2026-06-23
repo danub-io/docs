@@ -1,8 +1,6 @@
 ---
-title: "Search Module"
+title: 'Search Module'
 ---
-
-
 
 The `search` module implements full-text search with filters, sorting, pagination, and facets.
 
@@ -18,7 +16,7 @@ Search is **server-side** (SSR): the form submits query params to `/search`, and
 
 ```typescript
 interface SearchFilters {
-  search: string;        // Search term (minimum 2 characters)
+  search: string; // Search term (minimum 2 characters)
   sort?: 'rating' | 'name' | 'release';
   category?: string | null;
   page?: number;
@@ -29,10 +27,11 @@ interface SearchResult {
   total: number;
   page: number;
   totalPages: number;
-  perPage: number;            // 24
+  perPage: number; // 24
   query: string;
-  timeMs: number;             // Execution time in ms
-  availableCategories: {      // Facets
+  timeMs: number; // Execution time in ms
+  availableCategories: {
+    // Facets
     name: string;
     total: number;
   }[];
@@ -64,16 +63,16 @@ const result = await servicoBusca.search({
 
 ## Components
 
-| Component | Description |
-|-----------|-------------|
-| `SearchBar.astro` | Search input with value controlled by query param |
-| `SearchFilters.astro` | Category pills for filtering results |
-| `ActiveFilter.astro` | Active filter tag with remove button |
-| `ResultsGrid.astro` | Product card grid |
-| `SearchPagination.astro` | Page navigation |
-| `SearchResults.astro` | Container: title, count, grid, pagination |
-| `HighlightTerm.astro` | Highlights the search term in text (wraps in `<mark>`) |
-| `EmptySearch.astro` | Empty state when no results are found |
+| Component                | Description                                            |
+| ------------------------ | ------------------------------------------------------ |
+| `SearchBar.astro`        | Search input with value controlled by query param      |
+| `SearchFilters.astro`    | Category pills for filtering results                   |
+| `ActiveFilter.astro`     | Active filter tag with remove button                   |
+| `ResultsGrid.astro`      | Product card grid                                      |
+| `SearchPagination.astro` | Page navigation                                        |
+| `SearchResults.astro`    | Container: title, count, grid, pagination              |
+| `HighlightTerm.astro`    | Highlights the search term in text (wraps in `<mark>`) |
+| `EmptySearch.astro`      | Empty state when no results are found                  |
 
 ## Route
 

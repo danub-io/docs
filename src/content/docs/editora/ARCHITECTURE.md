@@ -1,8 +1,6 @@
 ---
-title: "Editora Architecture"
+title: 'Editora Architecture'
 ---
-
-
 
 ## Overview
 
@@ -43,12 +41,12 @@ src/editora/
 
 Supports multiple providers via the abstraction layer in `ai/llm.py`:
 
-| Provider | Environment Variable | Default Model |
-|----------|---------------------|---------------|
-| Anthropic | `ANTHROPIC_API_KEY` | claude-sonnet-4-20250514 |
-| OpenAI | `OPENAI_API_KEY` | gpt-4o |
-| Google | `GOOGLE_API_KEY` | gemini-2.0-flash |
-| Ollama | (local) | llama3 |
+| Provider  | Environment Variable | Default Model            |
+| --------- | -------------------- | ------------------------ |
+| Anthropic | `ANTHROPIC_API_KEY`  | claude-sonnet-4-20250514 |
+| OpenAI    | `OPENAI_API_KEY`     | gpt-4o                   |
+| Google    | `GOOGLE_API_KEY`     | gemini-2.0-flash         |
+| Ollama    | (local)              | llama3                   |
 
 ## Technology Stack
 

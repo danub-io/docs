@@ -1,21 +1,25 @@
 ---
-title: "Database Problems (Turso)"
+title: 'Database Problems (Turso)'
 ---
 
 ## Error: "Database connection failed"
 
 ### Symptom
+
 ```
 Error: Connection timeout to Turso database
 ```
 
 ### Solution
+
 1. Check if the token has expired:
+
 ```bash
 turso db tokens list [db-name]
 ```
 
 2. Generate a new token if needed:
+
 ```bash
 turso db tokens create [db-name]
 ```
@@ -27,11 +31,13 @@ turso db tokens create [db-name]
 ## Error: "Database is locked"
 
 ### Symptom
+
 ```
 SQLITE_BUSY: database is locked
 ```
 
 ### Solution
+
 - Turso is serverless and may have a limit on concurrent connections
 - Check if multiple scripts are running simultaneously
 - During development, avoid running multiple `pnpm dev` instances
@@ -41,12 +47,14 @@ SQLITE_BUSY: database is locked
 ## Migrations not applied
 
 ### Check status
+
 ```bash
 cd /home/dan/Documentos/lupinho/lupinho_be
 cat migrations/*.sql
 ```
 
 ### Apply manually via Turso CLI
+
 ```bash
 turso db shell [db-name]
 # Paste the migration SQL

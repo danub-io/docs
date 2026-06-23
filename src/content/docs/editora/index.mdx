@@ -5,7 +5,8 @@ description: AI-powered personal publishing tool for book production
 
 import { Badge, Aside, Tabs, TabItem, Steps, FileTree } from '@astrojs/starlight/components';
 
-<Badge text="Alpha" variant="note" /> <Badge text="v0.1.0" variant="caution" /> <Badge text="Python 3.12" variant="tip" /> <Badge text="Web + CLI" variant="success" />
+<Badge text="Alpha" variant="note" /> <Badge text="v0.1.0" variant="caution" />
+<Badge text="Python 3.12" variant="tip" /> <Badge text="Web + CLI" variant="success" />
 
 Welcome to the **Editora** documentation, a vibe coding tool for professional book production. Write chapters in Markdown and Editora handles the publishing workflow — AI review, typesetting, and export to PDF (print-ready) and EPUB.
 
@@ -19,34 +20,34 @@ chapters/*.md → [AI: Edit/Review] → [Pandoc + LaTeX] → output/*.pdf / *.ep
 
 ### Technology Stack
 
-| Tool | Role |
-|------|------|
-| **Python 3.12+** | Core language |
-| **Typer** | CLI interface |
-| **Pydantic** | Validation and settings |
+| Tool               | Role                     |
+| ------------------ | ------------------------ |
+| **Python 3.12+**   | Core language            |
+| **Typer**          | CLI interface            |
+| **Pydantic**       | Validation and settings  |
 | **Pandoc + LaTeX** | Professional typesetting |
-| **LangChain** | AI orchestration |
-| **LanguageTool** | pt-BR grammar checking |
+| **LangChain**      | AI orchestration         |
+| **LanguageTool**   | pt-BR grammar checking   |
 
 ## Features
 
-| Feature | Description |
-|---------|-------------|
-| Markdown writing | Git-versionable chapters, easy to convert |
-| AI editing | 3-level copyediting (light/medium/aggressive) |
+| Feature            | Description                                         |
+| ------------------ | --------------------------------------------------- |
+| Markdown writing   | Git-versionable chapters, easy to convert           |
+| AI editing         | 3-level copyediting (light/medium/aggressive)       |
 | Consistency review | Detects contradictions, plot holes, timeline issues |
-| Proofreading | pt-BR grammar and spelling correction |
-| Typesetting | Print-ready PDF (KDP compliant) and EPUB |
-| Intuitive CLI | Simple commands for the entire workflow |
+| Proofreading       | pt-BR grammar and spelling correction               |
+| Typesetting        | Print-ready PDF (KDP compliant) and EPUB            |
+| Intuitive CLI      | Simple commands for the entire workflow             |
 
 ## AI Providers
 
-| Provider | Variable | Default Model |
-|----------|----------|---------------|
-| Anthropic | `ANTHROPIC_API_KEY` | claude-sonnet-4 |
-| OpenAI | `OPENAI_API_KEY` | gpt-4o |
-| Google | `GOOGLE_API_KEY` | gemini-2.0-flash |
-| Ollama | (local) | llama3 |
+| Provider  | Variable            | Default Model    |
+| --------- | ------------------- | ---------------- |
+| Anthropic | `ANTHROPIC_API_KEY` | claude-sonnet-4  |
+| OpenAI    | `OPENAI_API_KEY`    | gpt-4o           |
+| Google    | `GOOGLE_API_KEY`    | gemini-2.0-flash |
+| Ollama    | (local)             | llama3           |
 
 ## Getting Started
 
@@ -77,12 +78,12 @@ editora build    # Generates PDF + EPUB
 
 ## CLI Commands
 
-| Command | Description |
-|---------|-------------|
-| `editora init` | Creates a new book project |
-| `editora build` | Compiles to PDF/EPUB |
-| `editora edit` | Edits chapters with AI |
-| `editora proofread` | Reviews grammar and spelling |
-| `editora consistency` | Checks global consistency |
-| `editora template` | Generates LaTeX templates for formatting |
-| `editora info` | Shows project statistics |
+| Command               | Description                              |
+| --------------------- | ---------------------------------------- |
+| `editora init`        | Creates a new book project               |
+| `editora build`       | Compiles to PDF/EPUB                     |
+| `editora edit`        | Edits chapters with AI                   |
+| `editora proofread`   | Reviews grammar and spelling             |
+| `editora consistency` | Checks global consistency                |
+| `editora template`    | Generates LaTeX templates for formatting |
+| `editora info`        | Shows project statistics                 |

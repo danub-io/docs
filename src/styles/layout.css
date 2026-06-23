@@ -35,7 +35,7 @@
   }
 
   :root .content-panel .sl-container {
-    max-width: 50rem;
+    max-width: 64rem;
     width: 100%;
     margin-inline: auto;
   }

@@ -1,12 +1,11 @@
 ---
-title: "Estratégia de SEO"
+title: 'Estratégia de SEO'
 ---
-
-
 
 ## Meta Tags
 
 As meta tags são definidas no `Layout.astro` e incluem:
+
 - `<title>` e `<meta name="description">` por página
 - Open Graph (`og:title`, `og:description`, `og:image`, `og:type`)
 - Twitter Cards (`twitter:card`, `twitter:title`, `twitter:description`)

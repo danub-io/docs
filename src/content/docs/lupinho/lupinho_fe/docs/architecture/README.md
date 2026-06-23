@@ -1,5 +1,5 @@
 ---
-title: "Architecture — Documentation"
+title: 'Architecture — Documentation'
 ---
 
 Index of the LUPINHO frontend architecture documentation.

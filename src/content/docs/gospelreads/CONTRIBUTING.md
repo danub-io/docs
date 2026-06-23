@@ -1,8 +1,6 @@
 ---
-title: "Contributing — GospelReads"
+title: 'Contributing — GospelReads'
 ---
-
-
 
 Thanks for contributing!
 

@@ -1,5 +1,5 @@
 ---
-title: "LUPINHO Panel (Backend)"
+title: 'LUPINHO Panel (Backend)'
 ---
 
 **Local tool that runs on your machine to populate the database.** Product ingestion, prices, reviews, etc. No login needed, won't be deployed, only you use it.
@@ -22,10 +22,12 @@ This is the "Brain" of the LUPINHO ecosystem. An admin panel and automation engi
 ## Installation and Running
 
 ### Prerequisites
+
 - `pnpm` installed globally
 - `.env.local` file configured (see `.env.example`)
 
 ### Commands
+
 ```bash
 pnpm install              # Install dependencies
 pnpm dev                  # Start development server (port 3001)
@@ -44,30 +46,39 @@ pnpm db:studio            # Open Drizzle Studio
 The project is divided into 9 independent modules, each isolated for easy editing via vibecoding:
 
 ### M1 — Entry
+
 Ingestion and semantic duplicate detection. AI extracts a JSON with `brand`, `product_name`, `raw_specs`, `tier I-V` from raw text. Similar candidates are sent for AI semantic verdict.
 
 ### M2 — Discovery
+
 Bulk search for technical review links via search templates. AI filters links by discarding forums, videos, and stores.
 
 ### M3 — Extraction
+
 Article reading, scoring (0-10), extraction of `pros`, `cons`, `mini_review`, and missing specs. Review_type distinguishes critic from user.
 
 ### M4 — Consolidation
+
 Acts as Editor-in-Chief: aggregates up to 8 reviews, calculates Bayesian Score (global average 7.5, min. 3 reviews) with Lag Factor (0.2/year). Synthesizes Final Verdict.
 
 ### M5 — Prices
+
 Continuous price monitoring via Google Shopping. False positive detection (case, cable, wrong model). Variations > R$5.00 stored in `price_history` (90-day retention).
 
 ### M6 — Checkout
+
 Final link (Affiliate) audit: scraper navigates to the saved URL to capture PIX/Boleto price and stock.
 
 ### M7 — CMS
+
 Central product catalog manager (CRUD) with listing, filters (brand, category, launch), editing and deletion.
 
 ### M8 — Settings
+
 Modular global settings panel: AI models (6-tier cascade), scraping services, system logs, database maintenance, preferences.
 
 ### M9 — Documentation
+
 Built-in Markdown documentation viewer with sidebar, search (Ctrl+K), and GFM rendering.
 
 ## Queue System
@@ -80,10 +91,10 @@ Built-in Markdown documentation viewer with sidebar, search (Ctrl+K), and GFM re
 
 In-memory cache (Map) with configurable TTL via `CacheLayer`:
 
-| Query | TTL |
-|-------|-----|
+| Query                                                    | TTL    |
+| -------------------------------------------------------- | ------ |
 | `getAIModels`, `getScrapingServices`, `getDefaultPrompt` | 10 min |
-| `getProductsToConsolidate`, `getProductsForReviewSearch` | 5 min |
+| `getProductsToConsolidate`, `getProductsForReviewSearch` | 5 min  |
 
 Automatic invalidation on mutations. Cache bypass via `refresh = true` parameter.
 
@@ -111,12 +122,14 @@ Obsolete columns removed in Apr/2026 (`embedding`, `is_primary`, `is_fallback`, 
 ## Migrations
 
 Managed via Drizzle Kit:
+
 ```bash
 pnpm db:generate    # Generate migration
 pnpm db:migrate     # Apply migration
 ```
 
 For manual SQL migrations (e.g., rate_limit), run via Turso CLI:
+
 ```bash
 turso db shell <database> < migrations/file.sql
 ```

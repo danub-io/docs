@@ -1,5 +1,5 @@
 ---
-title: "Architecture"
+title: 'Architecture'
 ---
 
 Detailed documentation about the architecture of the LUPINHO Panel system.

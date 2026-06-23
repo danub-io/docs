@@ -1,8 +1,6 @@
 ---
-title: "Architecture — GospelReads"
+title: 'Architecture — GospelReads'
 ---
-
-
 
 ## Overview
 

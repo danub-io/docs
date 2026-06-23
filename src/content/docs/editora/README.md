@@ -1,8 +1,6 @@
 ---
-title: "Editora — AI-Powered Personal Publishing Tool"
+title: 'Editora — AI-Powered Personal Publishing Tool'
 ---
-
-
 
 A **vibe coding** tool for professional book production. Write your chapters in Markdown and let Editora handle the entire publishing workflow — editing, consistency checking, typesetting, and export to PDF (print-ready) and EPUB.
 
@@ -75,6 +73,7 @@ cd my-book
 ```
 
 This creates the structure:
+
 ```
 my-book/
 ├── chapters/           # Chapters in Markdown
@@ -140,16 +139,16 @@ editora info
 
 ## Available Commands
 
-| Command | Description |
-|---------|-------------|
-| `editora init` | Creates a new book project |
-| `editora build` | Compiles to PDF/EPUB |
-| `editora info` | Shows project statistics |
-| `editora edit` | Edits chapters with AI |
-| `editora proofread` | Reviews grammar and spelling |
-| `editora consistency` | Checks global consistency |
-| `editora template` | Generates a typesetting template |
-| `editora --version` | Shows version |
+| Command               | Description                      |
+| --------------------- | -------------------------------- |
+| `editora init`        | Creates a new book project       |
+| `editora build`       | Compiles to PDF/EPUB             |
+| `editora info`        | Shows project statistics         |
+| `editora edit`        | Edits chapters with AI           |
+| `editora proofread`   | Reviews grammar and spelling     |
+| `editora consistency` | Checks global consistency        |
+| `editora template`    | Generates a typesetting template |
+| `editora --version`   | Shows version                    |
 
 ## Configuration
 
@@ -158,15 +157,15 @@ The `editora.yaml` file controls all behavior:
 ```yaml
 # Book metadata
 book:
-  title: "My Book"
-  author: "Author"
-  language: "pt-BR"
-  isbn: "978-0-00-000000-0"  # optional
+  title: 'My Book'
+  author: 'Author'
+  language: 'pt-BR'
+  isbn: '978-0-00-000000-0' # optional
 
 # Typesetting
 typesetting:
-  format: both              # pdf, epub, both
-  page_size: 6x9           # A5, 6x9, 5x8, 5.5x8.5
+  format: both # pdf, epub, both
+  page_size: 6x9 # A5, 6x9, 5x8, 5.5x8.5
   font_family: Georgia
   font_size: 11
   line_height: 1.4
@@ -178,14 +177,14 @@ typesetting:
 
 # AI / LLM
 llm:
-  provider: anthropic      # openai, anthropic, google, ollama
+  provider: anthropic # openai, anthropic, google, ollama
   model: claude-sonnet-4-20250514
   temperature: 0.3
   max_tokens: 4096
 
 # Text editing
 editing:
-  mode: light              # light, medium, aggressive
+  mode: light # light, medium, aggressive
   preserve_voice: true
   max_changes_percent: 15.0
 
@@ -285,4 +284,4 @@ MIT — Free to use for personal and commercial projects.
 
 ---
 
-*Editora — Because writing is only the beginning.*
+_Editora — Because writing is only the beginning._

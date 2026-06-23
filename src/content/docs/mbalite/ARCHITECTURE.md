@@ -1,8 +1,6 @@
 ---
-title: "Architecture — MBA Lite"
+title: 'Architecture — MBA Lite'
 ---
-
-
 
 ## Overview
 
@@ -14,14 +12,14 @@ Astro Components → Static HTML → dist/
 
 ## Components
 
-| Component | Description |
-|-----------|-------------|
-| `Header` | Top navigation with anchor links |
-| `Hero` | Main section with CTA |
-| `Features` | Grid of course benefits |
-| `LeadCapture` | Lead capture form |
-| `AuthorBio` | Author/instructor biography |
-| `Footer` | Footer with links and information |
+| Component     | Description                       |
+| ------------- | --------------------------------- |
+| `Header`      | Top navigation with anchor links  |
+| `Hero`        | Main section with CTA             |
+| `Features`    | Grid of course benefits           |
+| `LeadCapture` | Lead capture form                 |
+| `AuthorBio`   | Author/instructor biography       |
+| `Footer`      | Footer with links and information |
 
 ## Design System
 

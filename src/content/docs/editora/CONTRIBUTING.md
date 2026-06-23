@@ -1,8 +1,6 @@
 ---
-title: "Contributing to Editora"
+title: 'Contributing to Editora'
 ---
-
-
 
 Thank you for contributing! This guide defines the project's standards and workflows.
 
@@ -26,12 +24,12 @@ pip install -e ".[dev]"
 
 ## Code Standards
 
-| Tool | Command | Description |
-|------|---------|-------------|
-| Ruff | `ruff check src/` | Linting |
-| Black | `black src/` | Formatting |
-| Pyright | `pyright src/` | Type checking |
-| Pytest | `pytest` | Unit tests |
+| Tool    | Command           | Description   |
+| ------- | ----------------- | ------------- |
+| Ruff    | `ruff check src/` | Linting       |
+| Black   | `black src/`      | Formatting    |
+| Pyright | `pyright src/`    | Type checking |
+| Pytest  | `pytest`          | Unit tests    |
 
 - **Line length**: 100 characters
 - **Type hints**: Required for all public functions

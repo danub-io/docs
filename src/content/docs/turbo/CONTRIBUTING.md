@@ -1,5 +1,5 @@
 ---
-title: "Contributing to Turbo"
+title: 'Contributing to Turbo'
 ---
 
 # Contributing to Turbo

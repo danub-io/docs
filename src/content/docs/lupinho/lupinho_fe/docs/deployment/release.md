@@ -1,6 +1,6 @@
 ---
-title: "Release Process"
-description: "How releases are made and the changelog is automatically updated"
+title: 'Release Process'
+description: 'How releases are made and the changelog is automatically updated'
 ---
 
 Production deployment is done via GitHub Actions, triggered by semantic tags.
@@ -20,15 +20,15 @@ Production deployment is done via GitHub Actions, triggered by semantic tags.
 
 ## Commit to Changelog Mapping
 
-| Commit prefix | Changelog section |
-|---|---|
-| `feat:` | `### Added` |
-| `fix:` | `### Fixed` |
-| `refactor:` / `style:` | `### Changed` |
-| `perf:` | `### Optimized` |
-| `docs:` | `### Documentation` |
-| `chore:` | Ignored (not included) |
-| `merge` | Ignored (`git log --no-merges`) |
+| Commit prefix          | Changelog section               |
+| ---------------------- | ------------------------------- |
+| `feat:`                | `### Added`                     |
+| `fix:`                 | `### Fixed`                     |
+| `refactor:` / `style:` | `### Changed`                   |
+| `perf:`                | `### Optimized`                 |
+| `docs:`                | `### Documentation`             |
+| `chore:`               | Ignored (not included)          |
+| `merge`                | Ignored (`git log --no-merges`) |
 
 ## Responsible Script
 

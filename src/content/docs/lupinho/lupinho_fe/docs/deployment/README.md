@@ -1,5 +1,5 @@
 ---
-title: "Deploy — Documentation"
+title: 'Deploy — Documentation'
 ---
 
 Guide for deploying the LUPINHO frontend in different environments.

@@ -1,6 +1,6 @@
 ---
-title: "Postmortems — Template and Conventions"
-description: "Standardized structure for recording postmortems across all projects in the ecosystem"
+title: 'Postmortems — Template and Conventions'
+description: 'Standardized structure for recording postmortems across all projects in the ecosystem'
 ---
 
 Postmortems document bugs, discoveries, and important decisions so that knowledge is not lost.
@@ -45,7 +45,7 @@ Copy and adapt the template below:
 
 ```markdown
 ---
-title: "Postmortem NNN: Short problem title"
+title: 'Postmortem NNN: Short problem title'
 ---
 
 # Postmortem NNN: Short problem title
@@ -93,13 +93,13 @@ What was done to fix it. Include before/after code blocks.
 
 ### lupinho_fe
 
-| # | File | Description |
-|---|---------|-----------|
-| 001 | `POSTMORTEM-001-select-scroll-lock` | Select dropdown causes page shrinkage on mobile |
-| 002 | `POSTMORTEM-002-veredito-padding` | Inconsistent padding in the Veredito section (layout-boxed) |
-| 003 | `POSTMORTEM-003-csp-hydration-block` | CSP blocking React component hydration |
-| 004 | `POSTMORTEM-004-edit-tool-selfclosing-tag` | Edit tool converting self-closing JSX tag into invalid closing tag |
-| 005 | `POSTMORTEM-005-hero-horizontal-scroll-padding` | HeroCarousel horizontal padding broken on ultra-wide screens |
-| 006 | `POSTMORTEM-006-ssr-hooks-optimize-deps` | React Hooks error in SSR (Vite + Cloudflare Workerd) |
+| #   | File                                            | Description                                                        |
+| --- | ----------------------------------------------- | ------------------------------------------------------------------ |
+| 001 | `POSTMORTEM-001-select-scroll-lock`             | Select dropdown causes page shrinkage on mobile                    |
+| 002 | `POSTMORTEM-002-veredito-padding`               | Inconsistent padding in the Veredito section (layout-boxed)        |
+| 003 | `POSTMORTEM-003-csp-hydration-block`            | CSP blocking React component hydration                             |
+| 004 | `POSTMORTEM-004-edit-tool-selfclosing-tag`      | Edit tool converting self-closing JSX tag into invalid closing tag |
+| 005 | `POSTMORTEM-005-hero-horizontal-scroll-padding` | HeroCarousel horizontal padding broken on ultra-wide screens       |
+| 006 | `POSTMORTEM-006-ssr-hooks-optimize-deps`        | React Hooks error in SSR (Vite + Cloudflare Workerd)               |
 
 > **Note:** The Starlight sidebar is automatically generated from the `postmortems/` directory. Simply create a new `POSTMORTEM-NNN-description.md` file in the corresponding project directory and it will appear in the navigation without needing to edit the config.

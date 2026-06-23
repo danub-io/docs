@@ -2,4 +2,156 @@
   --sl-sidebar-width: 21.25rem;
   --sl-right-sidebar-width: 17rem;
   --sl-content-max-width: 50rem;
+
+  /* Gray colors */
+  --sl-color-gray-1: #eceef2;
+  --sl-color-gray-2: #c0c8d1;
+  --sl-color-gray-3: #8893a3;
+  --sl-color-gray-4: #545861;
+  --sl-color-gray-5: #353941;
+  --sl-color-gray-6: #24272f;
+  --sl-color-black: #17181c;
+
+  /* Accent colors */
+  --sl-color-accent-low: #1e1b4b;
+  --sl-color-accent: #6366f1;
+  --sl-color-accent-high: #a5b4fc;
+
+  /* Text colors */
+  --sl-color-white: #ffffff;
+
+  /* Background colors */
+  --sl-color-bg: #0f172a;
+  --sl-color-bg-nav: #0f172a;
+  --sl-color-bg-sidebar: #0f172a;
+  --sl-color-bg-inline-code: #1e293b;
+}
+
+:root[data-theme='light'] {
+  --sl-color-gray-1: #24272f;
+  --sl-color-gray-2: #353941;
+  --sl-color-gray-3: #545861;
+  --sl-color-gray-4: #8893a3;
+  --sl-color-gray-5: #c0c8d1;
+  --sl-color-gray-6: #eceef2;
+  --sl-color-gray-7: #f5f6f8;
+  --sl-color-white: #17181c;
+  --sl-color-black: #ffffff;
+  --sl-color-bg: #ffffff;
+}
+
+/* Custom Overrides for Premium Look */
+
+[data-template='splash'] body {
+  background-color: #030712 !important;
+  background-image:
+    radial-gradient(at 50% -20%, rgba(99, 102, 241, 0.25) 0%, transparent 50%),
+    radial-gradient(at 0% 0%, rgba(165, 180, 252, 0.05) 0%, transparent 33%),
+    radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.05) 0%, transparent 33%) !important;
+  background-attachment: fixed !important;
+}
+
+[data-template='splash'] .main-frame {
+  background-color: transparent !important;
+}
+
+[data-template='splash'] .header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  background-color: rgba(3, 7, 18, 0.7) !important;
+  backdrop-filter: blur(12px);
+}
+
+[data-template='splash'] .hero {
+  padding: 10rem 0 6rem 0 !important;
+}
+
+/* Targeting the hero title more aggressively */
+[data-template='splash'] .hero h1 {
+  font-size: clamp(4rem, 12vw, 8rem) !important;
+  line-height: 0.9 !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.05em !important;
+  background: linear-gradient(to bottom right, #fff 30%, #a5b4fc) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  filter: drop-shadow(0 0 30px rgba(99, 102, 241, 0.3)) !important;
+  margin-bottom: 2rem !important;
+}
+
+[data-template='splash'] .hero .tagline {
+  font-size: clamp(1.25rem, 3vw, 1.75rem) !important;
+  color: var(--sl-color-gray-3) !important;
+  max-width: 45rem;
+  margin-inline: auto;
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+/* Secondary headers on landing page */
+[data-template='splash'] .sl-markdown-content h2 {
+  font-size: 3rem !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+  margin-top: 6rem !important;
+  margin-bottom: 2rem !important;
+  border: none !important;
+  text-align: center;
+}
+
+[data-template='splash'] .sl-markdown-content h2::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 4px;
+  background: var(--sl-color-accent);
+  margin: 1rem auto;
+  border-radius: 2px;
+}
+
+.card {
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background: rgba(255, 255, 255, 0.02) !important;
+  backdrop-filter: blur(16px);
+  border-radius: 1.5rem !important;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  padding: 2.5rem !important;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+.card:hover {
+  border-color: rgba(99, 102, 241, 0.5) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  transform: translateY(-10px) scale(1.02);
+  box-shadow:
+    0 20px 40px -15px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(99, 102, 241, 0.2) !important;
+}
+
+/* Links and actions */
+[data-template='splash'] .sl-link-card {
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background: rgba(255, 255, 255, 0.02) !important;
+  border-radius: 1.5rem !important;
+  transition: all 0.4s ease !important;
+}
+
+[data-template='splash'] .sl-link-card:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: var(--sl-color-accent) !important;
+}
+
+[data-template='splash'] .actions a.primary {
+  background: var(--sl-color-accent) !important;
+  border-radius: 99rem !important;
+  padding: 1rem 2.5rem !important;
+  font-size: 1.1rem !important;
+  box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.5) !important;
+}
+
+[data-template='splash'] .actions a.primary:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+  box-shadow: 0 15px 25px -5px rgba(99, 102, 241, 0.6) !important;
 }
