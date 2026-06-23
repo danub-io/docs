@@ -1,5 +1,5 @@
 ---
-title: "LUPINHO Frontend (TechReveal)"
+title: 'LUPINHO Frontend (TechReveal)'
 ---
 
 **Public-facing site that reads from the database to display products, categories, and prices.** It also writes user data (registration, login, Google OAuth, 2FA, user reviews).
@@ -58,16 +58,16 @@ pnpm release                    # Build + deploy (for use with tags)
 
 ## Routes
 
-| Route | Description |
-|-------|-------------|
-| `/` | Home page with featured product and trends |
-| `/:category` | Product listing page by category |
-| `/:category/:slug` | Detailed product page |
-| `/:category/:slug/reviews` | Press reviews for the product |
-| `/:category/:slug/user-reviews` | User reviews for the product |
-| `/guide` | Index of recommendation guides |
-| `/guide/:slug` | Individual guide page with selected products |
-| `/dashboard` | Authenticated user dashboard |
+| Route                           | Description                                  |
+| ------------------------------- | -------------------------------------------- |
+| `/`                             | Home page with featured product and trends   |
+| `/:category`                    | Product listing page by category             |
+| `/:category/:slug`              | Detailed product page                        |
+| `/:category/:slug/reviews`      | Press reviews for the product                |
+| `/:category/:slug/user-reviews` | User reviews for the product                 |
+| `/guide`                        | Index of recommendation guides               |
+| `/guide/:slug`                  | Individual guide page with selected products |
+| `/dashboard`                    | Authenticated user dashboard                 |
 
 Legacy routes (`/product/:slug`, `/category/:category`) have 301 redirects maintained for SEO.
 
@@ -108,13 +108,13 @@ Astro/React Components (props → render)
 
 In-memory cache (Map) with stampede protection (shared `pendingFetch`):
 
-| Service | Cached Methods | TTL |
-|---------|---------------|-----|
-| `servicoCatalogo` | `getCategories()` | 5 min |
-| `servicoMenu` | `getMenu()` | 5 min |
-| `servicoProduto` | `getAllSlugs()` | 1h |
-| `servicoGuia` | `getCategoriesWithGuides()` | 30 min |
-| `servicoInicio` | `getFeaturedProduct()`, `getRecentProducts()` | 2 min |
+| Service           | Cached Methods                                | TTL    |
+| ----------------- | --------------------------------------------- | ------ |
+| `servicoCatalogo` | `getCategories()`                             | 5 min  |
+| `servicoMenu`     | `getMenu()`                                   | 5 min  |
+| `servicoProduto`  | `getAllSlugs()`                               | 1h     |
+| `servicoGuia`     | `getCategoriesWithGuides()`                   | 30 min |
+| `servicoInicio`   | `getFeaturedProduct()`, `getRecentProducts()` | 2 min  |
 
 Cache is invalidated only on server restart (in-memory only).
 
@@ -130,6 +130,7 @@ git push origin v1.0.0
 CI detects the tag, runs lint, tests, build, and automatically deploys to Cloudflare Workers.
 
 For manual test deployment:
+
 ```bash
 pnpm deploy
 ```
@@ -137,6 +138,7 @@ pnpm deploy
 ### Worker Secrets
 
 Before the first deploy, configure the secrets:
+
 ```bash
 pnpm wrangler secret put TURSO_DATABASE_URL
 pnpm wrangler secret put TURSO_AUTH_TOKEN

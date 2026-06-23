@@ -1,5 +1,5 @@
 ---
-title: "Changelog"
+title: 'Changelog'
 ---
 
 All notable changes to this project will be documented in this file.
@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
 - **`review_type` column in `Reviews` table:** Added `review_type` field (`'critic' | 'user'`) via ALTER TABLE to support user reviews on the frontend.
 - **M9: Documentation** — New module at `/docs` that centralizes all project documentation
   - Sidebar with navigation across all documents
@@ -31,10 +32,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Cache bypass via `refresh` parameter**
 
 ### Optimized
+
 - **N+1 queries rewritten:** LEFT JOIN + GROUP BY, Promise.all, native libsql transaction
 - **Batch processing in `update-ia.ts`:** BATCH_SIZE=10, parallel HTTP with Promise.allSettled, conditional writes (only inserts history if price changed > R$5), single 90-day purge at the end
 
 ### Fixed
+
 - **Security:** Fixed SQL Injection in IN clauses via parameterized placeholders (commit `08881d7`)
 - **M4:** Eliminated N+1 bottleneck with batch processing in `processarConsolidacao` (commit `57b4d31`)
 - **M3:** Fixed TypeScript types in `specs_extraidas` (commit `c18c7d9`)
@@ -44,6 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Removed hardcoded credentials:** Removed from `scripts/seed-categories.js`
 
 ### Updated (2026-05-01)
+
 - **API.md:** Added M8 (Settings), M9 (Documentation), Worker & Queue, and Utilities sections
   - 18 M8 Server Actions documented (`ai-models.ts`, `scraping-services.ts`, `logs.ts`, `preferences.ts`)
   - Worker functions (`processNextJob`, `runWorkerBatch`)
@@ -54,12 +58,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **docs/troubleshooting/:** Populated with `database.md`, `scraping.md`, `ai-services.md`, `common-errors.md`
 
 ### Documentation
+
 - **`docs/architecture/schema-banco.md`:** New — complete Turso schema (12 tables, indexes, relationships)
 - **`docs/operations/monitoramento.md`:** New — Pino logging, health check, workers, DLQ, alerts
 - **`docs/development/setup-local.md`:** New — local setup with migrations and troubleshooting
 - **`CONTRIBUTING.md`:** Fixed Node.js version (18+ → >= 22.12.0)
 
 ### Improved
+
 - Project documentation structure
 - Module renames for consistent naming (e.g., `2-busca-link-review` → `2-descoberta`, `5-busca-precos` → `5-precos`)
 
@@ -68,6 +74,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2026-04-15
 
 ### Added
+
 - M1: Entry Module (AI-powered product ingestion)
 - M2: Discovery Module (Web scraping for reviews)
 - M3: Extraction Module (AI-powered technical review analysis)
@@ -87,6 +94,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial documentation (README.md, ARCHITECTURE.md)
 
 ### Configuration
+
 - Next.js 16.2.3 with App Router
 - TypeScript in strict mode
 - Tailwind CSS v4 + Shadcn/ui

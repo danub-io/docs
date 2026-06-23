@@ -1,5 +1,5 @@
 ---
-title: "Deploy on Vercel - LUPINHO Panel"
+title: 'Deploy on Vercel - LUPINHO Panel'
 ---
 
 ## Prerequisites
@@ -45,13 +45,13 @@ The project is already configured for Vercel (serverless). No changes to `next.c
 
 ## Required Environment Variables
 
-| Variable | Description | Where to Get It |
-|----------|-------------|-----------------|
-| `TURSO_DATABASE_URL` | Turso database URL | `turso db show [name] --url` |
-| `TURSO_AUTH_TOKEN` | Access token | `turso db tokens create [name]` |
-| `ENCRYPTION_KEY` | AES-256-CBC key (32 chars) | Generate: `openssl rand -hex 16` |
-| `NEXTAUTH_SECRET` | Secret for next-auth | Generate: `openssl rand -hex 32` |
-| `GOOGLE_API_KEY` | (Optional) Google AI key | Google AI Studio |
+| Variable             | Description                | Where to Get It                  |
+| -------------------- | -------------------------- | -------------------------------- |
+| `TURSO_DATABASE_URL` | Turso database URL         | `turso db show [name] --url`     |
+| `TURSO_AUTH_TOKEN`   | Access token               | `turso db tokens create [name]`  |
+| `ENCRYPTION_KEY`     | AES-256-CBC key (32 chars) | Generate: `openssl rand -hex 16` |
+| `NEXTAUTH_SECRET`    | Secret for next-auth       | Generate: `openssl rand -hex 32` |
+| `GOOGLE_API_KEY`     | (Optional) Google AI key   | Google AI Studio                 |
 
 ## Post-Deploy Verification
 
@@ -62,9 +62,11 @@ The project is already configured for Vercel (serverless). No changes to `next.c
 ## Troubleshooting
 
 **Turso connection error:**
+
 - Check if the token has expired: `turso db tokens list [name]`
 - Confirm the URL is in the correct format (`libsql://...`)
 
 **Build fails:**
+
 - Verify all env vars are set
 - Test the build locally: `pnpm build`

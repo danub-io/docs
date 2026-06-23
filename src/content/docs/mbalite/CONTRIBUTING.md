@@ -1,8 +1,6 @@
 ---
-title: "Contributing — MBA Lite"
+title: 'Contributing — MBA Lite'
 ---
-
-
 
 ## Setup
 

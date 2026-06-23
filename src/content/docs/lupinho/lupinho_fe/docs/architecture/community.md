@@ -1,10 +1,11 @@
 ---
-title: "Community Module"
+title: 'Community Module'
 ---
 
 ## Overview
 
 The **Community** module groups all social interaction features of the site:
+
 - **Auth** — Login/registration, Google OAuth, 2FA, session management
 - **User reviews** — Creation and display of user reviews on products
 - **Feed** — Community page with recent reviews
@@ -73,16 +74,16 @@ pnpm wrangler secret put COMMUNITY_ENABLED
 
 ## UI States
 
-| Component | Disabled | Enabled (not logged in) | Enabled (logged in) |
-|-----------|----------|------------------------|---------------------|
-| `LoginDialog` | Not rendered | "Sign in" button visible | Hidden |
-| `UserMenu` | Not rendered | Hidden | User name/avatar |
-| `DashboardPanel` | Page redirects to 404 | Redirects to /?login=required | Functional dashboard |
-| `WriteReviewButton` | Not rendered | "Sign in" button (opens LoginDialog) | Review form |
-| `ProductUserReviews` | Not rendered | Cards only (no button) | Cards + button |
-| `/community` | Redirects 404 | Review feed | Feed + actions |
-| `/api/auth/*` | Returns 404 | Functional | Functional |
-| `/api/reviews/*` | Returns 404 | Returns 401 (no token) | Functional |
+| Component            | Disabled              | Enabled (not logged in)              | Enabled (logged in)  |
+| -------------------- | --------------------- | ------------------------------------ | -------------------- |
+| `LoginDialog`        | Not rendered          | "Sign in" button visible             | Hidden               |
+| `UserMenu`           | Not rendered          | Hidden                               | User name/avatar     |
+| `DashboardPanel`     | Page redirects to 404 | Redirects to /?login=required        | Functional dashboard |
+| `WriteReviewButton`  | Not rendered          | "Sign in" button (opens LoginDialog) | Review form          |
+| `ProductUserReviews` | Not rendered          | Cards only (no button)               | Cards + button       |
+| `/community`         | Redirects 404         | Review feed                          | Feed + actions       |
+| `/api/auth/*`        | Returns 404           | Functional                           | Functional           |
+| `/api/reviews/*`     | Returns 404           | Returns 401 (no token)               | Functional           |
 
 ## Migration
 

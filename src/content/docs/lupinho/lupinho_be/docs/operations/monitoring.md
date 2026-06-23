@@ -1,5 +1,5 @@
 ---
-title: "Monitoring and Operations — LUPINHO Backend"
+title: 'Monitoring and Operations — LUPINHO Backend'
 ---
 
 This document describes how to monitor and operate the backend in production.
@@ -49,12 +49,12 @@ logger.error({ err }, 'Scraping processing failed');
 
 ### Levels
 
-| Level | Usage |
-|-------|-------|
-| `info` | Normal operations (job start/finish) |
-| `warn` | Non-critical abnormal situations |
-| `error` | Failures requiring attention |
-| `fatal` | Failures that prevent operation |
+| Level   | Usage                                |
+| ------- | ------------------------------------ |
+| `info`  | Normal operations (job start/finish) |
+| `warn`  | Non-critical abnormal situations     |
+| `error` | Failures requiring attention         |
+| `fatal` | Failures that prevent operation      |
 
 ### Database Logs
 
@@ -123,9 +123,9 @@ pnpm exec tsx -e "
 
 ## Recommended Alerts
 
-| Condition | Action |
-|-----------|--------|
-| `fila_processamento` has > 50 `pendente` jobs | Worker may be offline |
-| Worker no heartbeat for > 2 min | Restart worker |
-| More than 10 jobs in `falha_critica` | Review DLQ manually |
-| 500 error on `/api/health` | Server may be overloaded |
+| Condition                                     | Action                   |
+| --------------------------------------------- | ------------------------ |
+| `fila_processamento` has > 50 `pendente` jobs | Worker may be offline    |
+| Worker no heartbeat for > 2 min               | Restart worker           |
+| More than 10 jobs in `falha_critica`          | Review DLQ manually      |
+| 500 error on `/api/health`                    | Server may be overloaded |

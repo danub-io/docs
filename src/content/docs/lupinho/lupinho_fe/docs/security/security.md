@@ -1,5 +1,5 @@
 ---
-title: "Security — LUPINHO Frontend"
+title: 'Security — LUPINHO Frontend'
 ---
 
 This document describes the security measures implemented in the frontend.
@@ -29,13 +29,13 @@ curl -I http://localhost:4321 | grep content-security-policy
 
 ## HTTP Security Headers
 
-| Header | Value | Effect |
-|--------|-------|--------|
-| `Strict-Transport-Security` | `max-age=63072000; includeSubDomains; preload` | Forces HTTPS for 2 years with preload |
-| `X-Frame-Options` | `DENY` | Protects against clickjacking |
-| `X-Content-Type-Options` | `nosniff` | Prevents MIME sniffing |
-| `Referrer-Policy` | `strict-origin-when-cross-origin` | Controls referrer header |
-| `Permissions-Policy` | `camera=(), microphone=(), geolocation=(), interest-cohort=()` | Disables sensitive APIs and FLoC |
+| Header                      | Value                                                          | Effect                                |
+| --------------------------- | -------------------------------------------------------------- | ------------------------------------- |
+| `Strict-Transport-Security` | `max-age=63072000; includeSubDomains; preload`                 | Forces HTTPS for 2 years with preload |
+| `X-Frame-Options`           | `DENY`                                                         | Protects against clickjacking         |
+| `X-Content-Type-Options`    | `nosniff`                                                      | Prevents MIME sniffing                |
+| `Referrer-Policy`           | `strict-origin-when-cross-origin`                              | Controls referrer header              |
+| `Permissions-Policy`        | `camera=(), microphone=(), geolocation=(), interest-cohort=()` | Disables sensitive APIs and FLoC      |
 
 Configured in the Astro middleware (`src/middleware.ts`).
 
@@ -79,13 +79,13 @@ await db.execute(`SELECT * FROM Produtos WHERE slug = '${slug}'`);
 
 The following routes are conditionally protected by the `COMMUNITY_ENABLED` feature flag:
 
-| Route | Behavior (disabled) |
-|-------|---------------------|
-| `/community` | Returns 404 |
-| `/dashboard` | Returns 404 |
-| `/api/auth/*` | Returns 404 |
-| `/api/reviews/*` | Returns 404 |
-| `/user-reviews` | Returns 404 |
+| Route            | Behavior (disabled) |
+| ---------------- | ------------------- |
+| `/community`     | Returns 404         |
+| `/dashboard`     | Returns 404         |
+| `/api/auth/*`    | Returns 404         |
+| `/api/reviews/*` | Returns 404         |
+| `/user-reviews`  | Returns 404         |
 
 > The middleware checks `COMMUNITY_ENABLED()` before loading `currentUser`. When disabled, no community routes are accessible regardless of authentication.
 
@@ -117,7 +117,11 @@ system (`<astro-island>`):
 
 ```html
 <script>
-  (self.Astro || (self.Astro = {})).load = async (fn) => { await (await fn())() };
+  (self.Astro || (self.Astro = {})).load = async (fn) => {
+    await (
+      await fn()
+    )();
+  };
   window.dispatchEvent(new Event('astro:load'));
 </script>
 ```

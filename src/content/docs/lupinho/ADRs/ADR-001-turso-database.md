@@ -1,8 +1,6 @@
 ---
-title: "ADR-001: Turso as the Database"
+title: 'ADR-001: Turso as the Database'
 ---
-
-
 
 **Date:** 2026-04-15
 **Status:** Accepted
@@ -10,6 +8,7 @@ title: "ADR-001: Turso as the Database"
 ## Context
 
 The LUPINHO ecosystem needs a database that:
+
 - Is accessible both from the backend (Next.js) and the frontend (Astro)
 - Supports SSR with low latency
 - Has global read replication (data queried by the frontend worldwide)
@@ -22,12 +21,12 @@ We chose **Turso** (distributed SQLite via libsql) as the single database for th
 
 ## Alternatives Considered
 
-| Alternative | Reason for Rejection |
-|------------|-------------------|
-| PostgreSQL (Supabase/Neon) | More operational complexity, higher cost for current volume |
-| MongoDB | Non-relational, would complicate queries with joins across products, reviews, and affiliates |
-| PlanetScale (MySQL) | Good, but Turso offers SQLite with simpler edge replication |
-| Local SQLite | No replication, no shared access between BE and FE |
+| Alternative                | Reason for Rejection                                                                         |
+| -------------------------- | -------------------------------------------------------------------------------------------- |
+| PostgreSQL (Supabase/Neon) | More operational complexity, higher cost for current volume                                  |
+| MongoDB                    | Non-relational, would complicate queries with joins across products, reviews, and affiliates |
+| PlanetScale (MySQL)        | Good, but Turso offers SQLite with simpler edge replication                                  |
+| Local SQLite               | No replication, no shared access between BE and FE                                           |
 
 ## Consequences
 

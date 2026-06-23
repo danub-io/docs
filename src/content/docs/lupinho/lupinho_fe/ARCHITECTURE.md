@@ -1,5 +1,5 @@
 ---
-title: "Architecture — LUPINHO Frontend"
+title: 'Architecture — LUPINHO Frontend'
 ---
 
 This document details the architectural decisions, data flow, and development patterns for the frontend.
@@ -72,13 +72,13 @@ Astro/React Components (props → render)
 
 Stampede-protected cache (Map-based TTL + shared `pendingFetch`):
 
-| Service | Method | TTL |
-|---------|--------|-----|
-| `servicoCatalogo` | `obterCategorias()` | 5 min |
-| `servicoMenu` | `obterMenu()` | 5 min |
-| `servicoProduto` | `obterTodosSlugs()` | 1h |
-| `servicoGuia` | `obterCategoriasComGuias()` | 30 min |
-| `servicoInicio` | `obterProdutosDestaque()`, `obterProdutosRecentes()` | 2 min |
+| Service           | Method                                               | TTL    |
+| ----------------- | ---------------------------------------------------- | ------ |
+| `servicoCatalogo` | `obterCategorias()`                                  | 5 min  |
+| `servicoMenu`     | `obterMenu()`                                        | 5 min  |
+| `servicoProduto`  | `obterTodosSlugs()`                                  | 1h     |
+| `servicoGuia`     | `obterCategoriasComGuias()`                          | 30 min |
+| `servicoInicio`   | `obterProdutosDestaque()`, `obterProdutosRecentes()` | 2 min  |
 
 Cache is invalidated only on server restart.
 
@@ -88,33 +88,33 @@ Each domain has a service that encapsulates SQL queries and transformations.
 
 ### Core Services
 
-| Service | File | Functions |
-|---------|------|-----------|
+| Service           | File                                   | Functions           |
+| ----------------- | -------------------------------------- | ------------------- |
 | `servicoCatalogo` | `src/core/services/servicoCatalogo.ts` | `obterCategorias()` |
-| `servicoMenu` | `src/core/services/servicoMenu.ts` | `obterMenu()` |
+| `servicoMenu`     | `src/core/services/servicoMenu.ts`     | `obterMenu()`       |
 
 ### Module Services
 
-| Module | Service | Functions |
-|--------|---------|-----------|
-| Home | `servicoInicio` | `obterProdutosDestaque()`, `obterProdutosRecentes()` |
-| Product | `servicoProduto` | `obterProdutoPorSlug()`, `obterTodosSlugs()`, `obterAvaliacoesCriticas()`, `obterAvaliacoesUsuarios()`, `obterAfiliados()`, `obterProdutoCompleto()` |
-| Category | `servicoCategoria` + `servicoSecoesCategoria` | `obterProdutosPorCategoria()`, `obterSecoes()` |
-| Guide | `servicoGuia` | `obterGuiasPorCategoria()`, `obterGuiaPorSlug()`, `obterProdutosDoGuia()` |
-| Search | `servicoBusca` | `buscar()` |
-| Compare | `servicoComparacao` | `obterProdutosComparacao()`, `obterTopProdutos()`, `obterSugestoesBusca()` |
-| Community | `servicoComunidade` | `obterAvaliacoesRecentes()` |
-| Auth | `servicoAuth` | `verificarToken()`, `buscarUsuarioPorId()`, `usuarioParaPublico()` |
+| Module    | Service                                       | Functions                                                                                                                                            |
+| --------- | --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Home      | `servicoInicio`                               | `obterProdutosDestaque()`, `obterProdutosRecentes()`                                                                                                 |
+| Product   | `servicoProduto`                              | `obterProdutoPorSlug()`, `obterTodosSlugs()`, `obterAvaliacoesCriticas()`, `obterAvaliacoesUsuarios()`, `obterAfiliados()`, `obterProdutoCompleto()` |
+| Category  | `servicoCategoria` + `servicoSecoesCategoria` | `obterProdutosPorCategoria()`, `obterSecoes()`                                                                                                       |
+| Guide     | `servicoGuia`                                 | `obterGuiasPorCategoria()`, `obterGuiaPorSlug()`, `obterProdutosDoGuia()`                                                                            |
+| Search    | `servicoBusca`                                | `buscar()`                                                                                                                                           |
+| Compare   | `servicoComparacao`                           | `obterProdutosComparacao()`, `obterTopProdutos()`, `obterSugestoesBusca()`                                                                           |
+| Community | `servicoComunidade`                           | `obterAvaliacoesRecentes()`                                                                                                                          |
+| Auth      | `servicoAuth`                                 | `verificarToken()`, `buscarUsuarioPorId()`, `usuarioParaPublico()`                                                                                   |
 
 ## Islands Architecture
 
 The project uses Astro Islands — interactive React components embedded in static HTML:
 
-| Type | Usage | Hydration |
-|------|-------|-----------|
-| **Native Astro** | Layouts, pages, lists | Zero JS on client |
-| **React Island** | ScoreBadge, CollapsibleReviewCard | `client:visible` or `client:idle` |
-| **Interactive React** | LoginDialog, UserMenu, SearchCommand | `client:load` / `client:idle` |
+| Type                  | Usage                                | Hydration                         |
+| --------------------- | ------------------------------------ | --------------------------------- |
+| **Native Astro**      | Layouts, pages, lists                | Zero JS on client                 |
+| **React Island**      | ScoreBadge, CollapsibleReviewCard    | `client:visible` or `client:idle` |
+| **Interactive React** | LoginDialog, UserMenu, SearchCommand | `client:load` / `client:idle`     |
 
 ### Selection Criteria
 
@@ -124,12 +124,12 @@ The project uses Astro Islands — interactive React components embedded in stat
 
 ## Types and Validation (Zod v4)
 
-| Schema | File | Usage |
-|--------|------|-------|
-| `ProductSchema` | `src/core/types/product.ts` | Product validation |
-| `ReviewSchema` | `src/core/types/review.ts` | Press and user reviews |
-| `GuideSchema` | `src/core/types/guide.ts` | Recommendation guides |
-| `LabelSchema` | `src/core/types/label.ts` | Category labels |
+| Schema          | File                        | Usage                  |
+| --------------- | --------------------------- | ---------------------- |
+| `ProductSchema` | `src/core/types/product.ts` | Product validation     |
+| `ReviewSchema`  | `src/core/types/review.ts`  | Press and user reviews |
+| `GuideSchema`   | `src/core/types/guide.ts`   | Recommendation guides  |
+| `LabelSchema`   | `src/core/types/label.ts`   | Category labels        |
 
 ## CSS Strategy (Tailwind v4)
 
@@ -140,43 +140,43 @@ The project uses Astro Islands — interactive React components embedded in stat
 
 ### Layout Tokens
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| `--spacing-container-max` | 1280px | Max container width |
-| `--spacing-gutter` | 24px | Gap between grid items |
-| `--spacing-section-gap` | 32px | Spacing between sections |
-| `--spacing-box-padding` | 24px | Card inner padding |
+| Token                     | Value  | Usage                    |
+| ------------------------- | ------ | ------------------------ |
+| `--spacing-container-max` | 1280px | Max container width      |
+| `--spacing-gutter`        | 24px   | Gap between grid items   |
+| `--spacing-section-gap`   | 32px   | Spacing between sections |
+| `--spacing-box-padding`   | 24px   | Card inner padding       |
 
 ### Typography Tokens
 
-| Token | Value | Usage |
-|-------|-------|-------|
+| Token            | Value            | Usage                                         |
+| ---------------- | ---------------- | --------------------------------------------- |
 | `--font-heading` | 'Inter Variable' | Headings (display, page-title, section-title) |
-| `--font-body` | 'Inter Variable' | Body text |
-| `--font-display` | 'Inter Variable' | Uppercase sections (section-title) |
-| `--font-sans` | 'Inter Variable' | General UI (nav, meta, labels) |
+| `--font-body`    | 'Inter Variable' | Body text                                     |
+| `--font-display` | 'Inter Variable' | Uppercase sections (section-title)            |
+| `--font-sans`    | 'Inter Variable' | General UI (nav, meta, labels)                |
 
 ### Typography Utilities
 
 14 `type-*` utility classes in `src/core/styles/global.css`, inspired by the RTINGS.com typography system:
 
-| Class | Usage | Font | Size | Weight |
-|-------|-------|------|------|--------|
-| `type-display` | Hero title on home | heading | 4xl/5xl | medium |
-| `type-page-title` | Page title | heading | 2xl/4xl | medium |
-| `type-section-title` | Section title (uppercase) | display | xl | normal |
-| `type-subsection` | Section subtitle | heading | xl | medium |
-| `type-card-title` | Card title | heading | base | semibold |
-| `type-body` | Body text | (inherited) | base | normal |
-| `type-body-sm` | Small body | (inherited) | sm | normal |
-| `type-body-lg` | Large body | (inherited) | lg | normal |
-| `type-meta` | UI metadata | sans | xs | medium |
-| `type-caption` | Captions | sans | xs | normal |
-| `type-overline` | Overline label | sans | 10px | bold |
-| `type-micro` | Micro label | sans | 10px | bold |
-| `type-card-meta` | Card metadata | sans | 11px | normal |
-| `type-nav-link` | Navigation links | sans | sm | normal |
-| `type-view-all` | "View all" link | sans | xs | medium |
+| Class                | Usage                     | Font        | Size    | Weight   |
+| -------------------- | ------------------------- | ----------- | ------- | -------- |
+| `type-display`       | Hero title on home        | heading     | 4xl/5xl | medium   |
+| `type-page-title`    | Page title                | heading     | 2xl/4xl | medium   |
+| `type-section-title` | Section title (uppercase) | display     | xl      | normal   |
+| `type-subsection`    | Section subtitle          | heading     | xl      | medium   |
+| `type-card-title`    | Card title                | heading     | base    | semibold |
+| `type-body`          | Body text                 | (inherited) | base    | normal   |
+| `type-body-sm`       | Small body                | (inherited) | sm      | normal   |
+| `type-body-lg`       | Large body                | (inherited) | lg      | normal   |
+| `type-meta`          | UI metadata               | sans        | xs      | medium   |
+| `type-caption`       | Captions                  | sans        | xs      | normal   |
+| `type-overline`      | Overline label            | sans        | 10px    | bold     |
+| `type-micro`         | Micro label               | sans        | 10px    | bold     |
+| `type-card-meta`     | Card metadata             | sans        | 11px    | normal   |
+| `type-nav-link`      | Navigation links          | sans        | sm      | normal   |
+| `type-view-all`      | "View all" link           | sans        | xs      | medium   |
 
 > ShadCN UI components now declare `font-sans` explicitly instead of inheriting from `html`.
 
@@ -199,9 +199,11 @@ The middleware (`src/middleware.ts`) applies:
 ### CSP policy includes `'unsafe-inline'`
 
 The middleware CSP (`src/middleware.ts:187`) allows Astro's inline hydration scripts:
+
 ```
 script-src 'self' 'unsafe-inline'
 ```
+
 React islands hydrate correctly via `<astro-island>` elements.
 
 **Historical note:** Astro 6 requires `'unsafe-inline'` in the `script-src` directive for React component hydration. Without it, islands render SSR HTML but never hydrate.
@@ -218,6 +220,7 @@ pnpm test:coverage     # With coverage report
 **Target coverage:** lines 80%, functions 75%, branches 70%
 
 **Patterns:**
+
 - DB mocked with `vi.mock('@/core/lib/db')`
 - Tests live in `__tests__/` next to the file under test
 
@@ -255,8 +258,8 @@ git push origin v1.0.0
 
 CI detects the tag, runs lint, tests, build, and deploys to Cloudflare Workers.
 
-| Type | Example |
-|------|---------|
-| New feature | `v1.1.0` |
-| Hotfix | `v1.1.1` |
+| Type            | Example  |
+| --------------- | -------- |
+| New feature     | `v1.1.0` |
+| Hotfix          | `v1.1.1` |
 | Breaking change | `v2.0.0` |

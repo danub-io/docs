@@ -1,8 +1,6 @@
 ---
-title: "ADR-002: Astro Islands + React for Interactive Components"
+title: 'ADR-002: Astro Islands + React for Interactive Components'
 ---
-
-
 
 **Date:** 2026-04-15
 **Status:** Accepted
@@ -22,12 +20,12 @@ We chose **Astro 6** with **Islands Architecture** as the main framework, using 
 
 ## Alternatives Considered
 
-| Alternative | Reason for Rejection |
-|------------|-------------------|
-| Next.js SPA | All JS is sent to the client, hurting performance and SEO |
-| Remix | Similar to Next.js, no islands concept |
-| Qwik | Smaller ecosystem, fewer integrations |
-| Pure Astro (without React) | Would lose the UI component ecosystem (shadcn) |
+| Alternative                | Reason for Rejection                                      |
+| -------------------------- | --------------------------------------------------------- |
+| Next.js SPA                | All JS is sent to the client, hurting performance and SEO |
+| Remix                      | Similar to Next.js, no islands concept                    |
+| Qwik                       | Smaller ecosystem, fewer integrations                     |
+| Pure Astro (without React) | Would lose the UI component ecosystem (shadcn)            |
 
 ## Consequences
 

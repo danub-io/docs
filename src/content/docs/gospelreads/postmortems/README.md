@@ -1,5 +1,5 @@
 ---
-title: "Postmortems — GospelReads"
+title: 'Postmortems — GospelReads'
 ---
 
 This directory stores postmortems for the GospelReads project.

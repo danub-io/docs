@@ -1,5 +1,5 @@
 ---
-title: "Postmortems — MBA Lite"
+title: 'Postmortems — MBA Lite'
 ---
 
 This directory stores postmortems for the MBA Lite project.

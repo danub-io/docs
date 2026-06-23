@@ -1,5 +1,5 @@
 ---
-title: "Architecture Diagrams - LUPINHO Panel"
+title: 'Architecture Diagrams - LUPINHO Panel'
 ---
 
 ## Main Pipeline (M1 → M7)

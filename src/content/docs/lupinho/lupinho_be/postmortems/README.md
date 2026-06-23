@@ -1,5 +1,5 @@
 ---
-title: "Postmortems — lupinho_be"
+title: 'Postmortems — lupinho_be'
 ---
 
 This directory stores postmortems for the LUPINHO backend.

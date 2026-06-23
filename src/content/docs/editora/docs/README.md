@@ -1,8 +1,6 @@
 ---
-title: "Documentation — Editora"
+title: 'Documentation — Editora'
 ---
-
-
 
 Project documentation index.
 

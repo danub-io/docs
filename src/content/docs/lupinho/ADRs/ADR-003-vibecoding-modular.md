@@ -1,8 +1,6 @@
 ---
-title: "ADR-003: Modular Structure for AI-Assisted Development"
+title: 'ADR-003: Modular Structure for AI-Assisted Development'
 ---
-
-
 
 **Date:** 2026-04-15
 **Status:** Accepted
@@ -10,6 +8,7 @@ title: "ADR-003: Modular Structure for AI-Assisted Development"
 ## Context
 
 The project is developed with intensive AI assistance (code agents). We needed a structure that:
+
 - Minimizes the context needed per task
 - Isolates domains to prevent side effects
 - Makes the code easier for AIs with limited context windows to understand
@@ -29,11 +28,11 @@ src/
 
 ## Alternatives Considered
 
-| Alternative | Reason for Rejection |
-|------------|-------------------|
+| Alternative                          | Reason for Rejection                               |
+| ------------------------------------ | -------------------------------------------------- |
 | Flat (everything in folders by type) | Context too large for AIs, hard to isolate changes |
-| Feature-Sliced Design | Too much ceremony for the project size |
-| Monolithic | Violates the vibecoding principle |
+| Feature-Sliced Design                | Too much ceremony for the project size             |
+| Monolithic                           | Violates the vibecoding principle                  |
 
 ## Consequences
 

@@ -1,5 +1,5 @@
 ---
-title: "Local Setup — LUPINHO Frontend"
+title: 'Local Setup — LUPINHO Frontend'
 ---
 
 Step-by-step guide for setting up the frontend development environment.
@@ -92,16 +92,16 @@ Access http://localhost:4321
 
 ## Useful Commands
 
-| Command | Description |
-|---------|-------------|
-| `pnpm dev` | Dev server with hot-reload |
-| `pnpm build` | Production build |
-| `pnpm preview` | Build preview |
-| `pnpm lint` | Check lint |
-| `pnpm format` | Format code |
-| `pnpm test:run` | Unit tests |
-| `pnpm test:coverage` | Tests with coverage |
-| `pnpm test:e2e` | E2E tests (Playwright) |
+| Command              | Description                |
+| -------------------- | -------------------------- |
+| `pnpm dev`           | Dev server with hot-reload |
+| `pnpm build`         | Production build           |
+| `pnpm preview`       | Build preview              |
+| `pnpm lint`          | Check lint                 |
+| `pnpm format`        | Format code                |
+| `pnpm test:run`      | Unit tests                 |
+| `pnpm test:coverage` | Tests with coverage        |
+| `pnpm test:e2e`      | E2E tests (Playwright)     |
 
 ## Troubleshooting
 

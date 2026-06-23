@@ -1,5 +1,5 @@
 ---
-title: "Repository Pattern - LUPINHO Panel"
+title: 'Repository Pattern - LUPINHO Panel'
 ---
 
 ## Overview
@@ -20,28 +20,28 @@ src/lib/repositories/
 ## Example: cms-repository.ts
 
 ```typescript
-import { db } from "@/lib/db";
-import { eq, like, and, SQL } from "drizzle-orm";
-import { produtos } from "@/db/schema";
+import { db } from '@/lib/db';
+import { eq, like, and, SQL } from 'drizzle-orm';
+import { produtos } from '@/db/schema';
 
 export async function getProdutos(filters?: {
-    categoria?: string;
-    marca?: string;
-    lancamento?: string;
+  categoria?: string;
+  marca?: string;
+  lancamento?: string;
 }) {
-    const conditions: SQL[] = [];
+  const conditions: SQL[] = [];
 
-    if (filters?.categoria) {
-        conditions.push(eq(produtos.categoria, filters.categoria));
-    }
-    if (filters?.marca) {
-        conditions.push(eq(produtos.marca, filters.marca));
-    }
+  if (filters?.categoria) {
+    conditions.push(eq(produtos.categoria, filters.categoria));
+  }
+  if (filters?.marca) {
+    conditions.push(eq(produtos.marca, filters.marca));
+  }
 
-    return await db
-        .select()
-        .from(produtos)
-        .where(conditions.length > 0 ? and(...conditions) : undefined);
+  return await db
+    .select()
+    .from(produtos)
+    .where(conditions.length > 0 ? and(...conditions) : undefined);
 }
 ```
 

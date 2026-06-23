@@ -1,8 +1,6 @@
 ---
-title: "Editora Web — Web Interface"
+title: 'Editora Web — Web Interface'
 ---
-
-
 
 Modern web interface for Editora, built with Next.js, Tailwind CSS, and shadcn/ui.
 
@@ -53,12 +51,14 @@ src/
 ## Design System
 
 ### Colors
+
 - **Primary**: Blue (#3B82F6)
 - **Secondary**: Gray (#64748B)
 - **Background**: White/Light gray
 - **Text**: Dark gray
 
 ### Typography
+
 - **Interface**: Inter (sans-serif)
 - **Editor**: Georgia (serif)
 

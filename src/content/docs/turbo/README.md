@@ -1,5 +1,5 @@
 ---
-title: "Turbo — AI Agent Orchestrator"
+title: 'Turbo — AI Agent Orchestrator'
 ---
 
 # Turbo — AI Agent Orchestrator
@@ -407,11 +407,11 @@ pytest tests/pipeline/test_integration.py -v
 
 ## Environment Variables
 
-| Variable          | Description                     | Default                        |
-| ----------------- | ------------------------------- | ------------------------------ |
-| `TURBO_DIR`       | Turbo installation directory    | Auto-detected                  |
-| `TURBO_PLANS_DIR` | Directory for generated plans   | `<turbo>/plans/`               |
-| `PI_BIN`          | Path to the pi binary           | Auto-detected via `which pi`   |
+| Variable          | Description                   | Default                      |
+| ----------------- | ----------------------------- | ---------------------------- |
+| `TURBO_DIR`       | Turbo installation directory  | Auto-detected                |
+| `TURBO_PLANS_DIR` | Directory for generated plans | `<turbo>/plans/`             |
+| `PI_BIN`          | Path to the pi binary         | Auto-detected via `which pi` |
 
 ## Configuration
 

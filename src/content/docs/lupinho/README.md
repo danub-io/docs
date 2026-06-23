@@ -1,5 +1,5 @@
 ---
-title: "LUPINHO — Hardware Curation Ecosystem"
+title: 'LUPINHO — Hardware Curation Ecosystem'
 ---
 
 Welcome to **LUPINHO** (TechReveal), an automated ecosystem for hardware analysis, comparison, and curation. This project leverages Artificial Intelligence and web automation to turn raw data into valuable business insights.
@@ -8,10 +8,10 @@ Welcome to **LUPINHO** (TechReveal), an automated ecosystem for hardware analysi
 
 The ecosystem is split into two main repositories that share the same **Turso (SQLite)** database.
 
-| Repository | Technology | Role in the Ecosystem |
-| :--- | :--- | :--- |
-| [**lupinho_be**](./lupinho_be) | Next.js 16+, Turso, Pino | **Backend / Panel:** Automation (M1-M6), Scrapers, and AI Processing |
-| [**lupinho_fe**](./lupinho_fe) | Astro 6+, React 19, Tailwind v4 | **Frontend / Public:** High-performance interface optimized for SEO |
+| Repository                     | Technology                      | Role in the Ecosystem                                                |
+| :----------------------------- | :------------------------------ | :------------------------------------------------------------------- |
+| [**lupinho_be**](./lupinho_be) | Next.js 16+, Turso, Pino        | **Backend / Panel:** Automation (M1-M6), Scrapers, and AI Processing |
+| [**lupinho_fe**](./lupinho_fe) | Astro 6+, React 19, Tailwind v4 | **Frontend / Public:** High-performance interface optimized for SEO  |
 
 ## Data Flow
 
@@ -30,7 +30,7 @@ The **Backend** injects processed data (reviews, prices, images). The **Frontend
 
 ## Documentation
 
-| Project | Documents |
-|---------|-----------|
+| Project        | Documents                                                                                                                                                                                                      |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **lupinho_fe** | [README](./lupinho_fe/README.md), [ARCHITECTURE](./lupinho_fe/ARCHITECTURE.md), [CONTRIBUTING](./lupinho_fe/CONTRIBUTING.md), [DATA_LAYER](./lupinho_fe/DATA_LAYER.md), [CHANGELOG](./lupinho_fe/CHANGELOG.md) |
-| **lupinho_be** | [README](./lupinho_be/README.md), [ARCHITECTURE](./lupinho_be/ARCHITECTURE.md), [CONTRIBUTING](./lupinho_be/CONTRIBUTING.md), [API](./lupinho_be/API.md), [CHANGELOG](./lupinho_be/CHANGELOG.md) |
+| **lupinho_be** | [README](./lupinho_be/README.md), [ARCHITECTURE](./lupinho_be/ARCHITECTURE.md), [CONTRIBUTING](./lupinho_be/CONTRIBUTING.md), [API](./lupinho_be/API.md), [CHANGELOG](./lupinho_be/CHANGELOG.md)               |

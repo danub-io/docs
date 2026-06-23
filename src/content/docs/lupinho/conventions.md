@@ -1,6 +1,6 @@
 ---
-title: "Coding Conventions for AI Development"
-description: "Naming conventions, folder structure, and error handling patterns for consistent code generation"
+title: 'Coding Conventions for AI Development'
+description: 'Naming conventions, folder structure, and error handling patterns for consistent code generation'
 ---
 
 This document defines the LUPINHO ecosystem conventions so that AI tools generate code consistent with the rest of the project.
@@ -46,23 +46,23 @@ src/
 
 ### Files
 
-| Type | Pattern | Example |
-|------|---------|---------|
-| Service | `servico[Nome].ts` | `servicoProduto.ts`, `servicoBusca.ts` |
-| Astro Component | `[Nome].astro` | `ProdutoDestaque.astro`, `CardGuia.astro` |
-| React Component | `[Nome].tsx` | `NotaBadge.tsx`, `LoginDialog.tsx` |
-| Zod Schema | In type file | `ProductSchema` in `product.ts` |
-| Test | `__tests__/[nome].test.ts` | `__tests__/servicoProduto.test.ts` |
-| Repository (BE) | `[modulo]-repository.ts` | `cms-repository.ts` |
+| Type            | Pattern                    | Example                                   |
+| --------------- | -------------------------- | ----------------------------------------- |
+| Service         | `servico[Nome].ts`         | `servicoProduto.ts`, `servicoBusca.ts`    |
+| Astro Component | `[Nome].astro`             | `ProdutoDestaque.astro`, `CardGuia.astro` |
+| React Component | `[Nome].tsx`               | `NotaBadge.tsx`, `LoginDialog.tsx`        |
+| Zod Schema      | In type file               | `ProductSchema` in `product.ts`           |
+| Test            | `__tests__/[nome].test.ts` | `__tests__/servicoProduto.test.ts`        |
+| Repository (BE) | `[modulo]-repository.ts`   | `cms-repository.ts`                       |
 
 ### Functions and Methods
 
-| Context | Pattern | Example |
-|---------|---------|---------|
-| Services (query) | `obter*()` | `obterProdutoPorSlug()`, `obterCategorias()` |
-| Services (mutation) | `criar*()`, `atualizar*()`, `deletar*()` | `criarAvaliacao()` |
-| Server Actions (BE) | `processar*()`, `get*()`, `salvar*()` | `processarIngestao()`, `getAIModels()` |
-| Repositories (BE) | `get*()`, `update*()`, `delete*()` | `getProdutos()`, `updateProduto()` |
+| Context             | Pattern                                  | Example                                      |
+| ------------------- | ---------------------------------------- | -------------------------------------------- |
+| Services (query)    | `obter*()`                               | `obterProdutoPorSlug()`, `obterCategorias()` |
+| Services (mutation) | `criar*()`, `atualizar*()`, `deletar*()` | `criarAvaliacao()`                           |
+| Server Actions (BE) | `processar*()`, `get*()`, `salvar*()`    | `processarIngestao()`, `getAIModels()`       |
+| Repositories (BE)   | `get*()`, `update*()`, `delete*()`       | `getProdutos()`, `updateProduto()`           |
 
 ### Path Aliases
 
@@ -75,13 +75,14 @@ src/
 ```
 
 Always use aliases instead of deep relative paths:
+
 ```typescript
 // Correct
-import { servicoProduto } from "@modules/produto/services/servicoProduto";
-import { db } from "@core/lib/db";
+import { servicoProduto } from '@modules/produto/services/servicoProduto';
+import { db } from '@core/lib/db';
 
 // Wrong
-import { servicoProduto } from "../../modules/produto/services/servicoProduto";
+import { servicoProduto } from '../../modules/produto/services/servicoProduto';
 ```
 
 ---
@@ -92,10 +93,10 @@ import { servicoProduto } from "../../modules/produto/services/servicoProduto";
 
 ```typescript
 // src/core/lib/db.ts
-import { createClient } from "@libsql/client";
+import { createClient } from '@libsql/client';
 export const db = createClient({
-  url: import.meta.env.TURSO_DATABASE_URL || process.env.TURSO_DATABASE_URL || "",
-  authToken: import.meta.env.TURSO_AUTH_TOKEN || process.env.TURSO_AUTH_TOKEN || "",
+  url: import.meta.env.TURSO_DATABASE_URL || process.env.TURSO_DATABASE_URL || '',
+  authToken: import.meta.env.TURSO_AUTH_TOKEN || process.env.TURSO_AUTH_TOKEN || '',
 });
 ```
 
@@ -124,6 +125,7 @@ export async function obterDados(): Promise<Produto[]> {
 ```
 
 **Rules:**
+
 - Success: returns typed data
 - Parse error: returns `[]` or `null`
 - Database error: returns `[]` or `null`
@@ -139,7 +141,7 @@ Always use `safeParse()` instead of `parse()` for data that may come malformed:
 ```typescript
 const parsed = ProductSchema.safeParse(row);
 if (!parsed.success) {
-  logger.warn("Malformed product", { row, error: parsed.error });
+  logger.warn('Malformed product', { row, error: parsed.error });
   return null; // or skip the item
 }
 return parsed.data;
@@ -165,7 +167,7 @@ async function obterDados(): Promise<Tipo> {
         lastFetch = Date.now();
         return data;
       } catch (error) {
-        logger.error("Cache fetch failed", error);
+        logger.error('Cache fetch failed', error);
         return cached || []; // fallback to stale data or empty
       } finally {
         pendingFetch = null;
@@ -187,8 +189,8 @@ Always parameterized:
 ```typescript
 // Correct
 await db.execute({
-  sql: "SELECT * FROM Produtos WHERE categoria = ? AND status = ?",
-  args: [categoria, "AprovadoM4"],
+  sql: 'SELECT * FROM Produtos WHERE categoria = ? AND status = ?',
+  args: [categoria, 'AprovadoM4'],
 });
 
 // Wrong (SQL injection)
@@ -215,6 +217,7 @@ vi.mock("@/core/lib/db", () => ({
 ```
 
 ### Required scenarios for every tested service:
+
 - Parse error: malformed data -> service returns `[]`
 - DB error: connection failure -> service returns `[]`
 - Empty results: query with no data -> service returns `[]`
@@ -223,13 +226,13 @@ vi.mock("@/core/lib/db", () => ({
 
 ## Components: Astro vs React
 
-| Situation | Use |
-|-----------|-----|
-| Static content (lists, grids, headers) | **Astro** (zero JS) |
-| Local state, events, hooks | **React** with `client:*` |
-| Immediate hydration (critical) | `client:load` |
-| Below the fold | `client:visible` (preferred) |
-| Non-urgent | `client:idle` |
+| Situation                              | Use                          |
+| -------------------------------------- | ---------------------------- |
+| Static content (lists, grids, headers) | **Astro** (zero JS)          |
+| Local state, events, hooks             | **React** with `client:*`    |
+| Immediate hydration (critical)         | `client:load`                |
+| Below the fold                         | `client:visible` (preferred) |
+| Non-urgent                             | `client:idle`                |
 
 UI components (Badge, Button, Card, Progress) are React but render in SSR without `client:*`.
 
@@ -239,29 +242,29 @@ UI components (Badge, Button, Card, Progress) are React but render in SSR withou
 
 ### lupinho_fe
 
-| Command | Description |
-|---------|-------------|
-| `pnpm dev` | Dev server (localhost:4321) |
-| `pnpm build` | Production build |
-| `pnpm preview` | Build preview |
-| `pnpm test:run` | Unit tests (single run) |
-| `pnpm test:coverage` | Tests with coverage |
-| `pnpm test:e2e` | E2E tests (Playwright) |
-| `pnpm lint` | ESLint |
-| `pnpm format` | Prettier |
-| `pnpm deploy` | Deploy via wrangler |
+| Command              | Description                 |
+| -------------------- | --------------------------- |
+| `pnpm dev`           | Dev server (localhost:4321) |
+| `pnpm build`         | Production build            |
+| `pnpm preview`       | Build preview               |
+| `pnpm test:run`      | Unit tests (single run)     |
+| `pnpm test:coverage` | Tests with coverage         |
+| `pnpm test:e2e`      | E2E tests (Playwright)      |
+| `pnpm lint`          | ESLint                      |
+| `pnpm format`        | Prettier                    |
+| `pnpm deploy`        | Deploy via wrangler         |
 
 ### lupinho_be
 
-| Command | Description |
-|---------|-------------|
-| `pnpm dev` | Dev server (localhost:3001) |
-| `pnpm build` | Production build |
-| `pnpm test:run` | Unit tests |
-| `pnpm lint` | ESLint |
+| Command            | Description                 |
+| ------------------ | --------------------------- |
+| `pnpm dev`         | Dev server (localhost:3001) |
+| `pnpm build`       | Production build            |
+| `pnpm test:run`    | Unit tests                  |
+| `pnpm lint`        | ESLint                      |
 | `pnpm db:generate` | Generate Drizzle migrations |
-| `pnpm db:push` | Apply migrations |
-| `pnpm db:studio` | Drizzle Studio |
+| `pnpm db:push`     | Apply migrations            |
+| `pnpm db:studio`   | Drizzle Studio              |
 
 ---
 
@@ -278,6 +281,7 @@ The `script-src 'self'` policy in the middleware **blocks the inline scripts** t
 **Diagnosis:** Check whether `<astro-island>` retains the `ssr` attribute after page load. If so, hydration did not occur. Use devtools or `page.evaluate(() => document.querySelector('astro-island').hasAttribute('ssr'))`.
 
 **Fix:** Add `'unsafe-inline'` to `script-src`:
+
 ```
 script-src 'self' 'unsafe-inline'
 ```

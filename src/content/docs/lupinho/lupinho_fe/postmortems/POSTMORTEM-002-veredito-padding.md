@@ -1,5 +1,5 @@
 ---
-title: "Postmortem 002: Inconsistent padding in the Veredito section (layout-boxed)"
+title: 'Postmortem 002: Inconsistent padding in the Veredito section (layout-boxed)'
 ---
 
 ## Summary
@@ -38,13 +38,15 @@ It is used by multiple section components on the product page. Since the padding
 Replace `class="layout-boxed"` with `class="rounded-card bg-card ring-1 ring-foreground/10 p-4"` in `ProdutoVeredito.astro`:
 
 **Before:**
+
 ```astro
-<div class="layout-boxed">
+<div class="layout-boxed"></div>
 ```
 
 **After:**
+
 ```astro
-<div class="rounded-card bg-card ring-1 ring-foreground/10 p-4">
+<div class="rounded-card bg-card ring-1 ring-foreground/10 p-4"></div>
 ```
 
 This preserves all visual styles (rounded corners, background, border) but swaps padding from 24px to 16px. Other sections using `layout-boxed` remain unaffected.

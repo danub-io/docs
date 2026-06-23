@@ -1,33 +1,71 @@
 ---
-title: Ecosystem
-description: Quikly development ecosystem documentation hub
+title: Quikly
+description: Orchestrating the next generation of AI-driven ecosystems.
 template: splash
 hero:
   title: Quikly
-  tagline: Development Ecosystem Documentation
+  tagline: Orchestrating the next generation of AI-driven ecosystems. High-performance tools for the modern developer.
   actions:
-    - text: Explore Projects
-      link: /docs/lupinho/
+    - text: Get Started
+      link: /docs/overview/
       icon: right-arrow
       variant: primary
+    - text: View on GitHub
+      link: https://github.com/danub-io
+      icon: external
+      variant: minimal
 ---
 
-import { LinkCard, CardGrid } from '@astrojs/starlight/components';
+import { LinkCard, CardGrid, Card } from '@astrojs/starlight/components';
 
-**Quikly** is a development studio building tools and products across multiple domains — from AI-powered technical curation and agent orchestration to automated publishing and theological content. This hub centralizes architecture decisions, conventions, postmortems, and reference documentation for every project in the ecosystem.
+<div class="landing-section">
+  ## The Ecosystem
 
-## Projects
+  Explore our flagship projects and specialized platforms designed for the modern digital landscape.
 
-<CardGrid>
-  <LinkCard title="💻 Lupinho" href="/docs/lupinho/" description="AI-powered technical hardware curation ecosystem — frontend, backend, and community" />
-  <LinkCard title="📖 Editora" href="/docs/editora/" description="Automated AI personal publishing tool for book production with web editor" />
-  <LinkCard title="✝️ GospelReads" href="/docs/gospelreads/" description="Theological content blog and Christian reflections — SSG with Astro content collections" />
-  <LinkCard title="🎓 MBA Lite" href="/docs/mbalite/" description="MBA Lite course landing page — High Performance Management, SSG" />
-  <LinkCard title="🤖 Turbo CLI" href="/docs/turbo/" description="AI Agent Orchestrator — plan, decompose, and execute tasks via pi coding agent" />
-</CardGrid>
+  <CardGrid>
+    <LinkCard
+      title="💻 Lupinho"
+      href="/docs/lupinho/"
+      description="The flagship AI-powered hardware curation ecosystem. Advanced technical insights for the modern era."
+    />
+    <LinkCard
+      title="📖 Editora"
+      href="/docs/editora/"
+      description="Revolutionizing personal publishing. From manuscript to production with AI-driven precision."
+    />
+    <LinkCard
+      title="✝️ GospelReads"
+      href="/docs/gospelreads/"
+      description="Theological depth meets modern technology. A curated space for Christian reflections."
+    />
+    <LinkCard
+      title="🎓 MBA Lite"
+      href="/docs/mbalite/"
+      description="Executive-level management insights. High performance, distilled for the modern leader."
+    />
+    <LinkCard
+      title="🤖 Turbo CLI"
+      href="/docs/turbo/"
+      description="Orchestrating intelligence. The ultimate CLI for AI agent decomposition and task execution."
+    />
+  </CardGrid>
+</div>
 
-## Quick Links
+<div class="landing-section">
+  ## Core Pillars
 
-- [Architecture Decisions](/docs/lupinho/adrs/) — Rationale behind key technical choices across projects
-- [Postmortems](/docs/lupinho/postmortems/) — Lessons learned from failures, bugs, and mistakes
-- [Conventions](/docs/lupinho/conventions/) — Cross-project standards, patterns, and coding guidelines
+  Our foundation is built on rigorous standards and absolute transparency.
+
+  <CardGrid stagger>
+    <Card title="Architecture" icon="setting">
+      Rigorous [Architecture Decisions](/docs/lupinho/adrs/) ensure long-term scalability and reliability.
+    </Card>
+    <Card title="Transparency" icon="magnifier">
+      Detailed [Postmortems](/docs/lupinho/postmortems/) turn every challenge into a learning opportunity.
+    </Card>
+    <Card title="Standards" icon="approve-check-circle">
+      Shared [Conventions](/docs/lupinho/conventions/) maintain excellence in everything we build.
+    </Card>
+  </CardGrid>
+</div>

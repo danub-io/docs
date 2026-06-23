@@ -1,5 +1,5 @@
 ---
-title: "Deployment"
+title: 'Deployment'
 ---
 
 This folder contains guides and documentation related to deploying the LUPINHO Panel application.

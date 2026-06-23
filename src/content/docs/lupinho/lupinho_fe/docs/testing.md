@@ -1,17 +1,15 @@
 ---
-title: "Testing Strategy"
+title: 'Testing Strategy'
 ---
-
-
 
 ## Overview
 
 The project uses two testing layers:
 
-| Layer | Tool | What it tests | Location |
-|--------|-----------|-------------|-------------|
-| Unit | Vitest | Services, React components, utilities | `__tests__/` alongside the file |
-| E2E | Playwright | Complete user flows, Astro pages | `tests/e2e/` |
+| Layer     | Tool                | What it tests                                | Location                                                                       |
+| --------- | ------------------- | -------------------------------------------- | ------------------------------------------------------------------------------ |
+| Unit      | Vitest              | Services, React components, utilities        | `__tests__/` alongside the file                                                |
+| E2E       | Playwright          | Complete user flows, Astro pages             | `tests/e2e/`                                                                   |
 | Community | Vitest + Playwright | Community module tests (auth, reviews, feed) | `src/modules/comunidade/__tests__/` and `tests/e2e/community-disabled.spec.ts` |
 
 ## Commands
@@ -30,12 +28,12 @@ pnpm test:e2e          # Run Playwright tests
 
 Thresholds configured in `vitest.config.ts`:
 
-| Metric | Threshold |
-|---------|-----------|
-| Lines | 80% |
-| Functions | 75% |
-| Branches | 70% |
-| Statements | 80% |
+| Metric     | Threshold |
+| ---------- | --------- |
+| Lines      | 80%       |
+| Functions  | 75%       |
+| Branches   | 70%       |
+| Statements | 80%       |
 
 Coverage covers files imported by the tests. Pure Astro components are covered by E2E tests.
 
@@ -57,6 +55,7 @@ vi.mock('@/core/lib/db', () => ({
 ```
 
 **Required scenarios for every service:**
+
 - **Parse error:** Malformed data returned from DB → service returns `[]`
 - **DB error:** Connection/query failure → service returns `[]`
 - **Empty results:** Successful query with no data → service returns `[]`

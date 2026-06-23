@@ -1,8 +1,6 @@
 ---
-title: "Documentation — GospelReads"
+title: 'Documentation — GospelReads'
 ---
-
-
 
 Project documentation index.
 

@@ -1,5 +1,5 @@
 ---
-title: "Environment Variables (lupinho_fe)"
+title: 'Environment Variables (lupinho_fe)'
 ---
 
 The frontend requires the following environment variables:
@@ -82,6 +82,7 @@ turso db tokens create <database-name>
 ## Differences from the Backend (lupinho_be)
 
 lupinho_fe does **not** use:
+
 - `ENCRYPTION_KEY` (only the backend needs it to encrypt AI keys)
 - `NEXTAUTH_SECRET` / `NEXTAUTH_URL` (the frontend uses its own JWT with `jose`)
 - AI provider API keys (`GOOGLE_API_KEY`, `GROQ_API_KEY`, etc.)

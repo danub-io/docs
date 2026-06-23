@@ -1,5 +1,5 @@
 ---
-title: "Postmortem 006: React Hooks Error in SSR (Vite + Cloudflare Workerd)"
+title: 'Postmortem 006: React Hooks Error in SSR (Vite + Cloudflare Workerd)'
 ---
 
 ## Summary

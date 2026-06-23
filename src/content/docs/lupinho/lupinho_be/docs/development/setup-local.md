@@ -1,5 +1,5 @@
 ---
-title: "Local Setup — LUPINHO Backend"
+title: 'Local Setup — LUPINHO Backend'
 ---
 
 Step-by-step guide to setting up the backend development environment.
@@ -75,16 +75,16 @@ Open http://localhost:3001
 
 ## Useful Commands
 
-| Command | Description |
-|---------|-------------|
-| `pnpm dev` | Dev server (Next.js, port 3001) |
-| `pnpm build` | Production build |
-| `pnpm lint` | Run linter |
-| `pnpm test:run` | Unit tests |
-| `pnpm test:e2e` | E2E tests (Playwright) |
-| `pnpm db:push` | Apply migrations to database |
-| `pnpm db:studio` | Open Drizzle Studio |
-| `pnpm clean` | Clean `.next` and cache |
+| Command          | Description                     |
+| ---------------- | ------------------------------- |
+| `pnpm dev`       | Dev server (Next.js, port 3001) |
+| `pnpm build`     | Production build                |
+| `pnpm lint`      | Run linter                      |
+| `pnpm test:run`  | Unit tests                      |
+| `pnpm test:e2e`  | E2E tests (Playwright)          |
+| `pnpm db:push`   | Apply migrations to database    |
+| `pnpm db:studio` | Open Drizzle Studio             |
+| `pnpm clean`     | Clean `.next` and cache         |
 
 ## Development Workflow
 

@@ -21,7 +21,7 @@ But the forest, of course, was always listening.
 
 Aria followed the trail that no map recorded. Her bare feet knew every exposed root, every mossy stone, every spot where the lowest branches demanded a careful duck of the head. It was a dance she had performed since childhood, when her grandmother would take her by the hand and whisper secrets that the wind carried away.
 
-*"The forest belongs to no one, but it welcomes us if we respect it."*
+_"The forest belongs to no one, but it welcomes us if we respect it."_
 
 The words echoed in her mind as she moved forward. The air was thick with a scent she did not recognize — something between wildflowers and wet earth, but with a metallic note that made the hairs on the back of her neck stand on end.
 
@@ -45,7 +45,7 @@ It was a man — or at least, it appeared to be. His silver hair fell in disarra
 
 The stranger smiled, but there was no humor in it.
 
-"Someone who knows you shouldn't be here. And also knows that, unfortunately, you *needed* to be."
+"Someone who knows you shouldn't be here. And also knows that, unfortunately, you _needed_ to be."
 
 He pointed at the sword.
 
@@ -57,11 +57,11 @@ Aria took a step back, her eyes darting between the stranger and the sword still
 
 "I don't know what you're talking about. And I didn't choose anything."
 
-"The choice is never conscious," he replied, taking a step forward. "That's what makes it a *true* choice. If you could rationalize it, weigh pros and cons, it wouldn't be a choice. It would be a calculation."
+"The choice is never conscious," he replied, taking a step forward. "That's what makes it a _true_ choice. If you could rationalize it, weigh pros and cons, it wouldn't be a choice. It would be a calculation."
 
 He knelt beside the sword, his fingers hovering an inch from the blade without touching it.
 
-"This is *Dawnlight*. Forged in the celestial smithies before the gods forgot how to create wonders. It has slept for a thousand years, waiting. And now it has awakened. Because of you."
+"This is _Dawnlight_. Forged in the celestial smithies before the gods forgot how to create wonders. It has slept for a thousand years, waiting. And now it has awakened. Because of you."
 
 Aria shook her head, trying to dispel the madness that seemed to have settled over the clearing.
 
@@ -85,7 +85,7 @@ He paused.
 
 "But first, you need to learn how to use it. And I'm the only person alive who can teach you."
 
-Aria looked at the sword again. The blue glow seemed brighter now, as if responding to the conversation. She felt something — not a voice, not exactly, but a *presence*. A call.
+Aria looked at the sword again. The blue glow seemed brighter now, as if responding to the conversation. She felt something — not a voice, not exactly, but a _presence_. A call.
 
 It was absurd. It was impossible.
 
@@ -103,7 +103,7 @@ A slow smile spread across Kaelen's face.
 
 "A lifetime. But we can start with the basics this afternoon."
 
-Aria took a deep breath, the forest air filling her lungs as it always had — familiar, safe, *hers*. But now there was something more in the wind, something that whispered of adventures and dangers and a destiny she had not asked for, but that somehow she had always known was waiting for her.
+Aria took a deep breath, the forest air filling her lungs as it always had — familiar, safe, _hers_. But now there was something more in the wind, something that whispered of adventures and dangers and a destiny she had not asked for, but that somehow she had always known was waiting for her.
 
 She approached the sword and, without hesitating this time, closed her fingers around the hilt.
 
@@ -111,4 +111,4 @@ The world exploded in blue light.
 
 ---
 
-*To be continued in the next chapter...*
+_To be continued in the next chapter..._

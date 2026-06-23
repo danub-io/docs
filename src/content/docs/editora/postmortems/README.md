@@ -1,5 +1,5 @@
 ---
-title: "Postmortems — Editora"
+title: 'Postmortems — Editora'
 ---
 
 This directory stores postmortems for the Editora project.

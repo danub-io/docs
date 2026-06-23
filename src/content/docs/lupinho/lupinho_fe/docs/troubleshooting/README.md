@@ -1,5 +1,5 @@
 ---
-title: "Troubleshooting — Documentation"
+title: 'Troubleshooting — Documentation'
 ---
 
 Guide to resolving common issues in the LUPINHO frontend.

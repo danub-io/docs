@@ -1,8 +1,6 @@
 ---
-title: "Documentation — Backend LUPINHO"
+title: 'Documentation — Backend LUPINHO'
 ---
-
-
 
 Index of the backend documentation.
 

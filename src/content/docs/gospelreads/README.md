@@ -1,8 +1,6 @@
 ---
-title: "GospelReads — The Intellectual Archive"
+title: 'GospelReads — The Intellectual Archive'
 ---
-
-
 
 A blog for theological content and Christian reflections, built with **Astro 6**, **React 19**, and **Tailwind CSS v4**. Hosted on **Firebase Hosting**.
 

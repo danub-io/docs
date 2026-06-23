@@ -1,5 +1,5 @@
 ---
-title: "Deploy on Cloudflare Workers"
+title: 'Deploy on Cloudflare Workers'
 ---
 
 > **Note:** lupinho_fe deploys exclusively on **Cloudflare Workers**, not Vercel.

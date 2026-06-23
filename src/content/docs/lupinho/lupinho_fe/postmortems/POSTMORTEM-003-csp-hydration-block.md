@@ -1,5 +1,5 @@
 ---
-title: "Postmortem 003: CSP blocking React component hydration"
+title: 'Postmortem 003: CSP blocking React component hydration'
 ---
 
 ## Summary
@@ -42,7 +42,11 @@ The CSP in `src/middleware.ts` set `script-src 'self'`, which blocks **all inlin
 
 ```html
 <script>
-  (self.Astro || (self.Astro = {})).load = async (fn) => { await (await fn())() };
+  (self.Astro || (self.Astro = {})).load = async (fn) => {
+    await (
+      await fn()
+    )();
+  };
   window.dispatchEvent(new Event('astro:load'));
 </script>
 ```
@@ -64,15 +68,15 @@ The CSP in `src/middleware.ts` set `script-src 'self'`, which blocks **all inlin
 
 ## Why It Was So Hard to Find
 
-| Reason | Explanation |
-|-------|-----------|
-| **Silent build** | `astro build` does not validate CSP — compiles without warnings |
-| **Silent dev server** | `astro dev` does not show CSP errors in the terminal |
-| **Tests bypass middleware** | Vitest + jsdom do not go through Astro middleware — CSP is never applied |
-| **Intact SSR** | HTML generates perfectly — page looks visually complete |
+| Reason                               | Explanation                                                                                                                                       |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Silent build**                     | `astro build` does not validate CSP — compiles without warnings                                                                                   |
+| **Silent dev server**                | `astro dev` does not show CSP errors in the terminal                                                                                              |
+| **Tests bypass middleware**          | Vitest + jsdom do not go through Astro middleware — CSP is never applied                                                                          |
+| **Intact SSR**                       | HTML generates perfectly — page looks visually complete                                                                                           |
 | **Debug focused on wrong component** | NavDrawer really had issues (missing controlled state, `nativeButton`), so debugging felt on the right track — but the real problem was elsewhere |
-| **CSP is silent by design** | CSP errors appear **only** in the browser console, with no JavaScript exception |
-| **Tests mislead** | `userEvent.click()` passes in tests because jsdom does not enforce CSP |
+| **CSP is silent by design**          | CSP errors appear **only** in the browser console, with no JavaScript exception                                                                   |
+| **Tests mislead**                    | `userEvent.click()` passes in tests because jsdom does not enforce CSP                                                                            |
 
 ## Applied Fix
 
@@ -127,6 +131,7 @@ Add an E2E test that verifies CSP allows island hydration. The project already h
 ### 4. Astro inline scripts are a requirement, not an option
 
 Astro SSR generates inline scripts to:
+
 - Define `Astro.load`, `Astro.idle`, etc.
 - Fire events `astro:load`, `astro:idle`
 - Initialize the island system

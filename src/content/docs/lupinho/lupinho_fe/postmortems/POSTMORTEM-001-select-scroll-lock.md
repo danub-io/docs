@@ -1,5 +1,5 @@
 ---
-title: "Postmortem 001: Select dropdown causes page shrinkage on mobile"
+title: 'Postmortem 001: Select dropdown causes page shrinkage on mobile'
 ---
 
 ## Summary

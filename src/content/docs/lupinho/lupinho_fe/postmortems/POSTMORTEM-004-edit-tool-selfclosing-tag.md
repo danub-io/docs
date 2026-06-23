@@ -1,5 +1,5 @@
 ---
-title: "Postmortem 004: Edit tool converting self-closing JSX tag into invalid closing tag"
+title: 'Postmortem 004: Edit tool converting self-closing JSX tag into invalid closing tag'
 ---
 
 ## Summary
@@ -30,6 +30,7 @@ title: "Postmortem 004: Edit tool converting self-closing JSX tag into invalid c
 The `edit` tool was called with an `oldString` that contained `</SpecRowMobile>`. The original file had `/>` (self-closing). Despite that, the tool reported success but incorrectly replaced:
 
 **Original (valid):**
+
 ```tsx
 <SpecRowMobile
   label="Crítico"
@@ -40,6 +41,7 @@ The `edit` tool was called with an `oldString` that contained `</SpecRowMobile>`
 ```
 
 **After edit (invalid):**
+
 ```tsx
 <SpecRowMobile
   label="Crítico"
@@ -53,11 +55,11 @@ The problem: the opening tag `<SpecRowMobile` was **never closed** — it was mi
 
 ## Why It Was Hard to Find
 
-| Reason | Explanation |
-|-------|-----------|
-| **Code looks visually correct** | `<SpecRowMobile>...</SpecRowMobile>` looks like a valid pair to the human eye |
-| **Edit tool reported success** | There was no indication of editing failure |
-| **esbuild error is cryptic** | `Expected ">" but found "<"` does not explicitly say an opening tag was left unclosed |
+| Reason                          | Explanation                                                                           |
+| ------------------------------- | ------------------------------------------------------------------------------------- |
+| **Code looks visually correct** | `<SpecRowMobile>...</SpecRowMobile>` looks like a valid pair to the human eye         |
+| **Edit tool reported success**  | There was no indication of editing failure                                            |
+| **esbuild error is cryptic**    | `Expected ">" but found "<"` does not explicitly say an opening tag was left unclosed |
 
 ## Applied Fix
 

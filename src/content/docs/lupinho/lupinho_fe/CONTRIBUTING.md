@@ -1,5 +1,5 @@
 ---
-title: "Contributing — LUPINHO Frontend"
+title: 'Contributing — LUPINHO Frontend'
 ---
 
 Thank you for contributing! This guide defines the standards and workflows to maintain code quality and consistency.
@@ -7,11 +7,13 @@ Thank you for contributing! This guide defines the standards and workflows to ma
 ## Environment Setup
 
 Prerequisites:
+
 - Node.js >= 22.12.0
 - pnpm (package manager)
 - Turso account (database)
 
 Steps:
+
 ```bash
 git clone <repo-url>
 cd lupinho_fe
@@ -32,17 +34,18 @@ pnpm dev
 
 ## Commit Pattern (Conventional Commits)
 
-| Type | Description |
-|------|-------------|
-| `feat` | New feature |
-| `fix` | Bug fix |
-| `docs` | Documentation changes |
-| `style` | Code formatting (no logic change) |
+| Type       | Description                            |
+| ---------- | -------------------------------------- |
+| `feat`     | New feature                            |
+| `fix`      | Bug fix                                |
+| `docs`     | Documentation changes                  |
+| `style`    | Code formatting (no logic change)      |
 | `refactor` | Refactoring (no new features or fixes) |
-| `test` | Adding/updating tests |
-| `chore` | Maintenance (deps, scripts, etc.) |
+| `test`     | Adding/updating tests                  |
+| `chore`    | Maintenance (deps, scripts, etc.)      |
 
 Example:
+
 ```bash
 git commit -m "feat(category): add label-based section grouping"
 ```
@@ -69,17 +72,20 @@ git commit -m "feat(category): add label-based section grouping"
 ## Running Tests
 
 ### Unit Tests (Vitest)
+
 ```bash
 pnpm test:run          # Single run
 pnpm test:coverage     # With coverage report
 ```
 
 Minimum coverage:
+
 - Lines: 80%
 - Functions: 75%
 - Branches: 70%
 
 ### E2E Tests (Playwright)
+
 ```bash
 pnpm test:e2e
 pnpm test:e2e:dev      # With automatic dev server
@@ -101,6 +107,7 @@ pnpm test:e2e:dev      # With automatic dev server
 ## Required Validation
 
 When finishing changes, run:
+
 1. `pnpm lint` — check ESLint
 2. `pnpm exec tsc --noEmit` — type check
 3. `pnpm test:run --coverage` — unit tests with coverage

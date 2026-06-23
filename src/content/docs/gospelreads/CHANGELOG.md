@@ -1,8 +1,6 @@
 ---
-title: "Changelog"
+title: 'Changelog'
 ---
-
-
 
 ## [Unreleased]
 
